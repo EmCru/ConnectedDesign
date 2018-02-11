@@ -1,0 +1,102 @@
+<Workspace Version="1.3.2.2480" X="-273.077276228931" Y="-181.574091780329" zoom="1.44258909293313" ScaleFactor="1" Name="Get_NumbersFromString" Description="" ID="76a9a9ff-63b5-463c-9efc-3a2bbac245c4" Category="ArupBimSF.String Functions">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="6e4611cc-26d4-41bc-a1c7-ea821cd48c90" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="985.361123110151" y="457.730021598272" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6672edeb-ed0f-4ca9-82dc-2cb3e98be433" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="463.658472682102" y="459.114364394009" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="str : string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="eb0dd79d-d6e6-4189-9ba7-dc97f70a99e9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="984.125269978402" y="531.173650107991" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="number" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="5983e5bb-4b6b-4c87-9547-a0779fe9a739" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="794.207494587709" y="467.176862074152" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="OUT[0];&#xA;OUT[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="27f9b41c-aad8-4609-9a92-c636197bb93a" type="PythonNodeModels.PythonNode" nickname="Python Script" x="641.57135297172" y="460.250357920888" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script># Extract a list of numbers from a string
+# Colin McCrone 
+# July 2017
+
+import clr
+
+
+# True if character is a number, false otherwise
+def IsNum(char):
+    try:
+        int(char)
+        return True
+    except ValueError:
+        return False
+
+
+# Join a single list of characters into a string
+def JoinChars(chars):
+	if not chars:
+		return None
+	elif len(chars) == 1:
+		return chars[0]
+	else:
+		return "".join(chars)
+
+
+# Return a list of contiguous numbers from a string
+def StringToNumbers(str):
+	# Extract lists of contiguous number characters
+	nums = []
+	lastWasNum = False
+	ls = []
+	for i in range(len(str)):
+		if IsNum(str[i]):
+			ls.append(str[i])
+			lastWasNum = True
+		elif str[i] == "." and lastWasNum:
+			ls.append(str[i])
+		elif lastWasNum:
+			nums.append(ls)
+			ls = []
+			lastWasNum = False
+		
+		if i == len(str)-1 and ls:
+			nums.append(ls)
+
+	# Cast character strings to numbers
+	if not nums:
+		return [None,None]
+	elif len(nums) == 1:
+		asStr = JoinChars(nums[0])
+		return [asStr,float(asStr)]
+	else:
+		asStr = []
+		asNum = []
+		for i in range(len(nums)):
+			oneStr = JoinChars(nums[i])
+			asStr.append(oneStr)
+			asNum.append(float(oneStr))
+		return [asStr,asNum]
+
+
+str = IN[0]
+OUT = StringToNumbers(str)
+
+
+
+
+	
+
+</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6672edeb-ed0f-4ca9-82dc-2cb3e98be433" start_index="0" end="27f9b41c-aad8-4609-9a92-c636197bb93a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5983e5bb-4b6b-4c87-9547-a0779fe9a739" start_index="0" end="6e4611cc-26d4-41bc-a1c7-ea821cd48c90" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5983e5bb-4b6b-4c87-9547-a0779fe9a739" start_index="1" end="eb0dd79d-d6e6-4189-9ba7-dc97f70a99e9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="27f9b41c-aad8-4609-9a92-c636197bb93a" start_index="0" end="5983e5bb-4b6b-4c87-9547-a0779fe9a739" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>
