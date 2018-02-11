@@ -1,0 +1,1062 @@
+<Workspace Version="1.3.2.2480" X="118.035098928814" Y="101.742685007408" zoom="0.579653943154789" ScaleFactor="1" Name="UI_MultipleInputForm++" Description="*From Data-Shapes" ID="77bdf496-5b85-4635-8c4b-66d7ce04db8b" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1224.91677751997" y="311.512881875111" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="9">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <PortInfo index="5" default="False" />
+      <PortInfo index="6" default="False" />
+      <PortInfo index="7" default="False" />
+      <PortInfo index="8" default="False" />
+      <Script>import clr
+try:
+	clr.AddReference('System.Windows.Forms')
+	clr.AddReference('System.Drawing')
+	
+	from System.Drawing import Point , Size , Graphics, Bitmap, Image, Font, FontStyle, Icon, Color, Region , Rectangle 
+	from System.Windows.Forms import Application, DockStyle, Button, Form, Label, TrackBar , ToolTip, ColumnHeader, TextBox, CheckBox, FolderBrowserDialog, OpenFileDialog, DialogResult, ComboBox, FormBorderStyle, FormStartPosition, ListView, ListViewItem , SortOrder, Panel, ImageLayout, GroupBox, RadioButton, BorderStyle, PictureBox, PictureBoxSizeMode, LinkLabel, CheckState, ColumnHeaderStyle , ImageList, VScrollBar
+	from System.Collections.Generic import *
+	from System.Collections.Generic import List as iList
+	from System.Windows.Forms import View as vi
+	clr.AddReference('System')
+	from System import IntPtr
+	from System.ComponentModel import Container
+	
+	
+	import sys
+	pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
+	sys.path.append(pyt_path)
+	import os
+	import webbrowser
+	import unicodedata
+	
+	clr.AddReference('RevitAPIUI')
+	from  Autodesk.Revit.UI import Selection , TaskDialog
+	from  Autodesk.Revit.UI.Selection import ISelectionFilter
+	
+	importcolorselection = 0
+	
+	try:
+		from  Autodesk.Revit.UI import ColorSelectionDialog
+	except:
+		importcolorselection = 1
+	
+	clr.AddReference('RevitNodes')
+	import Revit
+	clr.ImportExtensions(Revit.Elements)
+	clr.ImportExtensions(Revit.GeometryConversion)
+	
+	clr.AddReference('RevitServices')
+	from RevitServices.Persistence import DocumentManager
+	doc = DocumentManager.Instance.CurrentDBDocument
+	uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
+
+	clr.AddReference('RevitAPI')
+	from Autodesk.Revit.DB import FilteredElementCollector , View , ViewType , ElementId , FamilyInstance
+	dbviews = [v for v in FilteredElementCollector(doc).OfClass(View).ToElements() if (v.ViewType == ViewType.FloorPlan or v.ViewType == ViewType.CeilingPlan or v.ViewType == ViewType.Section or v.ViewType == ViewType.Elevation or v.ViewType == ViewType.ThreeD)]
+	viewindex = 0
+
+	
+	from System.Reflection import Assembly
+	import xml.etree.ElementTree as et
+
+	class selectionfilter(ISelectionFilter):
+		def __init__(self,category):
+			self.category = category
+		def AllowElement(self,element):
+			if element.Category.Name in [c.Name for c in self.category]:
+				return True
+			else:
+				return False
+		def AllowReference(reference,point):
+			return False
+	
+	class MultiTextBoxForm(Form):
+		
+	    def __init__(self):
+	        self.Text = 'ArupSF | Multi Input UI ++'
+	        self.output = []
+	        self.values = []
+	        self.cancelled = False
+	
+	    def setclose(self, sender, event):
+	    	cbindexread = 0
+	    	if sender.Name != "Cancel":
+	    		for f in self.output:
+	    			if f.GetType() == TextBox:
+	    				self.values.append(f.Text)
+	    			if f.GetType() == CheckBox:
+	    				self.values.append(f.Checked)
+	    			if f.GetType() == Button:
+	    				if isinstance(f.Tag ,list):
+	    					self.values.append([e for e in f.Tag if e.__class__.__name__ != "Category"])
+	    				else:	    					
+	    					if f.Tag.__class__.__name__ != "Category":
+	    						self.values.append(f.Tag)
+	    					else:
+    							self.values.append([])
+
+	    			if f.GetType() == ComboBox:
+	    				try:
+	    					key = f.Text
+	    					self.values.append(f.Tag[key])
+	    				except:
+	    					self.values.append(None)
+	    			if f.GetType() == mylistview:
+	    				self.values.append([f.Values[i.Text] for i in f.CheckedItems])
+	    			if f.GetType() == mytrackbar:
+	    				self.values.append(f.startval+f.Value*f.step)
+	    			if f.GetType() == mygroupbox:
+	    				try:
+	    					key = [j.Text for j in f.Controls if j.Checked == True][0]
+	    					self.values.append(f.Tag[key])
+	    				except:
+	    					self.values.append(None)
+	    	else:
+	    		self.values = None
+	    		self.cancelled = True
+	    	self.Close()
+	
+	    def reset(self, sender, event):
+			pass
+	
+	    def openfile(self, sender, event):
+			ofd = OpenFileDialog()
+			dr = ofd.ShowDialog()
+			if dr == DialogResult.OK:
+				sender.Text = ofd.FileName
+				sender.Tag = ofd.FileName
+	
+	    def opendirectory(self, sender, event):
+			fbd = FolderBrowserDialog()
+			fbd.SelectedPath = sender.Text
+			dr = fbd.ShowDialog()
+			if dr == DialogResult.OK:
+				sender.Text = fbd.SelectedPath
+				sender.Tag = fbd.SelectedPath
+	
+	    def pickobjects(self, sender, event):
+			for c in self.Controls:
+				c.Enabled = False
+			try:
+				sel = uidoc.Selection.PickObjects(Selection.ObjectType.Element,'')
+				selelem = [doc.GetElement(s.ElementId) for s in sel]
+				sender.Tag = (selelem)
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+			
+	    def picklinkedobjects(self, sender, event):
+			#This part was made easier by Dimitar Venkov's work
+			for c in self.Controls:
+				c.Enabled = False
+			try:
+				linkref = uidoc.Selection.PickObject(Selection.ObjectType.Element,'Select the link instance.')
+				link = doc.GetElement(linkref.ElementId).GetLinkDocument()
+				td = TaskDialog.Show('ArupSF','Select the linked elements and press Finish.')
+				sel = uidoc.Selection.PickObjects(Selection.ObjectType.LinkedElement,'Select the linked elements and press Finish.')
+				selelem = [link.GetElement(s.LinkedElementId) for s in sel]
+				sender.Tag = (selelem)
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True		
+
+	    def pickobject(self, sender, event):
+			for c in self.Controls:
+				c.Enabled = False
+			try:
+				sel = uidoc.Selection.PickObject(Selection.ObjectType.Element,'')
+				selelem = doc.GetElement(sel.ElementId) 
+				sender.Tag = (selelem)
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+			
+	    def picklinkedobject(self, sender, event):
+			#This part was made easier by Dimitar Venkov's work
+			for c in self.Controls:
+				c.Enabled = False
+			try:
+				linkref = uidoc.Selection.PickObject(Selection.ObjectType.Element,'Select the link instance.')
+				link = doc.GetElement(linkref.ElementId).GetLinkDocument()
+				td = TaskDialog.Show('ArupSF','Select the linked element.')
+				sel = uidoc.Selection.PickObject(Selection.ObjectType.LinkedElement,'Select the linked element.')
+				selelem = link.GetElement(sel.LinkedElementId)
+				sender.Tag = (selelem)
+			except:
+				pass				
+			for c in self.Controls:
+				c.Enabled = True
+			
+	    def pickobjectsofcat(self, sender, event):
+			for c in self.Controls:
+				c.Enabled = False
+			if isinstance(sender.Tag,list):	    
+				category = UnwrapElement(sender.Tag)
+			else:
+				category = [UnwrapElement(sender.Tag)]
+			try:
+				selfilt = selectionfilter(category)
+				sel = uidoc.Selection.PickObjects(Selection.ObjectType.Element,selfilt,'Select %s' %(', '.join([c.Name for c in category])))
+				selelem = [doc.GetElement(s.ElementId) for s in sel]
+				sender.Tag = (selelem)
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+
+	    def pickobjectofcat(self, sender, event):
+			for c in self.Controls:
+				c.Enabled = False
+			if isinstance(sender.Tag,list):	    
+				category = UnwrapElement(sender.Tag)
+			else:
+				category = [UnwrapElement(sender.Tag)]
+			try:
+				selfilt = selectionfilter(category)
+				sel = uidoc.Selection.PickObject(Selection.ObjectType.Element,selfilt,'Select %s' %(', '.join([c.Name for c in category])))
+				selelem = doc.GetElement(sel.ElementId) 
+				sender.Tag = (selelem)
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+			
+	    def pickfaces(self, sender, event):
+			faces = []	    	
+			for c in self.Controls:
+				c.Enabled = False
+			try:
+				selface = uidoc.Selection.PickObjects(Selection.ObjectType.Face,'')
+				for s in selface:
+					f = uidoc.Document.GetElement(s).GetGeometryObjectFromReference(s).ToProtoType(True)
+					[i.Tags.AddTag("RevitFaceReference", s) for i in f]
+					faces.append(f)
+				sender.Tag = [i for j in faces for i in j]
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+				
+	    def pickedges(self, sender, event):
+			edges = []
+			for c in self.Controls:
+				c.Enabled = False	
+			try:				
+				seledge = uidoc.Selection.PickObjects(Selection.ObjectType.Edge,'')
+				for s in seledge:
+					e = uidoc.Document.GetElement(s).GetGeometryObjectFromReference(s).AsCurve().ToProtoType(True)
+					e.Tags.AddTag("RevitFaceReference", s)
+					edges.append(e)
+				sender.Tag = edges
+			except:
+				pass
+			for c in self.Controls:
+				c.Enabled = True
+
+	    def colorpicker(self, sender, event):
+			dialog = ColorSelectionDialog()
+			selection = ColorSelectionDialog.Show(dialog)
+			selected = dialog.SelectedColor
+			sender.Tag = selected
+			sender.BackColor = Color.FromArgb(selected.Red,selected.Green,selected.Blue)
+			sender.ForeColor = Color.FromArgb(selected.Red,selected.Green,selected.Blue)
+	
+	    def topmost(self):
+			self.TopMost = True
+	
+	    def lvadd(self, sender, event):
+			sender.Tag = [i for i in sender.CheckedItems]
+			
+	    def scroll(self, sender, event):
+			parent = sender.Parent
+			child = parent.GetChildAtPoint(Point(0,5))
+			child.Text = str(sender.startval+sender.Value*sender.step)
+
+	    def openurl(self, sender, event):
+			webbrowser.open(sender.Tag)
+	
+	    def selectall(self, sender, event):
+			if sender.Checked:
+				parent = sender.Parent
+				listview = parent.GetChildAtPoint(Point(0,0))
+				for i in listview.Items:
+					i.Checked = True
+			else:
+				pass
+				
+	    def selectnone(self, sender, event):
+			if sender.Checked:
+				parent = sender.Parent
+				listview = parent.GetChildAtPoint(Point(0,0))
+				for i in listview.Items:
+					i.Checked = False
+			else:
+				pass		
+
+	    def updateallnone(self, sender, event):
+	    	try:
+	    		parent = sender.Parent
+	    		rball = parent.GetChildAtPoint(Point(0,sender.Height + 5))
+	    		rbnone = parent.GetChildAtPoint(Point(80,sender.Height + 5))
+	    		if sender.CheckedItems.Count == 0 and event.NewValue == CheckState.Unchecked:
+	    			rbnone.Checked = False
+	    			rball.Checked = False
+	    		elif sender.CheckedItems.Count == sender.Items.Count and event.NewValue == CheckState.Unchecked:
+	    			rball.Checked = False
+	    			rbnone.Checked = False
+	    		elif sender.CheckedItems.Count == sender.Items.Count-1 and event.NewValue == CheckState.Checked:
+	    			rball.Checked = True
+	    			rbnone.Checked = False
+	    		elif sender.CheckedItems.Count == 1 and event.NewValue == CheckState.Unchecked:
+	    			rball.Checked = False
+	    			rbnone.Checked = True	    	
+	    		else :
+	    			rball.Checked = False
+	    			rbnone.Checked = False
+	    	except:
+	    		pass
+
+	    def zoomcenter(self, sender, event ):
+			if event.X &gt; 15:	    
+				try:
+					uiviews = uidoc.GetOpenUIViews()
+					element = doc.GetElement(uidoc.Selection.GetElementIds()[0])
+					activeview = doc.ActiveView
+					bbox = element.get_BoundingBox(activeview)	
+					activeuiview = [v for v in uiviews if v.ViewId == activeview.Id][0]
+					activeuiview.ZoomAndCenterRectangle(bbox.Min, bbox.Max)
+					uidoc.RefreshActiveView()
+				except:
+					pass
+			else:
+				pass
+				
+			
+	    def setviewforelement(self, sender, event ):    
+			if event.X &gt; 15:	    		
+				try:
+					item = sender.GetItemAt(event.X,event.Y).Text
+					element = UnwrapElement(sender.Values[item])
+					try:
+						viewsforelement = [v for v in dbviews if (not v.IsTemplate) and (element.Id in [e.Id for e in FilteredElementCollector(doc,v.Id).OfClass(element.__class__).ToElements()])]
+					except:
+						viewsforelement = [v for v in dbviews if (not v.IsTemplate) and (element.Id in [e.Id for e in FilteredElementCollector(doc,v.Id).OfClass(FamilyInstance).ToElements()])]
+					global viewindex
+					dbView = viewsforelement[viewindex]
+					id = [element.Id]
+					icollection = iList[ElementId](id)
+					uidoc.Selection.SetElementIds(icollection)
+					if (viewindex &gt;= len(viewsforelement) -1) or not (element.Id in uidoc.Selection.GetElementIds()):
+						viewindex = 0
+					else:
+						viewindex += 1
+					uidoc.RequestViewChange(dbView)
+				except:
+					pass
+			else:	    
+				pass
+				
+			
+			
+
+
+	class mylistview(ListView):
+	
+		def __init__(self):
+			self.Values = []
+
+	class mytrackbar(TrackBar):
+	
+		def __init__(self,startval,step):
+			self.startval = startval
+			self.step = step
+			
+	class mygroupbox(GroupBox):
+	
+		def __init__(self):
+			self.Values = []
+	
+	#Form initialization
+	
+	form = MultiTextBoxForm()
+	form.topmost()	
+	form.ControlBox = False
+	xlabel = 25
+	xinput = 150
+	formy = 10
+	if IN[8] &gt; 350:	formwidth = IN[8]
+	else: formwidth = 350
+	fields = []
+	error = 0
+	
+	#Description 
+	
+	if IN[3] != "":
+		des = Label()
+		des.Font = Font("Arial", 15,FontStyle.Bold)
+		des.Location = Point(xlabel,formy)
+		des.AutoSize = True
+		des.MaximumSize = Size(formwidth - 2 * xlabel,0)
+		des.Text = IN[3]
+		form.Controls.Add(des)
+		formy = des.Bottom + 15
+	formheaderheight = formy
+	
+	#Input form
+	
+	# Create a container panel for all inputs
+	body = Panel()
+	body.Location = Point(0,formy)
+	body.Width = formwidth - 15
+	
+	
+	# Process form inputs
+	if isinstance(IN[0],list):
+		inputtypes = IN[0]
+	else:
+		inputtypes = [IN[0]]
+	# This definition is to handle the sorting of special characters
+	def remove_accents(input_str):
+	    nfkd_form = unicodedata.normalize('NFKD', input_str)
+	    only_ascii = nfkd_form.encode('ASCII', 'ignore')
+	    return only_ascii	
+
+	
+	def addinput(formbody,inputs,starty,xinput,rightmargin,labelsize,importcolorselection):
+		y = starty
+		for j in inputs:
+			label = Label()
+			label.Location = Point(xlabel,y+4)
+			label.AutoSize = True
+			label.MaximumSize = Size(labelsize,0)
+			if j.__class__.__name__ == 'listview' and j.element_count &gt; 0:
+				label.Text = j.inputname + '\n(' + str(j.element_count) + ' element' + ("s" if j.element_count &gt; 1 else "") + ')'
+			else:
+				label.Text = j.inputname
+			formbody.Controls.Add(label)
+	
+			if j.__class__.__name__ == 'dropdown':
+				cb = ComboBox()
+				if j.inputname != "":
+					cb.Width = formwidth - rightmargin - xinput
+					cb.Location = Point(xinput,y)
+				else:
+					cb.Width = formwidth - rightmargin - xlabel
+					cb.Location = Point(xlabel,y)
+				cb.Sorted = True
+				[cb.Items.Add(i) for i in j.keys() if not (i == 'inputname' or i == 'height' or i == 'defaultvalue' or i == 'highlight')]
+				cb.Tag = j
+				if j.defaultvalue != None:
+					defindex = [i for i in cb.Items].index([i for i in j.keys() if not (i == 'inputname' or i == 'height' or i == 'defaultvalue' or i == 'highlight')][j.defaultvalue])
+					cb.SelectedIndex = defindex
+				formbody.Controls.Add(cb)
+				form.output.append(cb)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'listview':
+				lvp = Panel()
+				if j.inputname != "":
+					lvp.Location = Point(xinput,y)
+					lvp.Width = formwidth - rightmargin - xinput				
+				elif j.inputname == "" and j.element_count != 0:
+					lvp.Location = Point(xlabel,y+35)
+					lvp.Width = formwidth - rightmargin - xlabel
+				else : 
+					lvp.Location = Point(xlabel,y)
+					lvp.Width = formwidth - rightmargin - xlabel				
+				lvp.Height = j.height + 25
+				#Creating the listview box
+				lv = mylistview()
+				lv.Scrollable = True
+				dummyheader = ColumnHeader()
+				dummyheader.Text = ""
+				dummyheader.Name = ""
+				dummyheader.Width = -2
+				lv.HeaderStyle = ColumnHeaderStyle.None
+				lv.Columns.Add(dummyheader)
+				lv.Values = j
+				if not j.display_mode:
+					lv.CheckBoxes = True
+				lv.View = vi.Details
+				lvItems =  [i for i in j.keys() if not (i == 'inputname' or i == 'height' or i == 'highlight' or i == 'display_mode' or i == 'element_count' or i == 'default_values' or i == 'sorted')]
+				if j.sorted :
+					lvItems = sorted(lvItems,key = remove_accents)
+				else:
+					pass
+				[lv.Items.Add(i) for i in lvItems]
+				lv.Location = Point(0,0)
+				if j.inputname != "" and j.element_count != 0:
+					lv.Width = formwidth - rightmargin - xinput
+				elif j.inputname != "" and j.element_count == 0:
+					lv.Width = formwidth - rightmargin - xinput
+				else:
+					lv.Width = formwidth - rightmargin - xlabel
+				lv.Height = j.height
+				lv.Scrollable = True
+				lv.ItemCheck += form.updateallnone
+				for i in j.default_values:
+					defInd = lvItems.index([x for x in j.keys() if not (x == 'inputname' or x == 'height' or x == 'highlight' or x == 'display_mode' or x == 'element_count' or x == 'default_values' or x == 'sorted')][i])
+					lv.Items[defInd].Checked = True
+				#Click listview items to hilight and center in appropriate view
+				if j.highlight :
+					lv.MouseDown += form.setviewforelement
+					lv.MouseUp += form.zoomcenter
+					items = list(lv.Items)
+					lv.FullRowSelect = True
+					del items[::2]
+					for item in items:
+						item.BackColor = Color.FromArgb(230,243,255)
+				#Creating select all and select none radiobuttons
+				if not j.display_mode:
+					rball = RadioButton()
+					rball.Location = Point(0,(j.height)+5)
+					rball.Width = 70
+					rball.Text = "Select all"
+					rball.Click += form.selectall
+					rbnone = RadioButton()
+					rbnone.Location = Point(80,(j.height)+5)
+					rbnone.Width = 90
+					rbnone.Text = "Select none"			
+					rbnone.Click += form.selectnone			
+				#Adding controls to panel
+				lvp.Controls.Add(lv)
+				if not j.display_mode:
+					lvp.Controls.Add(rball)
+					lvp.Controls.Add(rbnone)
+				formbody.Controls.Add(lvp)
+				if not j.display_mode:
+					form.output.append(lv)
+				y = lvp.Bottom + 25
+			elif j.__class__.__name__ == 'uitext':
+				tb = TextBox()
+				tb.Text = j.defaultvalue
+				if j.inputname != "":
+					tb.Width = formwidth  - rightmargin - xinput
+					tb.Location = Point(xinput,y)
+				else:
+					tb.Width = formwidth - rightmargin - xlabel
+					tb.Location = Point(xlabel,y)
+				formbody.Controls.Add(tb)
+				formbody.Controls.Add(label)
+				form.output.append(tb)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uitextnote':
+				gb = GroupBox()
+				gb.Text = j.title
+				gb.Parent = form
+				gb.SendToBack()
+				gb.BackColor = Color.Transparent
+				gb.Location = Point(xlabel, y)
+				tn = Label()
+				tn.Location = Point(xlabel,18)
+				tn.AutoSize = True
+				tn.MaximumSize = Size(formwidth - rightmargin - 45 ,0)
+				tn.Text = j.textnote
+				tn.BringToFront()
+				gb.Controls.Add(tn)
+				gb.Size = Size(formwidth  - rightmargin - 25, tn.Bottom-tn.Top+25)  
+				y = gb.Bottom + 25
+				formbody.Controls.Add(gb)
+			elif j.__class__.__name__ == 'uibool':
+				yn = CheckBox()
+				yn.Width = formwidth - xinput - rightmargin + 10
+				yn.Location = Point(xinput,y)
+				yn.Text = j.booltext
+				g = yn.CreateGraphics()
+				sizetext = g.MeasureString(yn.Text,yn.Font, formwidth - xinput - rightmargin -20)
+				heighttext = sizetext.Height
+				yn.Height = heighttext + 15
+				yn.Checked = j.defaultvalue
+				formbody.Controls.Add(yn)
+				form.output.append(yn)
+				y = yn.Bottom + 25
+			elif j.__class__.__name__ == 'uiradio':
+				yrb = 20
+				rbs = []
+				rbgroup = mygroupbox()
+				if j.inputname != "":
+					rbgroup.Width = formwidth - xinput - rightmargin
+					rbgroup.Location = Point(xinput,y)
+				else:
+					rbgroup.Width = formwidth - xlabel - rightmargin
+					rbgroup.Location = Point(xlabel,y)					
+				rbgroup.Tag = j
+				rbcounter = 0
+				for key in j.keys():
+					if key != 'inputname' and key != 'defaultvalue':
+						rb = RadioButton()
+						rb.Text = key 
+						if j.inputname != "":
+							rb.Width = formwidth - xinput - rightmargin - 35
+						else:
+							rb.Width = formwidth - xlabel - rightmargin - 35
+						rb.Location = Point(20,yrb)
+						if rbcounter == j.defaultvalue:
+							rb.Checked = True
+						rbgroup.Controls.Add(rb)
+						g = rb.CreateGraphics()
+						sizetext = g.MeasureString(key,rb.Font, formwidth - xinput - 90)
+						heighttext = sizetext.Height
+						rb.Height = heighttext + 15
+						ybot = rb.Bottom
+						yrb += heighttext + 12
+						rbcounter += 1
+					else:
+						pass
+				rbgroup.Height = ybot +20
+				[rbgroup.Controls.Add(rb) for rb in rbs]
+				formbody.Controls.Add(rbgroup)
+				form.output.append(rbgroup)
+				y = rbgroup.Bottom + 25
+			elif j.__class__.__name__  == 'uifilepath':
+				fp = Button()
+				if j.inputname != "":
+					fp.Width = formwidth - xinput - rightmargin
+					fp.Location = Point(xinput,y)
+				else:
+					fp.Width = formwidth - xlabel - rightmargin		
+					fp.Location = Point(xlabel,y)					
+				fp.Tag = j.defaultvalue
+				if j.defaultvalue == "FilePath":
+					fp.Text = j.buttontext
+				else:
+					fp.Text = j.defaultvalue
+				formbody.Controls.Add(fp)
+				fp.Click += form.openfile
+				form.output.append(fp)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uidirectorypath':
+				dp = Button()
+				if j.inputname != "":
+					dp.Width = formwidth - xinput - rightmargin
+					dp.Location = Point(xinput,y)
+				else:
+					dp.Width = formwidth - xlabel - rightmargin		
+					dp.Location = Point(xlabel,y)
+				dp.Tag = j.defaultvalue
+				if j.defaultvalue == "DirectoryPath":
+					dp.Text = j.buttontext
+				else:
+					dp.Text = j.defaultvalue
+				formbody.Controls.Add(dp)
+				dp.Click += form.opendirectory
+				form.output.append(dp)
+				y = label.Bottom + 30
+			elif j.__class__.__name__ == 'uiselectelements':
+				se = Button()
+				if j.inputname != "":
+					se.Width = formwidth - xinput - rightmargin
+					se.Location = Point(xinput,y)
+				else:
+					se.Width = formwidth - xlabel - rightmargin		
+					se.Location = Point(xlabel,y)
+				se.Text = j.buttontext
+
+				formbody.Controls.Add(se)
+				if j.multi == False:
+					se.Click += form.pickobjects
+				else:
+					se.Click  += form.pickobject
+				form.output.append(se)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiselectlinkedelements':
+				se = Button()
+				if j.inputname != "":
+					se.Width = formwidth - xinput - rightmargin
+					se.Location = Point(xinput,y)
+				else:
+					se.Width = formwidth - xlabel - rightmargin		
+					se.Location = Point(xlabel,y)
+				se.Text = j.buttontext
+				formbody.Controls.Add(se)
+				if j.multi == False:
+					se.Click += form.picklinkedobjects
+				else:
+					se.Click  += form.picklinkedobject
+				form.output.append(se)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiselectlinkedelementsofcat':
+				sec = Button()
+				if j.inputname != "":
+					sec.Width = formwidth - xinput - rightmargin
+					sec.Location = Point(xinput,y)
+				else:
+					sec.Width = formwidth - xlabel - rightmargin		
+					sec.Location = Point(xlabel,y)
+				sec.Text = j.buttontext
+				sec.Tag = j.category
+				formbody.Controls.Add(sec)
+				if j.multi == False:
+					sec.Click += form.picklinkedobjectsofcat
+				else:
+					sec.Click += form.picklinkedobjectofcat
+				form.output.append(sec)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiselectelementsofcat':
+				sec = Button()
+				if j.inputname != "":
+					sec.Width = formwidth - xinput - rightmargin
+					sec.Location = Point(xinput,y)
+				else:
+					sec.Width = formwidth - xlabel - rightmargin		
+					sec.Location = Point(xlabel,y)
+				sec.Text = j.buttontext
+				sec.Tag = j.category
+				formbody.Controls.Add(sec)
+				if j.multi == False:
+					sec.Click += form.pickobjectsofcat
+				else:
+					sec.Click += form.pickobjectofcat
+				form.output.append(sec)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiselectfaces':
+				sf = Button()
+				if j.inputname != "":
+					sf.Width = formwidth - xinput - rightmargin
+					sf.Location = Point(xinput,y)
+				else:
+					sf.Width = formwidth - xlabel - rightmargin		
+					sf.Location = Point(xlabel,y)
+				sf.Text = j.buttontext
+				formbody.Controls.Add(sf)
+				sf.Click += form.pickfaces
+				form.output.append(sf)
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiselectedges':
+				sed = Button()
+				if j.inputname != "":
+					sed.Width = formwidth - xinput - rightmargin
+					sed.Location = Point(xinput,y)
+				else:
+					sed.Width = formwidth - xlabel - rightmargin		
+					sed.Location = Point(xlabel,y)
+				sed.Text = j.buttontext
+				formbody.Controls.Add(sed)
+				sed.Click += form.pickedges
+				form.output.append(sed)
+				y = label.Bottom + 25
+				
+			elif j.__class__.__name__ == 'uislider':
+				gb = Panel()
+				if j.defaultvalue == '':
+					defval = j.minimum
+				else:
+					defval = j.defaultvalue
+				sl = mytrackbar(j.minimum,j.step)
+				if j.inputname != "":
+					gb.Width = formwidth - xinput - rightmargin
+					gb.Location = Point(xinput,y)
+				else:
+					gb.Width = formwidth - xlabel - rightmargin		
+					gb.Location = Point(xlabel,y)
+				gb.Height = 40
+				sl.Minimum = 0
+				sl.Maximum = (j.maximum-j.minimum)/j.step
+				sl.Value = (defval - j.minimum) / j.step
+				sl.TickFrequency = (j.maximum-j.minimum)/j.step/10
+				sl.Location = Point(40,0)
+				if j.inputname != "":
+					sl.Width = formwidth - xinput - rightmargin - 35
+				else:
+					sl.Width = formwidth - xlabel -rightmargin - 35
+				gb.Controls.Add(sl)
+				form.output.append(sl)
+				displabel = Label()
+				displabel.Width = 50
+				displabel.Location = Point(0,5)
+				displabel.Text = str(defval)
+				displabel.BringToFront()
+				gb.Controls.Add(displabel)	
+				formbody.Controls.Add(gb)			
+				sl.Scroll += form.scroll
+				y = label.Bottom + 25
+			elif j.__class__.__name__ == 'uiimage':
+				pic = Image.FromFile(j.image)
+				im = PictureBox()
+				if j.showborder:
+					im.BorderStyle = BorderStyle.Fixed3D
+				else:
+					im.BorderStyle = BorderStyle.None
+				ratio = (pic.Height)/(pic.Width)
+				h = float(pic.Height)
+				w = float(pic.Width)
+				ratio = h/w
+				image_maxsize = formwidth - xlabel - rightmargin
+				im.Size = Size(image_maxsize,image_maxsize*ratio)
+				scaledimage = Bitmap(image_maxsize,image_maxsize*ratio)
+				gr = Graphics.FromImage(scaledimage)
+				gr.DrawImage(pic,0,0,image_maxsize,image_maxsize*ratio)
+				im.Image = pic
+				im.SizeMode = PictureBoxSizeMode.Zoom
+				formbody.Controls.Add(im)
+				im.Location = Point(25,y+25)
+				y = im.Bottom + 25
+		
+			elif j.__class__.__name__ == 'uicolorpick' and importcolorselection == 0:
+				cp = Button()
+				if j.inputname != "":
+					cp.Width = formwidth - xinput - rightmargin
+					cp.Location = Point(xinput,y)
+				else:
+					cp.Width = formwidth - xlabel - rightmargin		
+					cp.Location = Point(xlabel,y)
+				cp.Text = j.buttontext
+				formbody.Controls.Add(cp)
+				cp.Click += form.colorpicker
+				form.output.append(cp)
+				y = label.Bottom + 25			
+			elif j.__class__.__name__ == 'uicolorpick' and importcolorselection == 1:
+				importcolorselection = 2
+			elif j.__class__.__name__ == 'uigroup':
+				grouppanel = GroupBox()
+				grouppanel.Text = j.groupname
+				grouppanel.Location = Point(xlabel,y)
+				grouppanel.Width = formwidth - 65
+				#recursive implementation of the definition to process grouped inputs
+				addinput(grouppanel,j.inputgroup,25,xinput-25,80,90,importcolorselection)
+				formbody.Controls.Add(grouppanel)
+				y = grouppanel.Bottom + 25
+			formbody.Height = y
+
+
+
+	# process input lists 
+	addinput(body,inputtypes,0,xinput,40,120,importcolorselection)
+	
+	#add the formbody panel to the form
+	form.Controls.Add(body)		
+	
+	#Adding Logo 
+	#default logo in case no input	
+	try:
+		if IN[4] != '':
+			try:
+				ima = Image.FromFile(IN[4])
+				bmp = Bitmap.FromFile(IN[4])
+			except:
+				ima = IN[4]
+				bmp = IN[4]
+
+		else :
+			dynamo = Assembly.Load('DynamoCore')
+			version = str(dynamo.GetName().Version)[:3]		
+			dynPath = os.getenv('APPDATA')+"\\Dynamo\Dynamo Revit\\" + version 
+			root = et.parse(dynPath + "\DynamoSettings.xml").getroot()
+			logopaths = []
+			for child in root:
+				if child.tag == "CustomPackageFolders":
+					for path in child:
+						logopaths.append(path.text + "\packages\ArupSF_Nodes\extra\\a.png")
+						logopaths.append(path.text + "\ArupSF_Nodes\extra\\a.png")
+			deflogopath = ""
+			for path in logopaths:
+				if deflogopath == "":
+					if os.path.isfile(path):
+						deflogopath = path
+						try:
+							ima = Image.FromFile(deflogopath)
+							bmp = Bitmap.FromFile(deflogopath)
+						except: 
+							pass
+		logo = Panel()
+		if IN[6] == None:
+			xlogo = 20
+			ylogo = formy+10
+		else:
+			xlogo = 30
+			ylogo = formy
+		size = 110
+		logo = PictureBox()
+		ratio = (ima.Height)/(ima.Width)
+		h = float(ima.Height)
+		w = float(ima.Width)
+		ratio = h/w
+		logo.Size = Size(size,size*ratio)
+		scaledimage = Bitmap(size,size*ratio)
+		gr = Graphics.FromImage(scaledimage)
+		gr.DrawImage(ima,0,0,size,size*ratio)
+		logo.Image = ima
+		logo.SizeMode = PictureBoxSizeMode.Zoom
+		form.Controls.Add(logo)
+		logo.Location = Point(xlogo,ylogo)
+		#Setting icon 
+		thumb = bmp.GetThumbnailImage(64, 64, bmp.GetThumbnailImageAbort,IntPtr.Zero)
+		thumb.MakeTransparent();
+		icon = Icon.FromHandle(thumb.GetHicon())
+		form.Icon = icon
+
+	except :
+		pass
+	if IN[6] != None:
+		if IN[8] &gt; 400:
+			formy += 50
+			xinput = 270
+		else:
+			formy = logo.Bottom + 20
+	else:
+		formy += 50
+
+
+
+	#Adding validation button
+	
+	button = Button()
+	button.Text = IN[1]
+	button.Width = formwidth - xinput - 40
+	button.Location = Point (xinput,formy)
+	button.Click += form.setclose
+	form.Controls.Add(button)
+	form.MaximizeBox = False
+	form.MinimizeBox = False
+	form.FormBorderStyle = FormBorderStyle.FixedSingle
+	
+	#Adding Cancel button
+	if IN[6] != None:
+		cancelbutton = Button()
+		cancelbutton.Text = IN[6]
+		cancelbutton.Width = 120
+		cancelbutton.Name = "Cancel"
+		cancelbutton.Location = Point (xinput -120 ,formy)
+		cancelbutton.Click += form.setclose
+		form.Controls.Add(cancelbutton)
+		form.CancelButton = cancelbutton
+	
+	#Adding link to help
+	
+	if IN[5] != None :
+		helplink = LinkLabel()
+		helplink.Text = "Help"
+		helplink.Tag = IN[5]
+		helplink.Click += form.openurl
+		helplink.Location = Point(formwidth - 65,formy+30)
+		form.Controls.Add(helplink)
+	else:
+		pass	
+			
+	form.ShowIcon = True
+	form.Width = formwidth
+	form.Height = formy + 120
+	formfooterheight = form.Height - formheaderheight
+	
+	# Make formbody scrollable
+	
+	# if the form is longer than its maximum height, do the following:
+	# modify the form height
+	# make the formbody panel scrollable
+	if form.Height + body.Height &gt; IN[7] and IN[7] &gt; 0:
+		formbody_calculatedheight = IN[7] - form.Height
+		# make sure the formbody is at least 100 px high
+		if formbody_calculatedheight &lt; 100: formbody_calculatedheight = 100
+		body.Height = formbody_calculatedheight
+		form.Height = form.Height + formbody_calculatedheight
+		# this (and apparently only this) will implement a vertical AutoScroll *only*
+		# http://stackoverflow.com/a/28583501
+		body.HorizontalScroll.Maximum = 0
+		body.AutoScroll = False
+		body.VerticalScroll.Visible = False
+		body.AutoScroll = True
+		body.BorderStyle = BorderStyle.Fixed3D
+	else:
+		form.Height = form.Height + body.Height
+	# Move footer elements
+	logo.Location = Point(logo.Location.X, logo.Location.Y + body.Height)
+	button.Location = Point(button.Location.X, button.Location.Y + body.Height)
+	if IN[6] != None: cancelbutton.Location = Point(cancelbutton.Location.X, cancelbutton.Location.Y + body.Height)
+	if IN[5] != None: helplink.Location = Point(helplink.Location.X, helplink.Location.Y + body.Height)
+
+	#Positionning the form at top left of current view
+	uiviews = uidoc.GetOpenUIViews()
+	if doc.ActiveView.IsValidType(doc.ActiveView.GetTypeId()):
+		activeviewid = doc.ActiveView.Id
+		activeUIView = [v for v in uiviews if v.ViewId == activeviewid][0]
+	else:
+		activeUIView = uiviews[0]
+	rect = activeUIView.GetWindowRectangle()
+	form.StartPosition = FormStartPosition.Manual
+	form.Location = Point(rect.Left-7,rect.Top)
+		
+	if IN[2]:
+		if importcolorselection != 2:
+			Application.Run(form)
+			result = form.values
+			OUT = result,True, form.cancelled
+		else:
+			OUT = ['ColorSelection input is only available With Revit 2017'] , False, False
+	else :
+		OUT = ['Set toggle to true!'] , False, False
+except:
+	import traceback
+	OUT = traceback.format_exc() , "error", "error"
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="35487104-3114-4073-80fa-ae4953fe8afa" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1685.03267898099" y="249.630864616374" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="User Inputs" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="469da622-3d6e-4ded-b8a7-367c37e21789" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1273.55806123264" y="170.90643807402" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="OUT[0];&#xA;OUT[1];&#xA;OUT[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="5117e6d8-0d0d-41f2-b435-0890eb762f49" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1689.03267898099" y="359.630864616374" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Was Run " />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7823d885-9f07-4652-821b-87c1b1c45a39" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1690.13847322233" y="436.151401320234" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Was Cancelled" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e2a5eb36-fd00-4442-855f-6d7763560d6c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="766.326752156544" y="190.021775688342" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Description_optional : string = &quot;&quot; " />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0510afb5-455e-4933-bc79-4b0b7bd8af49" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="700.528520055664" y="247.935948434725" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ButtonText_optional : string = &quot;Set Values&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0609d7ea-e03a-4eb5-a68e-74d26dfbcd71" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="733.241636720473" y="359.717730491945" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Logo_optional : var = &quot;&quot;;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b8823555-a1fd-437e-a47b-345e6865c158" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="984.289131589245" y="333.788329644157" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Inputs" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="cb02ee2b-ca05-4f5e-bcff-519b003592b9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="867.386249130329" y="443.286071152929" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Toggle : bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c5138d55-3e14-4830-a7e2-c33a07910e49" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="764.105929864531" y="523.442850655363" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="LinkToHelp_optional : string = null" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f5fc9f4d-d438-46b8-90a1-4b7917d6f932" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="457" y="618.033643752485" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="// Cancel button will only be displayed if a label text is entered here&#xD;&#xA;CancelButtonText_optional : string = null" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="eec65ed6-6e97-4d62-a2cd-8b7b0370eaf4" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="813.562191476155" y="707.46578238562" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="MaxHeight_optional : int = 0" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="7c6c054e-282c-4c5c-85c9-e0b136fed63a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="809.457299825951" y="787.085188946274" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Width_optional : int = 350" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" start_index="0" end="469da622-3d6e-4ded-b8a7-367c37e21789" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="469da622-3d6e-4ded-b8a7-367c37e21789" start_index="0" end="35487104-3114-4073-80fa-ae4953fe8afa" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="469da622-3d6e-4ded-b8a7-367c37e21789" start_index="1" end="5117e6d8-0d0d-41f2-b435-0890eb762f49" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="469da622-3d6e-4ded-b8a7-367c37e21789" start_index="2" end="7823d885-9f07-4652-821b-87c1b1c45a39" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e2a5eb36-fd00-4442-855f-6d7763560d6c" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0510afb5-455e-4933-bc79-4b0b7bd8af49" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0609d7ea-e03a-4eb5-a68e-74d26dfbcd71" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="4" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b8823555-a1fd-437e-a47b-345e6865c158" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="cb02ee2b-ca05-4f5e-bcff-519b003592b9" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c5138d55-3e14-4830-a7e2-c33a07910e49" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="5" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f5fc9f4d-d438-46b8-90a1-4b7917d6f932" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="6" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="eec65ed6-6e97-4d62-a2cd-8b7b0370eaf4" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="7" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7c6c054e-282c-4c5c-85c9-e0b136fed63a" start_index="0" end="6ff4fa22-aaf5-47ad-8d09-8e4dc6445e12" end_index="8" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

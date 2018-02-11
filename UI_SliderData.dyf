@@ -1,0 +1,64 @@
+<Workspace Version="1.3.2.2480" X="-140.694102769393" Y="-412.880991167938" zoom="0.765829392851552" ScaleFactor="1" Name="UI_SliderData" Description="" ID="61a253cc-df17-411e-9d76-d93cb60c7689" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.List.Empty" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <PythonNodeModels.PythonNode guid="fae85935-c94a-4570-a6f5-2553c180c3fc" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1267.68186863197" y="1099.48769533695" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="5">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <Script>class uislider():
+
+    def __init__(self,inputname,minimum,maximum,defaultvalue,step):
+        self.inputname = inputname
+        self.minimum = minimum
+        self.maximum = maximum
+        self.defaultvalue = defaultvalue
+        self.step = step
+
+    def __repr__(self):
+        return 'UI.IntegerSlider input'
+        
+x = uislider(IN[0],IN[1],IN[2],IN[3],IN[4])
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="03a72cf7-7376-4c86-97de-cdfc707008c5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1465.68186863197" y="1095.89416002682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Slider input" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="ed49be6a-57e6-4ce2-b3e5-8eb9e3b23f2e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="702.131842244529" y="960.894160026815" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="InputName : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="7feb5d10-8160-426f-8912-973c7a54f4e8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="685.131842244529" y="1204.89416002682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Default_Value : var = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1b626d56-852f-45ec-bac7-01db510d8297" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="788.131842244529" y="1035.89416002682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Minimum" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e758b8a9-aefe-478b-92c2-b0d2324216cf" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="793.131842244529" y="1121.89416002682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Maximum" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="960cd411-88d9-4bdd-b233-c048c8319750" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="758.131842244529" y="1319.89416002682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Step : var = 1" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="fae85935-c94a-4570-a6f5-2553c180c3fc" start_index="0" end="03a72cf7-7376-4c86-97de-cdfc707008c5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ed49be6a-57e6-4ce2-b3e5-8eb9e3b23f2e" start_index="0" end="fae85935-c94a-4570-a6f5-2553c180c3fc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7feb5d10-8160-426f-8912-973c7a54f4e8" start_index="0" end="fae85935-c94a-4570-a6f5-2553c180c3fc" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1b626d56-852f-45ec-bac7-01db510d8297" start_index="0" end="fae85935-c94a-4570-a6f5-2553c180c3fc" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e758b8a9-aefe-478b-92c2-b0d2324216cf" start_index="0" end="fae85935-c94a-4570-a6f5-2553c180c3fc" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="960cd411-88d9-4bdd-b233-c048c8319750" start_index="0" end="fae85935-c94a-4570-a6f5-2553c180c3fc" end_index="4" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

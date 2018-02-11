@@ -1,0 +1,49 @@
+<Workspace Version="1.3.2.2480" X="-182" Y="-132" zoom="1" ScaleFactor="1" Name="UI_BooleanData" Description="UI Boolean" ID="fd182e31-afb2-4645-8336-52f69bdb7c21" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="30cbff20-f699-428c-97e9-efe81c8b86f1" type="PythonNodeModels.PythonNode" nickname="Python Script" x="846" y="406" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>class uibool():
+
+    def __init__(self,inputname,defaultvalue,booltext):
+        self.inputname = inputname
+        self.defaultvalue = defaultvalue
+        self.booltext = booltext
+    def __repr__(self):
+        return 'UI.Boolean input'
+        
+      
+x = uibool(IN[0],IN[1],IN[2])
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="591e36fe-5664-4d60-9f89-4a66f696d285" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1046" y="442" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Boolean input" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="ea66f206-2c20-4b00-ad0a-193a202207e8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="517" y="458" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="DefaultValue : bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="2109d550-db12-49b0-aa88-15cc7fa385ba" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="506" y="363" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="InputName : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="82c1dc35-d6ef-416a-a7f8-042808423e68" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="506" y="531" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="SideText : string = &quot;Yes/No&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="30cbff20-f699-428c-97e9-efe81c8b86f1" start_index="0" end="591e36fe-5664-4d60-9f89-4a66f696d285" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ea66f206-2c20-4b00-ad0a-193a202207e8" start_index="0" end="30cbff20-f699-428c-97e9-efe81c8b86f1" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="2109d550-db12-49b0-aa88-15cc7fa385ba" start_index="0" end="30cbff20-f699-428c-97e9-efe81c8b86f1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="82c1dc35-d6ef-416a-a7f8-042808423e68" start_index="0" end="30cbff20-f699-428c-97e9-efe81c8b86f1" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

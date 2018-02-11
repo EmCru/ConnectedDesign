@@ -1,0 +1,56 @@
+<Workspace Version="1.3.2.2480" X="-824.256021965592" Y="-284.916133378138" zoom="1.27771698410772" ScaleFactor="1" Name="Sched_Get Column Width" Description="Get the Width of schedule on sheet" ID="f343e341-3684-4602-a22b-6b1b4c3ea34a" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="33738785-ee15-477e-949e-da8da5adeb9b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1191.21593477239" y="438" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+viewsch = UnwrapElement(IN[0])
+elementlist = list()
+viewlist = []
+for v in viewsch:
+	wid=[]
+	a=v.GetTableData()
+	b=a.GetSectionData(SectionType.Body)
+	c=b.NumberOfColumns
+	n=0
+	while n &lt;= c-1:
+		d=b.GetColumnWidth(n)
+		wid.append(d)
+		n=n+1
+	
+	viewlist.append(wid)
+	elementlist.append(wid)
+
+OUT = viewlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="6515d974-ee24-42c6-87ff-7e168bd052ac" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="961" y="439.933079068111" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({a});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="fa776c03-65fc-4a99-bda0-fbe4107c723e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="750.242656105604" y="440.803320132006" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Sched_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="30366ee1-6372-4598-8ac1-c0db8a9eb008" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1487.21593477239" y="438" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="DataOut" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="33738785-ee15-477e-949e-da8da5adeb9b" start_index="0" end="30366ee1-6372-4598-8ac1-c0db8a9eb008" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6515d974-ee24-42c6-87ff-7e168bd052ac" start_index="0" end="33738785-ee15-477e-949e-da8da5adeb9b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fa776c03-65fc-4a99-bda0-fbe4107c723e" start_index="0" end="6515d974-ee24-42c6-87ff-7e168bd052ac" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

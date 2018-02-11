@@ -1,0 +1,219 @@
+<Workspace Version="1.3.2.2480" X="-412" Y="-181" zoom="1" ScaleFactor="1" Name="SpaceCoord_Manager" Description="Tracks Associated Rooms and updates.  " ID="88609c90-da8d-41db-a5b5-0092dea08394" Category="ArupBimSF.Revit.Mep_Spaces">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="1edbf373-5e98-4345-91eb-ad8ccf80dbde" type="PythonNodeModels.PythonNode" nickname="Python Script" x="957" y="513" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+import math
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+from System.Collections.Generic import List
+
+linkdoc = IN[0]
+phase = UnwrapElement(IN[1])
+
+collector = FilteredElementCollector(doc)
+levels = collector.OfClass(Level).ToElements()
+	
+leveldict2 = {}
+for level in levels:
+	leveldict2[math.ceil((level.Elevation+0.5)*100)/100] = level
+	
+collector2 = FilteredElementCollector(doc)
+spaces = collector2.OfCategory(BuiltInCategory.OST_MEPSpaces).ToElements()
+
+collector3 = FilteredElementCollector(linkdoc)
+rooms = collector3.OfCategory(BuiltInCategory.OST_Rooms).ToElements()
+
+spacedict = {}
+for x in spaces:
+	spacedict[x.Number] = x
+
+roomdict = {}
+for x in rooms:
+	if x.Location != None:
+		roomdict[x.Number] = x
+
+
+spacenumbers = [x.Number for x in spaces]
+roomnumbers = [x.Number for x in rooms if x.Location != None]
+spaceset = set(spacenumbers)
+roomset = set(roomnumbers)
+
+replace = spaceset.intersection(roomset)
+delete = spaceset.difference(roomset)
+newrooms = roomset.difference(spaceset)
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+for x in delete:
+	space = spacedict[x]
+	doc.Delete(space.Id)
+TransactionManager.Instance.TransactionTaskDone()
+
+newspaces = []
+remains = []
+moved = []
+newlocations = []
+
+newrooms2 = []
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+for x in newrooms:
+	room = roomdict[x]
+	roomelev = math.ceil((room.Level.Elevation+0.5)*100)/100
+	level = leveldict2[roomelev]
+	
+	try:
+		newrooms2.append(room)
+		loc = room.Location.Point
+		newspace = doc.Create.NewSpace(level,phase,UV(loc.X,loc.Y))
+		newspaces.append(newspace)
+	except:
+		newspaces.append("failed new space creation for room: "+ x)
+TransactionManager.Instance.TransactionTaskDone()
+
+
+
+options = CopyPasteOptions()
+elementlist = List[ElementId]()
+	
+TransactionManager.Instance.EnsureInTransaction(doc)
+for x in replace:
+	space = spacedict[x]
+	number = space.Number
+	roomnumber = space.get_Parameter(BuiltInParameter.SPACE_ASSOC_ROOM_NUMBER).AsString()
+	room = roomdict[x]
+	posroom = room.Location.Point
+	posspace = space.Location.Point
+	
+	if number != roomnumber:
+		newlocations.append(number)
+		if round(space.Level.Elevation) != round(room.Level.Elevation):
+		#if room moved to a different level: copy space to that level and delete the old one.
+			#copy space to room's level
+			elementlist.Add(space.Id)
+			OffsetZ = (math.ceil((space.Level.Elevation+0.5)*100)/100) - (math.ceil(room.Level.Elevation*100)/100)*-1
+			OffsetX = (posspace.X - posroom.X)*-1
+			OffsetY = (posspace.Y - posroom.Y)*-1
+			direction = XYZ(OffsetX,OffsetY,OffsetZ)
+			trans = Transform.CreateTranslation(direction)
+			newspace = ElementTransformUtils.CopyElements(doc,elementlist,doc,trans,options)
+			elementlist.Clear()
+
+			#delete space
+			doc.Delete(space.Id)
+		else:
+		#otherwise just move it to the new location on the same level
+			newloc = XYZ(posroom.X,posroom.Y,posroom.Z)
+			try:
+				space.Location.Point = newloc
+			except:
+				pass
+	else:
+		if posspace.DistanceTo(posroom) &lt; 10/304.8:
+			remains.append(number)
+		else:
+			OffsetX = (posspace.X - posroom.X)*-1
+			OffsetY = (posspace.Y - posroom.Y)*-1
+			direction = XYZ(OffsetX,OffsetY,0)
+			ElementTransformUtils.MoveElement(doc,space.Id,direction)
+		
+			#newloc = XYZ(posroom.X,posroom.Y,posroom.Z)
+			#posspace = newloc
+			moved.append(number)
+			elementlist.Clear()
+TransactionManager.Instance.TransactionTaskDone()
+
+newspaces2 = []
+TransactionManager.Instance.EnsureInTransaction(doc)
+for space,room in zip(newspaces,newrooms2):
+	try:
+		space.LimitOffset = room.LimitOffset
+	except:
+		pass
+	space.Number = room.Number
+
+	newspaces2.append(space.ToDSType(False))
+TransactionManager.Instance.TransactionTaskDone()
+
+#Assign your output to the OUT variable.
+OUT = delete,newspaces2,newlocations,moved,remains</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d919611f-24a8-4e75-8274-188cc147721e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="783" y="471" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="LinkDoc" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="72b0df13-9bad-453f-a52f-a20f3797b968" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="789.879213252265" y="589.83786501154" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Phase" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="a54c3563-b302-448a-9346-e74a154dab96" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1164" y="468" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[0];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d0f038ad-4bdd-41f7-8c45-4fd2dd9d3958" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1337" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Deleted Spaces" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="52d3f724-41ee-45c8-abd8-3ee1107a7c6d" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1210" y="579" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="17b6d960-06da-4a57-a917-665f54c875fa" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1383" y="575" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="New Spaces" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="09787e0a-8098-4498-a0a2-a6ba9e2df04f" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1194" y="672" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f9eb9639-d41f-4fa0-ba2a-ebf6bab1f71d" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1367" y="668" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Moved to new location" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="9b2a83a1-d825-40bc-8d0a-974d1dfbb98c" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1211" y="766" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[3];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="49a4f0b9-7d94-4d70-9cad-0a277181d2b5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1384" y="762" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Moved in same location" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="4f12e28c-4eec-4781-9ac5-fa0db14b6455" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1203" y="851" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[4];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="111f0d11-2746-413d-857c-a0c806316ec2" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1376" y="847" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="No changes" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="1edbf373-5e98-4345-91eb-ad8ccf80dbde" start_index="0" end="a54c3563-b302-448a-9346-e74a154dab96" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1edbf373-5e98-4345-91eb-ad8ccf80dbde" start_index="0" end="52d3f724-41ee-45c8-abd8-3ee1107a7c6d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1edbf373-5e98-4345-91eb-ad8ccf80dbde" start_index="0" end="09787e0a-8098-4498-a0a2-a6ba9e2df04f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1edbf373-5e98-4345-91eb-ad8ccf80dbde" start_index="0" end="9b2a83a1-d825-40bc-8d0a-974d1dfbb98c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1edbf373-5e98-4345-91eb-ad8ccf80dbde" start_index="0" end="4f12e28c-4eec-4781-9ac5-fa0db14b6455" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d919611f-24a8-4e75-8274-188cc147721e" start_index="0" end="1edbf373-5e98-4345-91eb-ad8ccf80dbde" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="72b0df13-9bad-453f-a52f-a20f3797b968" start_index="0" end="1edbf373-5e98-4345-91eb-ad8ccf80dbde" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a54c3563-b302-448a-9346-e74a154dab96" start_index="0" end="d0f038ad-4bdd-41f7-8c45-4fd2dd9d3958" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="52d3f724-41ee-45c8-abd8-3ee1107a7c6d" start_index="0" end="17b6d960-06da-4a57-a917-665f54c875fa" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="09787e0a-8098-4498-a0a2-a6ba9e2df04f" start_index="0" end="f9eb9639-d41f-4fa0-ba2a-ebf6bab1f71d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9b2a83a1-d825-40bc-8d0a-974d1dfbb98c" start_index="0" end="49a4f0b9-7d94-4d70-9cad-0a277181d2b5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4f12e28c-4eec-4781-9ac5-fa0db14b6455" start_index="0" end="111f0d11-2746-413d-857c-a0c806316ec2" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

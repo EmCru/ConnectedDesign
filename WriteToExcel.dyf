@@ -1,0 +1,49 @@
+<Workspace Version="1.3.2.2480" X="96.6580051893786" Y="99.0382992481918" zoom="0.635248340448616" ScaleFactor="1" Name="Write➜Excel" Description="Writes input data to excel quickly.  Same as OOTB node with added presets for variables" ID="906c346f-0d8b-46c0-ab41-390c9c31ade2" Category="ArupBimSF.Data Transfer">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSOffice.Excel" resolvedName="DSOffice.Excel" assemblyName="DSOffice.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7de8efd1-d830-4a0f-a340-8fb200067a6a" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1467.03758046441" y="223.621342135804" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Data" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="53fec313-7d10-451d-8aa6-2d643463b22d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="507.12221643378" y="209.624409820206" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="File_Path" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f664a910-1338-40c7-b0b5-1f3e28e71e02" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="507.596674213394" y="291.256743033186" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="SheetName : string = &quot;Sheet1&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="74197bc8-a55b-4b07-a5df-49589c556f68" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="510.030210696017" y="371.351353294766" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="StartRow : int = 1" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6ccc2ede-1e6a-44fb-92aa-d0a5fa95d951" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="511.37866799499" y="467.801262381377" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="StartCol : int = 1" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="61225f5d-e5f1-431b-a2d5-d776039243fb" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="521.217887276716" y="586.711753061491" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Data_In : var[][]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a7b50214-79b6-477c-9d11-9a5e06067ca5" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="505.401958516647" y="687.410915141904" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="OverWrite : bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="7f7675d6-b185-469a-ad75-7061bcbfee3d" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="898.196880725213" y="226.345484704251" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="t7 = DSOffice.Excel.WriteToFile(t1, t2, t3, t4, t5, t6);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <PortInfo index="5" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="53fec313-7d10-451d-8aa6-2d643463b22d" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f664a910-1338-40c7-b0b5-1f3e28e71e02" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="74197bc8-a55b-4b07-a5df-49589c556f68" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6ccc2ede-1e6a-44fb-92aa-d0a5fa95d951" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="61225f5d-e5f1-431b-a2d5-d776039243fb" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="4" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a7b50214-79b6-477c-9d11-9a5e06067ca5" start_index="0" end="7f7675d6-b185-469a-ad75-7061bcbfee3d" end_index="5" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7f7675d6-b185-469a-ad75-7061bcbfee3d" start_index="0" end="7de8efd1-d830-4a0f-a340-8fb200067a6a" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

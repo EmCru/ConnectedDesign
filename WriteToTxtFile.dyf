@@ -1,0 +1,47 @@
+<Workspace Version="1.3.2.2480" X="-182.744355296068" Y="-262.070940952108" zoom="1.37758335255867" ScaleFactor="1" Name="Write➜TxtFile" Description="Write input text data to a file (txt,doc,csv)" ID="0035fc9d-e3fa-482b-a067-66f1b7380a8d" Category="ArupBimSF.Data Transfer">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="b57e73f6-e9e1-4b32-87f5-fdbb1efa1834" type="PythonNodeModels.PythonNode" nickname="Python Script" x="853" y="471" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>#Copyright © 2016, Lingkon
+# @Lingkon, lingkonn@gmail.com
+###############################
+filePath =IN[0]
+data = IN[1]
+import sys
+sys.path.append(r'C:\Program Files (x86)\IronPython 2.7\Lib')
+TextFile=open(filePath,'w')
+TextFile.write("\n".join(data))
+TextFile.close()
+OUT = ':)'</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7d0784b5-58ad-4413-b55e-fbc17df5ff61" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1050" y="471" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="void" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1d9632be-596f-4180-9e76-a9c726042f76" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="346.045006686015" y="386.99364892524" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//File Path to write&#xD;&#xA;//Example C:\Users\Lingkon\Desktop\Sample.txt&#xD;&#xA;filePath:string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <CoreNodeModels.FromObject guid="6a95a15b-203e-41e4-b6e1-002041488a71" type="CoreNodeModels.FromObject" nickname="String from Object" x="639" y="535" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+    </CoreNodeModels.FromObject>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8ec56030-709b-4e4a-af3e-c5cfa63d60c1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="600" y="640" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="reset:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8e754221-a050-415c-9cd4-793b0e649b72" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="335" y="539" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="data" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b57e73f6-e9e1-4b32-87f5-fdbb1efa1834" start_index="0" end="7d0784b5-58ad-4413-b55e-fbc17df5ff61" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1d9632be-596f-4180-9e76-a9c726042f76" start_index="0" end="b57e73f6-e9e1-4b32-87f5-fdbb1efa1834" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6a95a15b-203e-41e4-b6e1-002041488a71" start_index="0" end="b57e73f6-e9e1-4b32-87f5-fdbb1efa1834" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8ec56030-709b-4e4a-af3e-c5cfa63d60c1" start_index="0" end="b57e73f6-e9e1-4b32-87f5-fdbb1efa1834" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8e754221-a050-415c-9cd4-793b0e649b72" start_index="0" end="6a95a15b-203e-41e4-b6e1-002041488a71" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

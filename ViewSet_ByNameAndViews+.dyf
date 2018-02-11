@@ -1,0 +1,83 @@
+<Workspace Version="1.3.2.2480" X="-681.237111585234" Y="-279.275738576953" zoom="1.78359936238281" ScaleFactor="1" Name="ViewSet_ByNameAndViews+" Description="Creates a viewset/Sheetset by input name list and input views" ID="e0eb6cc8-c6c7-4c7c-8c82-136b5f39e3d8" Category="ArupBimSF.Revit.Document">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="9f2bdcfa-18ea-4f3e-9d3c-e1b7216bebc5" type="PythonNodeModels.PythonNode" nickname="Python Script" x="962.8" y="376" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__") : return obj1
+	else : return [obj1]
+
+def first(obj1):
+	if hasattr(obj1,'__iter__') : return obj1[0]
+	else : return obj1
+
+views = UnwrapElement(tolist(IN[0]))
+name1 = str(first(IN[1]) )
+overwrite = IN[2]
+vs_exists = None
+
+fec = FilteredElementCollector(doc).OfClass(ViewSheetSet).GetElementIterator()
+fec.Reset()
+for f in fec:
+	if f.Name == name1:
+		vs_exists = f
+		break
+if vs_exists != None and overwrite:
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	doc.Delete(vs_exists.Id)
+	TransactionManager.Instance.TransactionTaskDone()
+	vs_exists = None
+elif vs_exists != None and not overwrite:
+	OUT = "There's a ViewSet with the same name.\nSet Overwrite to true to continue."
+if vs_exists == None:
+	vs1 = ViewSet()
+	for v in views: (vs1.Insert(v))
+	printMan = doc.PrintManager
+	printMan.PrintRange = PrintRange.Select
+	viewSS = printMan.ViewSheetSetting
+	try:
+		TransactionManager.Instance.EnsureInTransaction(doc)
+		viewSS.CurrentViewSheetSet.Views = vs1
+		viewSS.SaveAs(name1)
+		TransactionManager.Instance.TransactionTaskDone()
+		OUT = "ViewSet created with %s views inside." %len(views)
+	except:
+		OUT = "The ViewSet could not be created"</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="af7c74cb-d03e-452c-a810-fde1c5a98eb3" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1113.8" y="376.8" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="result" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e5c6fe55-9354-4281-a4af-312e5335e869" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="604.215083828625" y="288.13792871283" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="views:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="9271b78b-78e5-48eb-8312-66fa70d8ccfb" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="608.113676567856" y="399.013280528022" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="setName: string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="51018858-565b-4834-9edd-07d72b712bbf" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="662.900901650301" y="523.869217161649" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Overwrite:bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9f2bdcfa-18ea-4f3e-9d3c-e1b7216bebc5" start_index="0" end="af7c74cb-d03e-452c-a810-fde1c5a98eb3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e5c6fe55-9354-4281-a4af-312e5335e869" start_index="0" end="9f2bdcfa-18ea-4f3e-9d3c-e1b7216bebc5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9271b78b-78e5-48eb-8312-66fa70d8ccfb" start_index="0" end="9f2bdcfa-18ea-4f3e-9d3c-e1b7216bebc5" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="51018858-565b-4834-9edd-07d72b712bbf" start_index="0" end="9f2bdcfa-18ea-4f3e-9d3c-e1b7216bebc5" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

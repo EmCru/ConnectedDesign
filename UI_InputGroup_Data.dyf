@@ -1,0 +1,44 @@
+<Workspace Version="1.3.2.2480" X="6.72412631311641" Y="61.9958116228328" zoom="0.496186487382813" ScaleFactor="1" Name="UI_InputGroup_Data" Description="*See Data Shapes" ID="3a407baa-7602-4b42-8e8b-159eec8e43c9" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="a458b5ec-2020-40ac-a2a7-f263ce11b275" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1172.35746577806" y="514.813340369984" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>class uigroup():
+
+    def __init__(self,inputname,groupname,inputgroup):
+    	self.inputname = inputname
+        self.groupname = groupname
+        self.inputgroup = inputgroup
+
+    def __repr__(self):
+        return 'UI.InputGroup'
+        
+x = uigroup("",IN[0],IN[1])
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="235e628d-9df1-4553-81a2-60c96763c979" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1371.35746577806" y="514.813340369984" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Input Group " />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="2cf9c304-a6ed-45e4-8608-bc6ffae6ee64" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="815.5" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="GroupTitle : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="58934d9b-e63b-44e1-82ec-455e4a635dd6" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="890.225500544095" y="619.978040043527" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Inputs" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="a458b5ec-2020-40ac-a2a7-f263ce11b275" start_index="0" end="235e628d-9df1-4553-81a2-60c96763c979" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="2cf9c304-a6ed-45e4-8608-bc6ffae6ee64" start_index="0" end="a458b5ec-2020-40ac-a2a7-f263ce11b275" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="58934d9b-e63b-44e1-82ec-455e4a635dd6" start_index="0" end="a458b5ec-2020-40ac-a2a7-f263ce11b275" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

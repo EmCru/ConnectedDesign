@@ -1,0 +1,100 @@
+<Workspace Version="1.3.2.2480" X="-77" Y="-117" zoom="1" ScaleFactor="1" Name="SharedParameter_Add from txt File" Description="adds a shared parameter you project from input shared parameter txt file_!pa!shp!edb_^FixMe_Fix to access the linked SHP txt file by default but allow for input path as well" ID="8ed4c4c5-f56f-4db9-88dd-90527c10f345" Category="ArupBimSF.Revit.Parameters">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" type="PythonNodeModels.PythonNode" nickname="Python Script" x="864.766738660907" y="441.876889848812" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="4">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <Script>import clr
+import System
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import*
+clr.AddReference('RevitServices')
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+clr.AddReference('RevitAPIUI')
+from Autodesk.Revit.UI import *
+from Autodesk.Revit import Creation
+
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uidoc = DocumentManager.Instance.CurrentUIDocument
+app = doc.Application
+
+
+if isinstance(IN[0], list):
+	category = [i for i in IN[0]]
+else:
+	category= [IN[0]]
+	
+#getting list of categories
+try:
+	categories = [doc.Settings.Categories.get_Item(System.Enum.ToObject(BuiltInCategory, i.Id)) for i in category]
+except:
+	categories = [UnwrapElement(i) for i in category]
+	
+#creating category set
+catset = app.Create.NewCategorySet()
+[catset.Insert(j) for j in categories]
+
+if isinstance(IN[1], list):
+	parameters = [i for i in IN[1]]
+else:
+	parameters = [IN[1]]
+	
+try:
+	group = [a for a in System.Enum.GetValues(BuiltInParameterGroup) if a == IN[2]][0]
+except:
+	group = [a for a in System.Enum.GetValues(BuiltInParameterGroup) if str(a) == IN[2]][0]
+i = 0
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+#Determining whether the parameters are type or instance
+if IN[3]:
+	bind = app.Create.NewInstanceBinding(catset)
+else : 
+	bind = app.Create.NewTypeBinding(catset)
+#Adding the parameters to the project
+bindmap = doc.ParameterBindings
+for p in parameters:
+	try:
+		bindmap.Insert(p, bind, group)
+		i += 1
+	except:
+		continue
+
+TransactionManager.Instance.TransactionTaskDone()
+
+
+OUT =  '%d shared parameters addes to project' %(i)</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="bd84dc9e-3901-4f53-b413-0b56989e2c11" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1111.8747300216" y="441.876889848812" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="4cdddcfa-3c22-4f72-ab8e-bbd3fe9cd775" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="484.447084233262" y="487.038876889849" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Parameters" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a955aa3c-069f-4487-b3ef-ad6e8b956fb0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="449" y="353" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Category " />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f8a2a201-771f-4b3f-bf81-cd638b361a92" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="492.196544276459" y="579.349892008639" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ParameterGroup" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c62e18c3-afb3-4f63-be1d-5d6188cc6e1c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="466.539956803456" y="658.961123110151" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Is Instance Parameter? " />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" start_index="0" end="bd84dc9e-3901-4f53-b413-0b56989e2c11" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4cdddcfa-3c22-4f72-ab8e-bbd3fe9cd775" start_index="0" end="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a955aa3c-069f-4487-b3ef-ad6e8b956fb0" start_index="0" end="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f8a2a201-771f-4b3f-bf81-cd638b361a92" start_index="0" end="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c62e18c3-afb3-4f63-be1d-5d6188cc6e1c" start_index="0" end="7f1bcae7-243f-4b21-aa0d-51a72f3b5152" end_index="3" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

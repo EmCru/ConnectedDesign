@@ -1,0 +1,95 @@
+<Workspace Version="1.3.2.2480" X="110.73521685932" Y="38.0842860032882" zoom="1.545620359375" ScaleFactor="1" Name="Set_ElementLocation+" Description="Sets the location of input point based elements to input location points.  This node allows you to set elements in 2d as well, and on sheets which the ootb node does not_#Set#Location" ID="990bee7c-00d2-4063-8091-16a510597a5d" Category="ArupBimSF.Revit.Element_Location">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0b58544a-1544-4dcb-b989-d0f012e9c98c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="647.507706245096" y="188.8" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="5649e3be-3d4a-446a-92a5-261b1b3097bf" type="PythonNodeModels.PythonNode" nickname="Python Script" x="495.838228712823" y="189.901499154889" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc =  DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB.Structure import StructuralFramingUtils, StructuralType
+FrU = StructuralFramingUtils
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"): return obj1
+	else: return [obj1]
+
+def output1(l1):
+	if len(l1) == 1: return l1[0]
+	else: return l1
+
+elements = UnwrapElement(tolist(IN[0]))
+newloc = UnwrapElement(tolist(IN[1]))
+out1, fail = [], []
+framing = ("Beam", "Brace")
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+for i in xrange(len(elements)):
+	try:
+		el_typ = elements[i].GetType().ToString()
+		isWall, isBeam = False, False
+		if el_typ == "Autodesk.Revit.DB.Wall":
+			w_start = WallUtils.IsWallJoinAllowedAtEnd(elements[i],0)
+			w_end = WallUtils.IsWallJoinAllowedAtEnd(elements[i],1)
+			WallUtils.DisallowWallJoinAtEnd(elements[i],0)
+			WallUtils.DisallowWallJoinAtEnd(elements[i],1)
+			isWall = True
+		elif el_typ == "Autodesk.Revit.DB.FamilyInstance":
+			if elements[i].StructuralType.ToString() in framing:
+				b_start = FrU.IsJoinAllowedAtEnd(elements[i],0)
+				b_end = FrU.IsJoinAllowedAtEnd(elements[i],1)
+				FrU.DisallowJoinAtEnd(elements[i],0)
+				FrU.DisallowJoinAtEnd(elements[i],1)
+				isBeam = True	
+		newloc1 = newloc[i].ToRevitType()
+		oldloc = elements[i].Location
+		loc_typ = oldloc.GetType().ToString()
+		if loc_typ == "Autodesk.Revit.DB.LocationCurve":
+			oldloc.Curve = newloc1
+		elif loc_typ == "Autodesk.Revit.DB.LocationPoint":
+			oldloc.Point = newloc1
+		if isWall:
+			if w_start: WallUtils.AllowWallJoinAtEnd(elements[i],0)
+			if w_end: WallUtils.AllowWallJoinAtEnd(elements[i],1)
+		if isBeam and not isRvt14:
+			if b_start: FrU.AllowJoinAtEnd(elements[i],0)
+			if b_end: FrU.AllowJoinAtEnd(elements[i],1)
+		out1.append(elements[i].ToDSType(True))
+	except:
+		out1.append(fail)
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = output1(out1)</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="65443fa4-3979-4d76-a81d-f7f773afc41a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="245.282920904236" y="159.90838134239" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements_In:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e8797c2a-6c58-42ac-87d2-542ccf8abf1c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="243.432345291211" y="256.622904664402" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Location_Points:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="5649e3be-3d4a-446a-92a5-261b1b3097bf" start_index="0" end="0b58544a-1544-4dcb-b989-d0f012e9c98c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="65443fa4-3979-4d76-a81d-f7f773afc41a" start_index="0" end="5649e3be-3d4a-446a-92a5-261b1b3097bf" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e8797c2a-6c58-42ac-87d2-542ccf8abf1c" start_index="0" end="5649e3be-3d4a-446a-92a5-261b1b3097bf" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

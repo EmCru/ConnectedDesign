@@ -1,0 +1,87 @@
+<Workspace Version="1.3.2.2480" X="-148.694102769393" Y="-421.880991167938" zoom="0.765829392851552" ScaleFactor="1" Name="UI_UseRadioButtons" Description="" ID="33fe9010-2fe2-418b-837c-04ab42fd398e" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.List.Empty" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="fc7785d4-01e9-474d-ac13-ce38a04ae054" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1274.19012484704" y="1049.23273259144" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="RadioButton input" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="0a1d4833-9d71-40bc-b640-6498f8ce336a" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1037.19012484704" y="1053.61984778723" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="4">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <Script>class uiradio():
+
+    def __init__(self,inputname,defaultvalue):
+        self.inputname = inputname
+        self.defaultvalue = defaultvalue
+
+    def __setitem__(self, key, item):
+        self.__dict__[key] = item
+
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
+    def __iter__(self):
+        return iter(self.__dict__)
+
+    def values(self):
+        return self.__dict__.values()
+
+    def keys(self):
+        return self.__dict__.keys()
+
+    def __repr__(self):
+        return 'UI.Radio input'
+        
+x = uiradio(IN[0],IN[3])
+
+if isinstance(IN[1],list):
+	in1 = IN[1]
+else:
+	in1 = [IN[1]]
+if isinstance(IN[2],list):
+	in2 = IN[2]
+else:
+	in2 = [IN[2]]
+	
+
+for k,v in zip(in1,in2):
+	try:
+		x[str(k)] = v
+	except:
+		x[k.encode('utf-8').decode('utf-8')] = v
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="4d7e7ca2-d6ec-4b27-8a65-9e28debf97be" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="622.148923258422" y="1250.23273259144" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="DefaultValueIndex : int = null" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="adb7e641-9104-4d5e-ba8b-c34577c02db5" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="621.148923258422" y="992.232732591439" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="InputName : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1dc56526-40c0-4219-88b9-0203609ceeb4" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="650.148923258422" y="1066.23273259144" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Keys" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8094b839-0c2e-486a-a17f-4ba0eab8ba25" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="650.148923258422" y="1159.23273259144" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Values" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0a1d4833-9d71-40bc-b640-6498f8ce336a" start_index="0" end="fc7785d4-01e9-474d-ac13-ce38a04ae054" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4d7e7ca2-d6ec-4b27-8a65-9e28debf97be" start_index="0" end="0a1d4833-9d71-40bc-b640-6498f8ce336a" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="adb7e641-9104-4d5e-ba8b-c34577c02db5" start_index="0" end="0a1d4833-9d71-40bc-b640-6498f8ce336a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1dc56526-40c0-4219-88b9-0203609ceeb4" start_index="0" end="0a1d4833-9d71-40bc-b640-6498f8ce336a" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8094b839-0c2e-486a-a17f-4ba0eab8ba25" start_index="0" end="0a1d4833-9d71-40bc-b640-6498f8ce336a" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

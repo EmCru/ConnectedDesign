@@ -1,0 +1,60 @@
+<Workspace Version="1.3.2.2480" X="-155" Y="-162" zoom="1" ScaleFactor="1" Name="SharedParameters_Read from Txt File" Description="Reads shared parameters from input txt file._!PA!edb!Shp^Fixme combine this with the get sHP def node" ID="e8a438f2-177b-4012-bc19-ff96e274d53c" Category="ArupBimSF.Revit.Parameters">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="3598f3eb-e330-4087-ae1d-4953f7e56771" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1216" y="489" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revit Parameters" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="83067c5c-1819-437c-b557-20c424e85b2c" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1011" y="494" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[0];&#xA;x[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="3c6539db-1537-409e-a5a8-d48c6c7dbf70" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1219" y="560" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Parameter Names" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="b7f1c2ca-8470-4788-9bbd-1608839e561d" type="PythonNodeModels.PythonNode" nickname="Python Script" x="815" y="490" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import*
+clr.AddReference('RevitServices')
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+clr.AddReference('RevitAPIUI')
+from Autodesk.Revit.UI import *
+
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uidoc = DocumentManager.Instance.CurrentUIDocument
+app = doc.Application
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+app.SharedParametersFilename  =IN[0]
+spfile = app.OpenSharedParameterFile()
+gr = spfile.Groups
+defp = [g.Definitions for g in gr]
+defflat = [x for l in defp for x in l]
+defflatname = [x.Name for x in defflat]
+
+
+TransactionManager.Instance.TransactionTaskDone()
+
+
+
+OUT = defflat , defflatname</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6cf58d9d-fed3-45bb-89b4-1c7b2a51feb2" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="640" y="491" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="FilePath" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="83067c5c-1819-437c-b557-20c424e85b2c" start_index="0" end="3598f3eb-e330-4087-ae1d-4953f7e56771" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="83067c5c-1819-437c-b557-20c424e85b2c" start_index="1" end="3c6539db-1537-409e-a5a8-d48c6c7dbf70" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b7f1c2ca-8470-4788-9bbd-1608839e561d" start_index="0" end="83067c5c-1819-437c-b557-20c424e85b2c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6cf58d9d-fed3-45bb-89b4-1c7b2a51feb2" start_index="0" end="b7f1c2ca-8470-4788-9bbd-1608839e561d" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

@@ -1,0 +1,113 @@
+<Workspace Version="1.3.2.2480" X="-418" Y="55" zoom="1" ScaleFactor="1" Name="Set_ElectricSystemNames_ConnectedToPanel" Description="sets the elec system names of systems connected to input panels" ID="06c4080d-e52f-4b48-88cd-bc17f874a99a" Category="ArupBimSF.Revit.Mep_Electrical">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0e9680ad-b505-469b-9892-e9fd3e32397b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1418.01652868361" y="403" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b3d5dd7f-b31f-4ecc-9e69-8a75f189f12d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="1053.37900161866" y="404.322906744389" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="bb9cd6b8-d3a0-4356-870d-affacd673446" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1258.00045649535" y="404.496536298591" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+element = UnwrapElement(IN[0])
+pname = IN[1]
+
+
+def SetValueToElementParameterByName(e, en, ev):
+		params = e.Parameters
+		for param in params:
+			if param.Definition.Name == en:
+				try:
+					t= Transaction(doc)
+					t.Start("Set value to parameter")
+					param.Set(ev)	
+					t.Commit();
+				except:
+					pass
+pass
+
+
+def getSystem(elem):
+	system = elem.MEPModel.AssignedElectricalSystems
+	
+	if system.Size == 0:
+		return None	
+	else:
+		for sys in system:
+			return [x for x in system]
+		
+
+listout = []	
+
+for x in element:	
+	
+	try:
+		systems = getSystem(x)			
+		cnames = []					
+
+		for system in systems:				
+			cname = system.get_Parameter(BuiltInParameter.RBS_ELEC_CIRCUIT_NUMBER).AsString()	
+			cnames.append(int(float(cname)))
+			
+		cnames.sort()
+		cnamesstr = ""
+		
+		for cname in cnames:
+			cnamesstr = cnamesstr + str(cname) + ", "	
+				
+		cnamesstr = cnamesstr[:-2]	
+		SetValueToElementParameterByName(x, pname, cnamesstr)
+		listout.append(cnamesstr)
+	
+	except:
+		listout.append(None)
+		
+OUT = listout
+	
+	
+	
+	
+	</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="24f83d90-8647-4e2a-a2c9-1f00b91de7a8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="964.935434905125" y="548.814764606845" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="refresh: bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6ee21602-ff5e-4334-8e3f-e93020e362e3" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="721" y="473.766808551011" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="parameterName: string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b3d5dd7f-b31f-4ecc-9e69-8a75f189f12d" start_index="0" end="bb9cd6b8-d3a0-4356-870d-affacd673446" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bb9cd6b8-d3a0-4356-870d-affacd673446" start_index="0" end="0e9680ad-b505-469b-9892-e9fd3e32397b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="24f83d90-8647-4e2a-a2c9-1f00b91de7a8" start_index="0" end="bb9cd6b8-d3a0-4356-870d-affacd673446" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6ee21602-ff5e-4334-8e3f-e93020e362e3" start_index="0" end="bb9cd6b8-d3a0-4356-870d-affacd673446" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

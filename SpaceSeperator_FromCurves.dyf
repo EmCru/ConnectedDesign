@@ -1,0 +1,85 @@
+<Workspace Version="1.3.2.2480" X="-420" Y="41" zoom="1" ScaleFactor="1" Name="SpaceSeperator_FromCurves" Description="Creates Serperation Lines from input curves" ID="a16d030e-431e-4d76-8560-5f1b9e9662c0" Category="ArupBimSF.Revit.Mep_Spaces">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="SketchPlane" resolvedName="Revit.Elements.SketchPlane" assemblyName="RevitNodes.dll" />
+    <ClassMap partialName="Autodesk.Curve" resolvedName="Autodesk.DesignScript.Geometry.Curve" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="d59ad91c-ebbc-4aa2-833d-566b8b131d63" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Return_ListOrSingleValue" x="1217.84129945647" y="246" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <ID value="121e2fd1-5591-4943-bf4a-e4e980ad0146" />
+      <Name value="Return_ListOrSingleValue" />
+      <Description value="See Forum Post Regarding this node_RevitForum I think?" />
+      <Inputs>
+        <Input value="unknownItem" />
+        <Input value="List_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="250dd57e-a503-4b1c-b066-39737076f9c8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1506.96751391526" y="365.241308268732" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="spaceSeparator" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="fa9f26a8-4434-4862-be79-b9f6b7d29ca5" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="949.41908940058" y="352.5663765388" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="6d0b162c-c036-4a8c-b14b-024fc23d0c21" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1090.31421312392" y="459.035075901327" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+curves = UnwrapElement(IN[0])
+sketchplane = UnwrapElement(IN[1])
+view = UnwrapElement(IN[2])
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+curvearray = CurveArray()
+for curve in curves:
+	curvearray.Append(curve.ToRevitType())
+doccreation = doc.Create
+separatorarray = doccreation.NewSpaceBoundaryLines(sketchplane, curvearray, view)
+TransactionManager.Instance.TransactionTaskDone()
+
+elementlist = list()
+for item in separatorarray:
+	elementlist.append(item)
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e72e706c-db35-4113-8f8b-7fc049e6be43" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="762.584955622473" y="507.291108847258" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="sketchPlane : SketchPlane" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="52ecc4cb-43ce-49ff-922a-049ce53da602" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="637" y="363.293963063396" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="curve : Autodesk.Curve" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d36399f7-8308-40a9-b798-c1dbe4f7ae30" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="874.761742691551" y="579.045332416674" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="view" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="d59ad91c-ebbc-4aa2-833d-566b8b131d63" start_index="0" end="250dd57e-a503-4b1c-b066-39737076f9c8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fa9f26a8-4434-4862-be79-b9f6b7d29ca5" start_index="0" end="6d0b162c-c036-4a8c-b14b-024fc23d0c21" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6d0b162c-c036-4a8c-b14b-024fc23d0c21" start_index="0" end="d59ad91c-ebbc-4aa2-833d-566b8b131d63" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e72e706c-db35-4113-8f8b-7fc049e6be43" start_index="0" end="6d0b162c-c036-4a8c-b14b-024fc23d0c21" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="52ecc4cb-43ce-49ff-922a-049ce53da602" start_index="0" end="d59ad91c-ebbc-4aa2-833d-566b8b131d63" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="52ecc4cb-43ce-49ff-922a-049ce53da602" start_index="0" end="fa9f26a8-4434-4862-be79-b9f6b7d29ca5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d36399f7-8308-40a9-b798-c1dbe4f7ae30" start_index="0" end="6d0b162c-c036-4a8c-b14b-024fc23d0c21" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

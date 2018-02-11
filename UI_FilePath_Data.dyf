@@ -1,0 +1,49 @@
+<Workspace Version="1.3.2.2480" X="-120" Y="-171" zoom="1" ScaleFactor="1" Name="UI_FilePath_Data" Description="" ID="e01a2767-673b-4636-b55f-e824fdf06ea8" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="72abf13a-0017-427f-ac81-03a7e710048b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="819.8" y="503" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>class uifilepath():
+
+    def __init__(self,inputname,defaultvalue,buttontext):
+        self.inputname = inputname
+        self.defaultvalue = defaultvalue
+        self.buttontext = buttontext
+
+    def __repr__(self):
+        return 'UI.FilePath input'
+
+x = uifilepath(IN[0],IN[1],IN[2])
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="8a29f0a8-fc43-4e48-9cd5-b5986242f6a8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1028.8" y="501" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="FilePath input" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="289a6ae0-71af-4c41-a924-6c054ed3e6fe" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="416" y="622.8" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Is ignored if a default path is given&#xD;&#xA;ButtonText : string = &quot;FilePath&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c68c7542-939e-46c0-afb9-7b27ea135e2c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="445.6" y="542.8" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="DefaulPath : string = &quot;FilePath&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5c85db82-06a5-4389-a5ec-f588b2333df0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="457.8" y="447" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="InputName : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="72abf13a-0017-427f-ac81-03a7e710048b" start_index="0" end="8a29f0a8-fc43-4e48-9cd5-b5986242f6a8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="289a6ae0-71af-4c41-a924-6c054ed3e6fe" start_index="0" end="72abf13a-0017-427f-ac81-03a7e710048b" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c68c7542-939e-46c0-afb9-7b27ea135e2c" start_index="0" end="72abf13a-0017-427f-ac81-03a7e710048b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5c85db82-06a5-4389-a5ec-f588b2333df0" start_index="0" end="72abf13a-0017-427f-ac81-03a7e710048b" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

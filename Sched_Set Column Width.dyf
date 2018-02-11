@@ -1,0 +1,79 @@
+<Workspace Version="1.3.2.2480" X="-978.262448826602" Y="-284.677891583431" zoom="1.51939327724693" ScaleFactor="1" Name="Sched_Set Column Width" Description="SEt the Column Width of Schedules on sheets" ID="8d46acca-c3df-44e6-8688-173c5a4d5775" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="010f6f66-a222-4a8d-b449-94153dfeb818" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1022" y="467" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+# Import geometry conversion extension methods
+clr.ImportExtensions(Revit.GeometryConversion)
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+from System.Collections.Generic import *
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+uidoc=DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
+
+elt = []
+#for i in IN[0]:
+#	elt.append(UnwrapElement(i))
+widthlist = UnwrapElement(IN[0])
+viewsch = UnwrapElement(IN[1])
+#elementlist = list()
+#viewlist = []
+
+# Start Transaction
+TransactionManager.Instance.EnsureInTransaction(doc)
+for i,v in enumerate(viewsch):
+	wl=widthlist[i]
+	a=v.GetTableData()
+	b=a.GetSectionData(SectionType.Body)
+	c=b.NumberOfColumns
+	n=0
+	while n &lt;= c-1:
+		d=b.SetColumnWidth(n,wl[n])
+		n=n+1
+doc.Regenerate()
+# End Transaction
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = viewsch</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8994dcef-44d7-4d6c-b9b5-eacb445a0e1f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="747.413116893038" y="522" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Sched_in" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="75c0344e-4811-4c83-a965-d2c7b7c2ee57" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="748.658157446775" y="451.821306382276" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Width list" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="e43e790c-1ae9-4004-b640-e7d7ad182921" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1328" y="467" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Sched_Out" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="010f6f66-a222-4a8d-b449-94153dfeb818" start_index="0" end="e43e790c-1ae9-4004-b640-e7d7ad182921" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8994dcef-44d7-4d6c-b9b5-eacb445a0e1f" start_index="0" end="010f6f66-a222-4a8d-b449-94153dfeb818" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="75c0344e-4811-4c83-a965-d2c7b7c2ee57" start_index="0" end="010f6f66-a222-4a8d-b449-94153dfeb818" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

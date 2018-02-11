@@ -1,0 +1,87 @@
+<Workspace Version="1.3.2.2480" X="-416.989435138101" Y="209.038372660179" zoom="0.784369328044828" ScaleFactor="1" Name="Sched_Get Sheets From Schedule" Description="get the data from revit schedule columns" ID="62fd8d32-f020-4457-a027-5e25e2def668" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="077f50ad-4382-4c4e-9528-7ea6dd0f5f8b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1441.11613371221" y="209.085137886345" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+sheetListName = IN[0]
+
+collector = FilteredElementCollector(doc)
+collector.OfClass( ViewSchedule );
+elementlist = collector.ToElements()
+
+sheetSchedule = None
+if isinstance(sheetListName, str):
+	schedule = None
+	for i in elementlist:
+		sheetViewName = BuiltInParameter.VIEW_NAME
+		viewName = i.get_Parameter( sheetViewName ).AsString()
+		
+		if viewName == sheetListName:
+			sheetSchedule = i
+			break
+else:
+	sheetSchedule = UnwrapElement(sheetListName)
+
+
+table = sheetSchedule.GetTableData()
+section = table.GetSectionData(SectionType.Body)
+nRows = section.NumberOfRows
+nColumns = section.NumberOfColumns
+
+columnIndex = None
+for c in range(nColumns): 
+	heading = TableView.GetCellText(sheetSchedule, SectionType.Body, 0, c)
+	if heading == "Sheet Number":
+		columnIndex = c
+		break
+
+sheetNumberList = []
+for row in range(nRows)[2:]: 
+	sheetNumberList.Add( TableView.GetCellText(sheetSchedule, SectionType.Body, row, columnIndex) )
+
+collector = FilteredElementCollector(doc)
+collector.OfClass( ViewSheet );
+elementlist = collector.ToElements()
+
+sheetList = []
+for s in elementlist: 
+	for n in sheetNumberList:
+		if s.SheetNumber == n: 
+			sheetList.Add(s)
+			break
+
+OUT = sheetList</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0754e2d2-acc1-46f1-9f67-b5a556ae502b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1641.72810176968" y="202.661707509725" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Sheets" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0092a4f2-01b4-48b5-a76b-0eeeb142b7d1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="821.028324428943" y="213.713895855766" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Enter a Revit Sheet List view or the schedule name as a string&#xD;&#xA;SheetList_Sched_ViewOrName:var" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="077f50ad-4382-4c4e-9528-7ea6dd0f5f8b" start_index="0" end="0754e2d2-acc1-46f1-9f67-b5a556ae502b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0092a4f2-01b4-48b5-a76b-0eeeb142b7d1" start_index="0" end="077f50ad-4382-4c4e-9528-7ea6dd0f5f8b" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

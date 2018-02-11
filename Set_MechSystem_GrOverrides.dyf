@@ -1,0 +1,83 @@
+<Workspace Version="1.3.2.2480" X="-288.822106495642" Y="-35.3341048729028" zoom="1.30764135636719" ScaleFactor="1" Name="Set_MechSystem_GrOverrides" Description="Set Mechancial System Graphic Overrides" ID="0c44d69f-4d77-45c2-930d-fdc1081dbe1d" Category="ArupBimSF.Revit.Mep_Systems">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="16b21c2b-f8ab-4254-ace8-ccd3232ef654" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="966.818106498542" y="178.230705498766" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="LineColor" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="22bacb51-16c2-4e14-8c85-43de0545bb01" type="PythonNodeModels.PythonNode" nickname="Python Script" x="764.641784891439" y="181.583855248822" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="4">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+#The inputs to this node will be stored as a list in the IN variables.
+toggle = ""
+if isinstance(IN[0],list):
+	systems = UnwrapElement(IN[0])
+else:
+	systems = [UnwrapElement(IN[0])]
+if isinstance(IN[1],list):
+	red = IN[1]
+	green = IN[2]
+	blue = IN[3]
+else:
+	toggle = "1"
+	red = [IN[1]]
+	green = [IN[2]]
+	blue = [IN[3]]
+
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+if toggle == "1":
+	for i,sys in enumerate(systems):
+		color = Color(red[0],green[0],blue[0])
+		sys.LineColor = color
+else:
+	for i,sys in enumerate(systems):
+		color = Color(red[i],green[i],blue[i])
+		sys.LineColor = color
+TransactionManager.Instance.TransactionTaskDone()
+
+#Assign your output to the OUT variable.
+OUT = [sys.LineColor for sys in systems]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="64277176-cc27-47cc-8cdb-f453f01347a1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="470.110793926729" y="158.996454249047" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="SystemType" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a5c0f5ab-8816-4657-a584-d664c9330758" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="503.229692427065" y="317.411585928523" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Red: int" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="33c0b9b3-ffad-4644-9254-4ac3142c9c8c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="503.229692427065" y="386.411585928523" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Green: int" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="342cedc6-147c-4204-92bd-c48f93b24acd" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="494.229692427065" y="451.411585928523" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Blue: int" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="22bacb51-16c2-4e14-8c85-43de0545bb01" start_index="0" end="16b21c2b-f8ab-4254-ace8-ccd3232ef654" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="64277176-cc27-47cc-8cdb-f453f01347a1" start_index="0" end="22bacb51-16c2-4e14-8c85-43de0545bb01" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a5c0f5ab-8816-4657-a584-d664c9330758" start_index="0" end="22bacb51-16c2-4e14-8c85-43de0545bb01" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="33c0b9b3-ffad-4644-9254-4ac3142c9c8c" start_index="0" end="22bacb51-16c2-4e14-8c85-43de0545bb01" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="342cedc6-147c-4204-92bd-c48f93b24acd" start_index="0" end="22bacb51-16c2-4e14-8c85-43de0545bb01" end_index="3" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

@@ -1,0 +1,43 @@
+<Workspace Version="1.3.2.2480" X="-182" Y="-132" zoom="1" ScaleFactor="1" Name="UI_ColorInput_Data" Description="UI Boolean" ID="ac06cb81-171a-4a2a-af90-2a78e25ca2ce" Category="ArupBimSF.User_Interface">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="569c4a22-dc33-4a3e-a03d-23a185ec4a9d" type="PythonNodeModels.PythonNode" nickname="Python Script" x="971.387240356083" y="474.430267062315" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>class uicolorpick():
+
+    def __init__(self,inputname,buttontext):
+        self.inputname = inputname
+        self.buttontext = buttontext
+
+    def __repr__(self):
+        return 'UI.ColorPick input'
+
+x = uicolorpick(IN[0],IN[1])
+
+
+OUT = x</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9832b1a1-a421-4564-ad0d-4427527ebc49" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1157.38724035608" y="476" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="ColorSelection Input" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="fddb4e31-8a25-414c-b780-237a6d5a519e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="605" y="455" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="InputName : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="7c851613-fbe5-4490-a64a-e28ab64888fb" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="539" y="536" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ButtonText : string = &quot;Select Color&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="569c4a22-dc33-4a3e-a03d-23a185ec4a9d" start_index="0" end="9832b1a1-a421-4564-ad0d-4427527ebc49" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fddb4e31-8a25-414c-b780-237a6d5a519e" start_index="0" end="569c4a22-dc33-4a3e-a03d-23a185ec4a9d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7c851613-fbe5-4490-a64a-e28ab64888fb" start_index="0" end="569c4a22-dc33-4a3e-a03d-23a185ec4a9d" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>
