@@ -1,0 +1,82 @@
+<Workspace Version="1.3.2.2480" X="-45.7373347551929" Y="130.57300625" zoom="0.70823125" ScaleFactor="1" Name="Get_RevisionsFromSheets" Description="gets all revisions from input sheets" ID="409dce06-3cca-453e-a8bc-457d0d7bf713" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0076fb7e-91e3-4853-ba35-914e56e75ff0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="929.562864281542" y="346.060130143123" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Sheets" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="daa8a10a-8309-4cde-b90e-a8c8e265df85" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1051.61481558997" y="461.221884460158" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script># Copyright(c) 2015, Konrad K Sobon
+# @arch_laboratory, http://archi-lab.net
+
+import clr
+# Import Element wrapper extension methods
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+import sys
+pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
+sys.path.append(pyt_path)
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+
+def ProcessList(_func, _list):
+    return map( lambda x: ProcessList(_func, x) if type(x)==list else _func(x), _list )
+
+def GetElement(id):
+	doc = DocumentManager.Instance.CurrentDBDocument
+	return doc.GetElement(id)
+
+if isinstance(IN[0], list):
+	sheets = []
+	for i in IN[0]:
+		sheets.append(UnwrapElement(i))
+else:
+	sheets = [UnwrapElement(IN[0])]
+
+try:
+	errorReport = None
+	revIds = []
+	for i in sheets:
+		revIds.append(list(i.GetAdditionalRevisionIds()))
+	revisions = ProcessList(GetElement, revIds)
+except:
+	# if error accurs anywhere in the process catch it
+	import traceback
+	errorReport = traceback.format_exc()
+
+#Assign your output to the OUT variable
+if errorReport == None:
+	OUT = revisions
+else:
+	OUT = errorReport</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4d4ea2ed-0e5c-4509-8ab8-68cbc1d2ea91" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1323.00176461426" y="429.529942500921" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Revision" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0076fb7e-91e3-4853-ba35-914e56e75ff0" start_index="0" end="daa8a10a-8309-4cde-b90e-a8c8e265df85" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="daa8a10a-8309-4cde-b90e-a8c8e265df85" start_index="0" end="4d4ea2ed-0e5c-4509-8ab8-68cbc1d2ea91" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

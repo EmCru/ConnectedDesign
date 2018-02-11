@@ -1,0 +1,127 @@
+<Workspace Version="1.3.2.2480" X="-123" Y="87" zoom="1" ScaleFactor="1" Name="Get_Rooms_ByLevel" Description="gets all rooms by level" ID="6aec4d8a-5d47-4f67-8bfd-a8939136e8f7" Category="EEC.Revit.Elements.Rooms &amp; Spaces">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="6017e362-e73e-4aae-b682-d71feb6d10fa" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1337.35239777572" y="233" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Room(s)" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="87c31bbf-adeb-43c6-8077-5cf96cd3b0ab" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.GetItemAtIndex" x="1143.8403865822" y="255" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.GetItemAtIndex@var[]..[],int">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.Input.DoubleInput guid="60c11d2e-ef93-4719-8221-6746586b9aad" type="CoreNodeModels.Input.DoubleInput" nickname="Number" x="1031.42410563454" y="288.373583406335" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.Double value="0" />
+    </CoreNodeModels.Input.DoubleInput>
+    <PythonNodeModels.PythonNode guid="3923767e-3dba-4de1-88c6-b285123666b9" type="PythonNodeModels.PythonNode" nickname="Python Script" x="838.993520518359" y="347.315334773218" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright(c) 2014, Konrad K Sobon
+# Grimshaw Architects, http://grimshaw-architects.com/
+# Archi-lab, http://wwww.archi-lab.net
+
+# Default imports
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+#Import Collections
+from System.Collections.Generic import *
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+
+doc =  DocumentManager.Instance.CurrentDBDocument
+app =  DocumentManager.Instance.CurrentUIApplication.Application
+levelInput = IN[0]
+filterToggle = IN[1]
+roomNames, validRooms = [], []
+
+collector = FilteredElementCollector(doc)
+levelFilter = ElementLevelFilter(UnwrapElement(levelInput).Id)
+
+areaFilter = AreaFilter()
+areaExcludes = collector.WherePasses(areaFilter).ToElements()
+areaExcludes = list(areaExcludes)
+
+element_set = ElementSet()
+excludes = List[ElementId]()
+if len(areaExcludes) == 0:
+	logicalFilter = levelFilter
+else:
+	for i in areaExcludes:
+		element_set.Insert(i)
+		elemIter = element_set.ForwardIterator()
+		elemIter.Reset()
+		while elemIter.MoveNext():
+			curElem = elemIter.Current
+			excludes.Add(curElem.Id)
+	filter = ExclusionFilter(excludes)
+	logicalFilter = LogicalAndFilter(levelFilter, filter)
+
+bip = BuiltInParameter.ROOM_NAME
+if filterToggle == False:
+	allRoomsOnLevel = FilteredElementCollector(doc).OfClass(Autodesk.Revit.DB.SpatialElement).WherePasses(logicalFilter).ToElements()
+	for i in allRoomsOnLevel:
+		roomNames.append(i.get_Parameter(bip).AsString())
+	OUT = allRoomsOnLevel, roomNames
+else:
+	allRoomsOnLevel = FilteredElementCollector(doc).OfClass(Autodesk.Revit.DB.SpatialElement).WherePasses(logicalFilter).ToElements()
+	for i in allRoomsOnLevel:
+		if i.Area != 0:
+			validRooms.append(i)
+	for i in validRooms:
+		roomNames.append(i.get_Parameter(bip).AsString())
+	OUT = validRooms, roomNames</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="ecc6f5f5-9df3-40f0-ac11-8c1ffc75d3e6" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.GetItemAtIndex" x="1148.35239777572" y="530.771189199715" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.GetItemAtIndex@var[]..[],int">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.Input.DoubleInput guid="564f308d-3ea1-4259-82c3-494f3671e08a" type="CoreNodeModels.Input.DoubleInput" nickname="Number" x="1035.93611682807" y="564.144772606049" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.Double value="1" />
+    </CoreNodeModels.Input.DoubleInput>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="03b538fb-651e-44b7-914a-0796890c6e63" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="562" y="481.025917926566" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Exclude Unplaced?" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="ec727cdf-be4a-4d92-a648-09af3f184ee3" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1344.35239777572" y="534" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Room Name(s)" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="caca5ecb-0cf7-4148-b36a-c565b5716aa0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="576.686825053996" y="306.835853131749" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Level" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="87c31bbf-adeb-43c6-8077-5cf96cd3b0ab" start_index="0" end="6017e362-e73e-4aae-b682-d71feb6d10fa" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="60c11d2e-ef93-4719-8221-6746586b9aad" start_index="0" end="87c31bbf-adeb-43c6-8077-5cf96cd3b0ab" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3923767e-3dba-4de1-88c6-b285123666b9" start_index="0" end="87c31bbf-adeb-43c6-8077-5cf96cd3b0ab" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3923767e-3dba-4de1-88c6-b285123666b9" start_index="0" end="ecc6f5f5-9df3-40f0-ac11-8c1ffc75d3e6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecc6f5f5-9df3-40f0-ac11-8c1ffc75d3e6" start_index="0" end="ec727cdf-be4a-4d92-a648-09af3f184ee3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="564f308d-3ea1-4259-82c3-494f3671e08a" start_index="0" end="ecc6f5f5-9df3-40f0-ac11-8c1ffc75d3e6" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="03b538fb-651e-44b7-914a-0796890c6e63" start_index="0" end="3923767e-3dba-4de1-88c6-b285123666b9" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="caca5ecb-0cf7-4148-b36a-c565b5716aa0" start_index="0" end="3923767e-3dba-4de1-88c6-b285123666b9" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="97.6694957809221" eyeY="494.100723934738" eyeZ="190.109266213172" lookX="33.5092113418806" lookY="-408.996559811202" lookZ="-285.707799843543" upX="0.0786971112490904" upY="0.737277336810125" upZ="-0.670990978558743" />
+  </Cameras>
+</Workspace>

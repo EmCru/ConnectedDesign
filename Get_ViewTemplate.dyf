@@ -1,0 +1,47 @@
+<Workspace Version="1.3.2.2480" X="-47.316509592669" Y="-54.743073824102" zoom="1.51051845643135" ScaleFactor="1" Name="Get_ViewTemplate" Description="Gets view templates from input views" ID="d5b6ec72-e13f-46fc-ba3d-eb20be84da06" Category="ArupBimSF.Revit.View Templates, Filters, and Overrides">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="4ceaac36-c715-4418-9e33-3e93778f72c9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="292.006469181074" y="259.729152004521" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Views" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="93066a11-fcad-452b-a987-ca6835c0b7cb" type="PythonNodeModels.PythonNode" nickname="Python Script" x="735.75400144831" y="259.221768793471" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+views = UnwrapElement(IN[0])
+elementlist = list()
+
+for view in views:
+	if view.ViewTemplateId.IntegerValue == -1:
+		elementlist.append(list())
+	else:
+		elementlist.append(doc.GetElement(view.ViewTemplateId))
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2c36185d-d9b5-4cd9-9484-c7ca65e8d910" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="905.61100416769" y="258.513325760012" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Templates" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="110c6d83-af8c-448f-b9e2-22da16dd139b" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="453.867199695334" y="263.310121752377" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="4ceaac36-c715-4418-9e33-3e93778f72c9" start_index="0" end="110c6d83-af8c-448f-b9e2-22da16dd139b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="93066a11-fcad-452b-a987-ca6835c0b7cb" start_index="0" end="2c36185d-d9b5-4cd9-9484-c7ca65e8d910" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="110c6d83-af8c-448f-b9e2-22da16dd139b" start_index="0" end="93066a11-fcad-452b-a987-ca6835c0b7cb" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

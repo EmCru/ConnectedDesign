@@ -1,0 +1,29 @@
+<Workspace Version="1.3.2.2480" X="210" Y="247" zoom="1" ScaleFactor="1" Name="Get_ProjectNumber" Description="gets the project number for the active Project" ID="5cf73dbf-7bdb-4571-97d2-6aa7dc063887" Category="ArupBimSF.Revit.Document">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="2f3c67e8-cc2a-46e5-a875-7ccba8bc0f14" type="PythonNodeModels.PythonNode" nickname="Project Number" x="250" y="0" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+elementlist = list()
+projinfo = doc.ProjectInformation
+elementlist.append(projinfo.Number)
+# this property seems to be missing in some files - weird...
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1608ff0e-5c47-486b-86b2-80f6eb0b0088" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="449" y="0" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="2f3c67e8-cc2a-46e5-a875-7ccba8bc0f14" start_index="0" end="1608ff0e-5c47-486b-86b2-80f6eb0b0088" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

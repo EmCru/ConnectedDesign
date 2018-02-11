@@ -1,0 +1,244 @@
+<Workspace Version="1.3.2.2480" X="496.076825997589" Y="554.38518054732" zoom="0.640755504049842" ScaleFactor="1" Name="Get_UnicodeChar_AtIndex+" Description="Select a unicode Charachter at index.  Chosen Charachter get sent to clipboard and is availible in an output as well" ID="a3e15ba7-08f7-4998-8f6f-4c3a305945cc" Category="ArupBimSF.String Functions">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="String" resolvedName="DSCore.String" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="Logic" resolvedName="DSCore.Logic" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="ac979525-8584-4685-ab83-5d33d1c5b814" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.GetItemAtIndex" x="214.882571294893" y="-320.314042412911" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.GetItemAtIndex@var[]..[],int">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="13bd886b-6a43-47ee-bd2f-e21240a5bbeb" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="633.114823868628" y="-316.960428940845" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="SentToClipBoard" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="bd41b49c-92ba-4055-bac5-0bb680649cec" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="440.741978395287" y="-134.050969350067" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="CharacterList" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="6a718f43-413a-45cf-9bbf-0b952e9fe399" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="String.TrimWhitespace" x="30.4787881600193" y="-189.805058849912" isVisible="true" isUpstreamVisible="true" lacing="Longest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="DSCoreNodes.dll" function="DSCore.String.TrimWhitespace@string">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="ea77d630-bf66-4c67-836b-a4a424a79c1a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-480.814892440292" y="-268.09471319878" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Get_Index : int = 0" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <CoreNodeModels.Input.StringInput guid="ecd25646-79e2-49fa-a8c3-4e25d4b86103" type="CoreNodeModels.Input.StringInput" nickname="String" x="-479.970673719624" y="-121.59076561967" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>‖
+⍿
+|
+：
+⌀
+○
+●
+⚠
+⚡
+✔
+✖
+✗
+✘
+❌
+➜
+⟘
+⟙
+⧉
+⭦
+⭧
+⭨
+⭩
+⮀
+⮁
+⮂
+⮃
+⮄
+⮅
+⮆
+⮇
+⮘
+⮙
+⮚
+⮛
+⮜
+⮝
+⮞
+⮟
+⮿
+🗲
+🗸
+©
+®
+॥
+𐩑
+🌍
+🌎
+🌏
+🌡
+🍄
+🍕
+🍷
+🍸
+🍹
+🍺
+🍻
+🏴
+👊
+👍
+👎
+💀
+💊
+💣
+💰
+📌
+🔌
+🔑
+🔒
+🔓
+🔧
+🔨
+🔪
+🔫
+🕱
+🕶
+🕷
+🚫
+🚹
+🚺
+🚻
+🚾
+🛠
+∠
+∥
+⏊
+◉
+◐
+◑
+◒
+◓
+◔
+◕
+◖
+◗
+☀
+☁
+☂
+★
+☆
+☕
+☚
+☛
+☝
+☢
+☣
+☮
+☯
+♔
+♕
+♖
+♗
+♘
+♙
+♚
+♛
+♜
+♝
+♞
+♟
+♠
+♡
+♢
+♣
+♤
+♥
+♦
+♧
+♺
+♻
+♼
+⚐
+⚑
+⚒
+⚓
+⚔
+⚾
+⚿
+⛝
+⛤
+⛧
+✀
+✈
+✌
+✍
+✏
+✚
+✪
+✱
+✶
+✷
+✸
+✹
+❎
+❽
+➑
+➤
+⟝
+⟞
+⟟
+⟵
+⟶
+⟷
+⟸
+⟹
+⟺
+⟻
+⟼
+⦾
+⦿
+⬀
+⬁
+⬂
+⬃
+⬛
+⬜
+⭙
+：</System.String>
+      <System.String value="‖&#xD;&#xA;⍿&#xD;&#xA;|&#xD;&#xA;：&#xD;&#xA;⌀&#xD;&#xA;○&#xD;&#xA;●&#xD;&#xA;⚠&#xD;&#xA;⚡&#xD;&#xA;✔&#xD;&#xA;✖&#xD;&#xA;✗&#xD;&#xA;✘&#xD;&#xA;❌&#xD;&#xA;➜&#xD;&#xA;⟘&#xD;&#xA;⟙&#xD;&#xA;⧉&#xD;&#xA;⭦&#xD;&#xA;⭧&#xD;&#xA;⭨&#xD;&#xA;⭩&#xD;&#xA;⮀&#xD;&#xA;⮁&#xD;&#xA;⮂&#xD;&#xA;⮃&#xD;&#xA;⮄&#xD;&#xA;⮅&#xD;&#xA;⮆&#xD;&#xA;⮇&#xD;&#xA;⮘&#xD;&#xA;⮙&#xD;&#xA;⮚&#xD;&#xA;⮛&#xD;&#xA;⮜&#xD;&#xA;⮝&#xD;&#xA;⮞&#xD;&#xA;⮟&#xD;&#xA;⮿&#xD;&#xA;🗲&#xD;&#xA;🗸&#xD;&#xA;©&#xD;&#xA;®&#xD;&#xA;॥&#xD;&#xA;𐩑&#xD;&#xA;🌍&#xD;&#xA;🌎&#xD;&#xA;🌏&#xD;&#xA;🌡&#xD;&#xA;🍄&#xD;&#xA;🍕&#xD;&#xA;🍷&#xD;&#xA;🍸&#xD;&#xA;🍹&#xD;&#xA;🍺&#xD;&#xA;🍻&#xD;&#xA;🏴&#xD;&#xA;👊&#xD;&#xA;👍&#xD;&#xA;👎&#xD;&#xA;💀&#xD;&#xA;💊&#xD;&#xA;💣&#xD;&#xA;💰&#xD;&#xA;📌&#xD;&#xA;🔌&#xD;&#xA;🔑&#xD;&#xA;🔒&#xD;&#xA;🔓&#xD;&#xA;🔧&#xD;&#xA;🔨&#xD;&#xA;🔪&#xD;&#xA;🔫&#xD;&#xA;🕱&#xD;&#xA;🕶&#xD;&#xA;🕷&#xD;&#xA;🚫&#xD;&#xA;🚹&#xD;&#xA;🚺&#xD;&#xA;🚻&#xD;&#xA;🚾&#xD;&#xA;🛠&#xD;&#xA;∠&#xD;&#xA;∥&#xD;&#xA;⏊&#xD;&#xA;◉&#xD;&#xA;◐&#xD;&#xA;◑&#xD;&#xA;◒&#xD;&#xA;◓&#xD;&#xA;◔&#xD;&#xA;◕&#xD;&#xA;◖&#xD;&#xA;◗&#xD;&#xA;☀&#xD;&#xA;☁&#xD;&#xA;☂&#xD;&#xA;★&#xD;&#xA;☆&#xD;&#xA;☕&#xD;&#xA;☚&#xD;&#xA;☛&#xD;&#xA;☝&#xD;&#xA;☢&#xD;&#xA;☣&#xD;&#xA;☮&#xD;&#xA;☯&#xD;&#xA;♔&#xD;&#xA;♕&#xD;&#xA;♖&#xD;&#xA;♗&#xD;&#xA;♘&#xD;&#xA;♙&#xD;&#xA;♚&#xD;&#xA;♛&#xD;&#xA;♜&#xD;&#xA;♝&#xD;&#xA;♞&#xD;&#xA;♟&#xD;&#xA;♠&#xD;&#xA;♡&#xD;&#xA;♢&#xD;&#xA;♣&#xD;&#xA;♤&#xD;&#xA;♥&#xD;&#xA;♦&#xD;&#xA;♧&#xD;&#xA;♺&#xD;&#xA;♻&#xD;&#xA;♼&#xD;&#xA;⚐&#xD;&#xA;⚑&#xD;&#xA;⚒&#xD;&#xA;⚓&#xD;&#xA;⚔&#xD;&#xA;⚾&#xD;&#xA;⚿&#xD;&#xA;⛝&#xD;&#xA;⛤&#xD;&#xA;⛧&#xD;&#xA;✀&#xD;&#xA;✈&#xD;&#xA;✌&#xD;&#xA;✍&#xD;&#xA;✏&#xD;&#xA;✚&#xD;&#xA;✪&#xD;&#xA;✱&#xD;&#xA;✶&#xD;&#xA;✷&#xD;&#xA;✸&#xD;&#xA;✹&#xD;&#xA;❎&#xD;&#xA;❽&#xD;&#xA;➑&#xD;&#xA;➤&#xD;&#xA;⟝&#xD;&#xA;⟞&#xD;&#xA;⟟&#xD;&#xA;⟵&#xD;&#xA;⟶&#xD;&#xA;⟷&#xD;&#xA;⟸&#xD;&#xA;⟹&#xD;&#xA;⟺&#xD;&#xA;⟻&#xD;&#xA;⟼&#xD;&#xA;⦾&#xD;&#xA;⦿&#xD;&#xA;⬀&#xD;&#xA;⬁&#xD;&#xA;⬂&#xD;&#xA;⬃&#xD;&#xA;⬛&#xD;&#xA;⬜&#xD;&#xA;⭙&#xD;&#xA;：" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction guid="d58a5adc-1be7-4ec9-b53b-ef03028cea43" type="Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction" nickname="String.Split" x="-248.403221215059" y="-155.594211643122" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.String.Split@string,string[]" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction>
+    <CoreNodeModels.Input.StringInput guid="fdb60d97-bf62-472e-972c-b5cbb350193a" type="CoreNodeModels.Input.StringInput" nickname="String" x="-357.555589715342" y="-80.5591362973441" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>
+</System.String>
+      <System.String value="&#xD;&#xA;" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="1d8845d0-0e31-41ac-b38a-49369f577828" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="➜SendToClipBoard" x="436.109675751765" y="-328.934784425323" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="f0d95545-2e95-48ac-b183-77c0e0470562" />
+      <Name value="➜SendToClipBoard" />
+      <Description value="copies the input item to clipboard" />
+      <Inputs>
+        <Input value="str" />
+      </Inputs>
+      <Outputs>
+        <Output value="str" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="ac979525-8584-4685-ab83-5d33d1c5b814" start_index="0" end="1d8845d0-0e31-41ac-b38a-49369f577828" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6a718f43-413a-45cf-9bbf-0b952e9fe399" start_index="0" end="ac979525-8584-4685-ab83-5d33d1c5b814" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6a718f43-413a-45cf-9bbf-0b952e9fe399" start_index="0" end="bd41b49c-92ba-4055-bac5-0bb680649cec" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ea77d630-bf66-4c67-836b-a4a424a79c1a" start_index="0" end="ac979525-8584-4685-ab83-5d33d1c5b814" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecd25646-79e2-49fa-a8c3-4e25d4b86103" start_index="0" end="d58a5adc-1be7-4ec9-b53b-ef03028cea43" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d58a5adc-1be7-4ec9-b53b-ef03028cea43" start_index="0" end="6a718f43-413a-45cf-9bbf-0b952e9fe399" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fdb60d97-bf62-472e-972c-b5cbb350193a" start_index="0" end="d58a5adc-1be7-4ec9-b53b-ef03028cea43" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1d8845d0-0e31-41ac-b38a-49369f577828" start_index="0" end="13bd886b-6a43-47ee-bd2f-e21240a5bbeb" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

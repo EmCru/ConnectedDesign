@@ -1,0 +1,76 @@
+<Workspace Version="1.3.2.2480" X="221.55204314995" Y="235.782702170778" zoom="0.910063803931439" ScaleFactor="1" Name="Get_ProjectParam_byCategory" Description="Gets project parameters from active doc by input category" ID="217584d5-720c-40f5-b9e2-7f7c70ef8233" Category="ArupBimSF.Revit.Parameters">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Category" resolvedName="Revit.Elements.Category" assemblyName="RevitNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d2b5ac1a-fd40-4369-84d9-12c1828afd53" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1384" y="260" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="paramName" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="9594ec1b-dd5e-4b58-bfcb-9952b3db49c0" type="PythonNodeModels.PythonNode" nickname="Return List or Single Value" x="1118.15739423325" y="273.781407323203" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>check = IN[0]
+items = IN[1]
+if isinstance(check, (list)): OUT = items
+else: OUT = items[0]</Script>
+    </PythonNodeModels.PythonNode>
+    <PythonNodeModels.PythonNode guid="402e6905-37a1-479b-9022-1d1c847ece1a" type="PythonNodeModels.PythonNode" nickname="python - Get the parameters" x="905" y="381" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+import Autodesk
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+search_cats = UnwrapElement(IN[0])
+search_ids = []
+cats = []
+for search_cat in search_cats:
+	search_ids.append(search_cat.Id.IntegerValue)
+	cats.append(list())
+doc = DocumentManager.Instance.CurrentDBDocument
+iterator = doc.ParameterBindings.ForwardIterator()
+while iterator.MoveNext():
+	for cat in iterator.Current.Categories:
+		i = 0
+		for search_id in search_ids:
+			if cat.Id.IntegerValue == search_id:
+				cats[i].append(iterator.Key.Name)
+			i += 1
+OUT = cats</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="1222ce12-9893-44a4-9861-9cd99f1a3f35" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="611.669014656251" y="333.926562262176" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6edab46a-66a1-43b2-ad7e-c1aa72f781dc" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-16.7183739389815" y="274.586372014886" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="category" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8789872c-6b21-4764-9f26-64f65ea48841" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="601" y="446" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="toggle : bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <CoreNodeModels.FromObject guid="e7bde12c-c637-4472-b0ae-35935d848aaa" type="CoreNodeModels.FromObject" nickname="String from Object" x="115.610235875243" y="234.446545071559" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+    </CoreNodeModels.FromObject>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="0f345c76-2fc1-4185-bd0a-b4ac2e79760c" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Category.ByName" x="278.391856396989" y="237.517896402158" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Category.ByName@string">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9594ec1b-dd5e-4b58-bfcb-9952b3db49c0" start_index="0" end="d2b5ac1a-fd40-4369-84d9-12c1828afd53" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="402e6905-37a1-479b-9022-1d1c847ece1a" start_index="0" end="9594ec1b-dd5e-4b58-bfcb-9952b3db49c0" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1222ce12-9893-44a4-9861-9cd99f1a3f35" start_index="0" end="402e6905-37a1-479b-9022-1d1c847ece1a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6edab46a-66a1-43b2-ad7e-c1aa72f781dc" start_index="0" end="e7bde12c-c637-4472-b0ae-35935d848aaa" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8789872c-6b21-4764-9f26-64f65ea48841" start_index="0" end="402e6905-37a1-479b-9022-1d1c847ece1a" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e7bde12c-c637-4472-b0ae-35935d848aaa" start_index="0" end="0f345c76-2fc1-4185-bd0a-b4ac2e79760c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0f345c76-2fc1-4185-bd0a-b4ac2e79760c" start_index="0" end="9594ec1b-dd5e-4b58-bfcb-9952b3db49c0" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0f345c76-2fc1-4185-bd0a-b4ac2e79760c" start_index="0" end="1222ce12-9893-44a4-9861-9cd99f1a3f35" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>
