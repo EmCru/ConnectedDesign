@@ -1,0 +1,114 @@
+<Workspace Version="1.3.2.2480" X="199.81163819873" Y="46.6507539387807" zoom="0.716982951558229" ScaleFactor="1" Name="Revision_Remove From Sheets" Description="Removes input revisions from input sheets" ID="885c0105-cfad-4a59-b4bf-e275b227a400" Category="ArupBimSF.Revit.Views_Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="03d1cb47-b01d-46d2-b77d-12e823465243" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1167.41389716943" y="545.076656095582" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+# Import Element wrapper extension methods
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+import sys
+pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
+sys.path.append(pyt_path)
+
+import System
+from System import Array
+from System.Collections.Generic import *
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+
+if isinstance(IN[0], list):
+	sheets = []
+	for i in IN[0]:
+		sheets.append(UnwrapElement(i))
+else:
+	sheets = [UnwrapElement(IN[0])]
+
+if isinstance(IN[1], list):
+	revs = []
+	for i in IN[1]:
+		revs.append(UnwrapElement(i))
+else:
+	revs = [UnwrapElement(IN[1])]
+	
+RunIt = IN[2]
+
+if RunIt:
+	try:
+		errorReport = None
+		for i in sheets:
+			revisionsOnSheet = i.GetAdditionalRevisionIds()
+			for r in revs:
+				if r.Id in revisionsOnSheet:
+					revisionsOnSheet.Remove(r.Id)
+				else:
+					continue
+			TransactionManager.Instance.EnsureInTransaction(doc)
+			i.SetAdditionalRevisionIds(revisionsOnSheet)
+			TransactionManager.Instance.TransactionTaskDone()
+			
+	except:
+		# if error accurs anywhere in the process catch it
+		import traceback
+		errorReport = traceback.format_exc()
+else:
+	errorReport = "Set RunIt to True."
+
+
+#Assign your output to the OUT variable
+if errorReport == None:
+	OUT = IN[0]
+else:
+	OUT = errorReport
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="571e0550-2cd3-4d37-bb37-def7bd5599d2" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1378.34984981488" y="636.4432081955" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Sheet" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="8687a887-8118-48b1-8715-9823293c15c3" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="692.17912211203" y="369.850729195089" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" CodeText="list;&#xA;Bool;&#xA;&#xA;[Imperative]&#xA;&#xA;{&#xA;	if (Bool==true)&#xA;		return = list;&#xA;	else&#xA;		return = list;&#xA;};" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6af61eed-fc2e-4e7c-962c-1009eb5193cb" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="434.758422504079" y="177.439770894394" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="SheetList" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="30e8b17f-10ad-4ce3-80ad-1485d3114ca3" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="576.817377044078" y="678.76606594458" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Revision" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="08673534-1621-4fef-bbef-faa1923ae900" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="904.808159297177" y="818.902908227635" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Run_It:bool=false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a4d8dbd6-9343-451c-a642-6d5c44507329" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="125.34094073248" y="301.681566487452" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Refresh:bool=false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="03d1cb47-b01d-46d2-b77d-12e823465243" start_index="0" end="571e0550-2cd3-4d37-bb37-def7bd5599d2" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8687a887-8118-48b1-8715-9823293c15c3" start_index="2" end="03d1cb47-b01d-46d2-b77d-12e823465243" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6af61eed-fc2e-4e7c-962c-1009eb5193cb" start_index="0" end="8687a887-8118-48b1-8715-9823293c15c3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="30e8b17f-10ad-4ce3-80ad-1485d3114ca3" start_index="0" end="03d1cb47-b01d-46d2-b77d-12e823465243" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="08673534-1621-4fef-bbef-faa1923ae900" start_index="0" end="03d1cb47-b01d-46d2-b77d-12e823465243" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a4d8dbd6-9343-451c-a642-6d5c44507329" start_index="0" end="8687a887-8118-48b1-8715-9823293c15c3" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

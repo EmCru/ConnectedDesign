@@ -1,0 +1,31 @@
+<Workspace Version="1.3.2.2480" X="-70" Y="164" zoom="1" ScaleFactor="1" Name="Return_ListOrSingleValue" Description="See Forum Post Regarding this node_RevitForum I think?_!LI" ID="121e2fd1-5591-4943-bf4a-e4e980ad0146" Category="ArupBimSF.List Functions">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="a3c4a31d-63ef-41c5-ba23-92148b70b337" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="985" y="86" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="5b813d92-14ec-4df6-9cd6-cc719a4115b8" type="PythonNodeModels.PythonNode" nickname="Python Script" x="746" y="51" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>check = IN[0]
+items = IN[1]
+if isinstance(check, (list)): OUT = items
+else: OUT = items[0]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d6353707-de98-4f72-b898-ad4a26ade935" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="516" y="58" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="unknownItem" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="329070ed-7fd6-40a3-a4a8-bd0e7492fd3b" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="516" y="141" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="List_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="5b813d92-14ec-4df6-9cd6-cc719a4115b8" start_index="0" end="a3c4a31d-63ef-41c5-ba23-92148b70b337" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d6353707-de98-4f72-b898-ad4a26ade935" start_index="0" end="5b813d92-14ec-4df6-9cd6-cc719a4115b8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="329070ed-7fd6-40a3-a4a8-bd0e7492fd3b" start_index="0" end="5b813d92-14ec-4df6-9cd6-cc719a4115b8" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>
