@@ -1,0 +1,79 @@
+<Workspace Version="1.3.2.2480" X="-94" Y="47" zoom="1" ScaleFactor="1" Name="Get_Element_System" Description="get the system from input system families" ID="68f263c2-da20-4d36-bf30-8f8e2d1e4cfd" Category="ArupBimSF.Revit.Mep_Systems">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="14f81e92-dd07-47ca-847a-ac83755a9c1f" type="PythonNodeModels.PythonNode" nickname="Python Script" x="632" y="246" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+#The inputs to this node will be stored as a list in the IN variables.
+if isinstance(IN[0],list):
+	toggle = 0
+	element = UnwrapElement(IN[0])
+else:
+	toggle = 1
+	element = [UnwrapElement(IN[0])]
+
+def getSystem(elem):
+	try:
+		system = elem.MEPSystem
+		return system
+	except:		
+		try:
+			connectors = elem.ConnectorManager.Connectors
+		except:
+			connectors = elem.MEPModel.ConnectorManager.Connectors
+		
+		if connectors.Size &lt; 2:	
+			for conn in connectors:
+				connector = conn
+				break
+			return connector.MEPSystem
+		else:
+			systems = []
+			ids = set()
+			for conn in connectors:
+				try:
+					if conn.MEPSystem.Id not in ids:
+						ids.add(conn.MEPSystem.Id)
+						systems.append(conn.MEPSystem)
+				except:
+					pass
+			return systems
+
+listout = []	
+for x in element:
+	try:
+		system = getSystem(x)
+		if isinstance(system, list) and len(system) == 1:
+			listout.append(system[0])
+		else:
+			listout.append(system)
+	except:
+		listout.append(None)
+#Assign your output to the OUT variable.
+if toggle:
+	OUT = system
+else:
+	OUT = listout</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f33b618a-9d70-4ce4-ba9f-3d63577384c3" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="469" y="247" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="83852291-1c23-4760-9245-c3b43f0661de" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="827" y="239" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Systems" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="14f81e92-dd07-47ca-847a-ac83755a9c1f" start_index="0" end="83852291-1c23-4760-9245-c3b43f0661de" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f33b618a-9d70-4ce4-ba9f-3d63577384c3" start_index="0" end="14f81e92-dd07-47ca-847a-ac83755a9c1f" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

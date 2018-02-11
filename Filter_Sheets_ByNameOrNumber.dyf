@@ -1,0 +1,88 @@
+<Workspace Version="1.3.2.2480" X="-181.333564549973" Y="114.670073316373" zoom="1.17131835730765" ScaleFactor="1" Name="Filter_Sheets_ByNameOrNumber" Description="collects all sheets in current project by partial or exact match of the sheet name or number" ID="da268162-fb0d-416a-9733-a2d5a9811c16" Category="ArupBimSF.Revit.Views_Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="e03f3891-f1fe-4ab9-9979-399a6888c666" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1081.95085951436" y="96.4538228228567" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="exact match" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="06fd9c35-5727-496c-a1ea-d0d1a6954ddb" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="899.396522493746" y="161.115352378913" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="v[0];&#xA;v[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="cc03b156-ffec-4cab-99c5-0b0ce96e45d3" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1085.41256759859" y="280.681982689198" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="partial match" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="2c89e9ba-183f-499f-827a-f882b417562e" type="PythonNodeModels.PythonNode" nickname="Python Script" x="688.951700439407" y="153.765107040278" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"):
+		return obj1
+	else:
+		return [obj1]
+
+dataEnteringNode = IN
+fn = tolist(IN[0])
+fn = [str(n) for n in fn]
+NameNumber = IN[1]
+
+
+fec = FilteredElementCollector(doc).OfClass(View).GetElementIterator()
+fec.Reset()
+result = []
+similar = []
+names = []
+
+for i in fec:
+	if i.ViewType == ViewType.DrawingSheet:
+		if NameNumber:
+			n1 = i.ViewName
+		else:
+			n1 = i.SheetNumber
+		names.append(n1)
+		if any(fn1 == n1 for fn1 in fn):
+			result.append(i.ToDSType(True))
+		elif any(fn1.lower() in n1.lower() for fn1 in fn):
+			similar.append(i.ToDSType(True))
+if len(result) &gt; 0:
+	OUT = result,similar
+if len(result) == 0 and len(similar) &gt; 0:
+	OUT = "---",similar
+if len(result) == 0 and len(similar) == 0:
+	OUT = "---", names</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="565666be-398a-46b1-8434-da0855b8403c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="362.067879064367" y="145.12440813949" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Search_String : string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="057fd18b-41a9-4e64-94c4-03374eff5336" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="366.783945037814" y="262.674703692968" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Name_or_Number:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="06fd9c35-5727-496c-a1ea-d0d1a6954ddb" start_index="0" end="e03f3891-f1fe-4ab9-9979-399a6888c666" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="06fd9c35-5727-496c-a1ea-d0d1a6954ddb" start_index="1" end="cc03b156-ffec-4cab-99c5-0b0ce96e45d3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="2c89e9ba-183f-499f-827a-f882b417562e" start_index="0" end="06fd9c35-5727-496c-a1ea-d0d1a6954ddb" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="565666be-398a-46b1-8434-da0855b8403c" start_index="0" end="2c89e9ba-183f-499f-827a-f882b417562e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="057fd18b-41a9-4e64-94c4-03374eff5336" start_index="0" end="2c89e9ba-183f-499f-827a-f882b417562e" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

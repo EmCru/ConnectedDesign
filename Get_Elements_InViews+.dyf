@@ -1,0 +1,118 @@
+<Workspace Version="1.3.2.2480" X="1184.86539831035" Y="-309.932724390984" zoom="1.13136064003941" ScaleFactor="1" Name="Get_Elements_InViews+" Description="Gets all visible elements from input views.  This node gets more info that the OOTb node does not pick-up like RAster Images, textnotes and more. Get elements in active view by default and setting RunMe To true otherwise input a list of views" ID="c6fc2c3d-1fae-4d7a-9264-c037a8a9a97e" Category="ArupBimSF.Revit.Elements">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="a33a9f58-3be5-4050-b651-137b2f6e4a69" type="PythonNodeModels.PythonNode" nickname="Python Script" x="572.881838117198" y="472.760741953531" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import*
+clr.AddReference('RevitServices')
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+if isinstance(IN[0],list):
+	views = UnwrapElement(IN[0])
+else:
+	views = [UnwrapElement(IN[0])]
+
+OUT = [FilteredElementCollector(doc,v.Id).ToElements() for v in views]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0f0974b2-0a4d-423a-8e98-7ff72d7793f4" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-778.786121281048" y="360.583782127362" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ViewsIn: var=&quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="05055e67-b03e-4236-9eac-f63af9a7b6b9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="888.146168143656" y="457.736009531717" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="ElementOut" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="55f5852e-c62d-454a-8e68-f48cd60c3d6b" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="160.588665213635" y="420.960755544412" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="list;&#xA;come;&#xA;&#xA;[Imperative]&#xA;&#xA;{&#xA;	if (come ==true)&#xA;		return = list;&#xA;	else&#xA;		return = list;&#xA;};" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="fe87d004-43e8-4a9b-885e-99e34914875e" type="PythonNodeModels.PythonNode" nickname="Python Script" x="-764.807862860328" y="544.455774515503" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import RevitNodes
+clr.AddReference("RevitNodes")
+import Revit
+
+# Import Revit elements
+from Revit.Elements import *
+
+# Import DocumentManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+import System
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+uidoc = uiapp.ActiveUIDocument
+app = uiapp.Application
+view = uidoc.ActiveView 
+
+OUT = view</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="eceaafe8-de63-455f-8d87-515558ec9f74" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-765.036548411184" y="673.666844084354" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Refresh : bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <CoreNodeModels.Logic.If guid="16a3244e-e898-49bb-98bc-d457db39cc6b" type="CoreNodeModels.Logic.If" nickname="If" x="-146.823997804812" y="341.165411512226" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </CoreNodeModels.Logic.If>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="0dfc4290-5cbe-4d78-a6b3-b7817d567a28" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Action_RunMe If " x="-436.437238918795" y="263.773306619826" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="True" />
+      <PortInfo index="1" default="True" />
+      <ID value="e6eb7029-1049-4ec4-8b3d-baa7fa801194" />
+      <Name value="Action_RunMe If " />
+      <Description value="uses a run_me node if input does note eqaul &quot;&quot;#Action" />
+      <Inputs>
+        <Input value="List_In" />
+        <Input value="Run_If_Not" />
+      </Inputs>
+      <Outputs>
+        <Output value="OUT" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="ff64e03d-ab5d-4cea-a1a9-c14c5b37cc6f" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Action_RunMe" x="-441.743075681138" y="463.888952098751" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="True" />
+      <PortInfo index="1" default="False" />
+      <ID value="c1b72ef9-e92d-4311-bdd3-9a5de57d13e6" />
+      <Name value="Action_RunMe" />
+      <Description value="Uses A boolean to determine whether to run a function or sequence." />
+      <Inputs>
+        <Input value="Should_I" />
+        <Input value="ThingToDo" />
+      </Inputs>
+      <Outputs>
+        <Output value="Result" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1099291d-0ae0-4ff4-8c97-2ad05c3de6b3" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-995.626940945765" y="451.641346560904" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//set runme to true to run the Current Active view&#xD;&#xA;RunMe : bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="a33a9f58-3be5-4050-b651-137b2f6e4a69" start_index="0" end="05055e67-b03e-4236-9eac-f63af9a7b6b9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0f0974b2-0a4d-423a-8e98-7ff72d7793f4" start_index="0" end="16a3244e-e898-49bb-98bc-d457db39cc6b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0f0974b2-0a4d-423a-8e98-7ff72d7793f4" start_index="0" end="0dfc4290-5cbe-4d78-a6b3-b7817d567a28" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="55f5852e-c62d-454a-8e68-f48cd60c3d6b" start_index="2" end="a33a9f58-3be5-4050-b651-137b2f6e4a69" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fe87d004-43e8-4a9b-885e-99e34914875e" start_index="0" end="ff64e03d-ab5d-4cea-a1a9-c14c5b37cc6f" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="eceaafe8-de63-455f-8d87-515558ec9f74" start_index="0" end="55f5852e-c62d-454a-8e68-f48cd60c3d6b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="16a3244e-e898-49bb-98bc-d457db39cc6b" start_index="0" end="55f5852e-c62d-454a-8e68-f48cd60c3d6b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0dfc4290-5cbe-4d78-a6b3-b7817d567a28" start_index="0" end="16a3244e-e898-49bb-98bc-d457db39cc6b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ff64e03d-ab5d-4cea-a1a9-c14c5b37cc6f" start_index="0" end="16a3244e-e898-49bb-98bc-d457db39cc6b" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1099291d-0ae0-4ff4-8c97-2ad05c3de6b3" start_index="0" end="ff64e03d-ab5d-4cea-a1a9-c14c5b37cc6f" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

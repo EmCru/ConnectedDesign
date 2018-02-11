@@ -1,0 +1,158 @@
+<Workspace Version="1.3.2.2480" X="323.92525245364" Y="-364.38419258496" zoom="0.61642567405744" ScaleFactor="1" Name="Get_Elements_InViewsByCategories+" Description="Reads list of views and categories and returns list of elements of specified categories by view." ID="d96a9532-cfe0-4f37-b9fd-3ec3ae1ce1af" Category="Arup - Bay Area.Revit.Elements">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0731a1ac-cb71-4628-9560-7a62c5697117" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="39.362670718455" y="626.990300868328" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="view:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="6c04e673-f4fd-41ed-aee0-0c4f232c2a4d" type="PythonNodeModels.PythonNode" nickname="Python Script" x="620.512363510474" y="1751.43431974505" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright(c) 2016, Dimitar Venkov
+# @5devene, dimitar.ven@gmail.com
+
+import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import FilteredElementCollector
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"): return obj1
+	else: return [obj1]
+def output1(l1):
+	if len(l1) == 1: return l1[0]
+	else: return l1
+
+views = UnwrapElement(tolist(IN[0]))
+elements = []
+
+for i in xrange(len(views)):
+	fec = FilteredElementCollector(doc, views[i].Id).WhereElementIsNotElementType().GetElementIterator()
+	fec.Reset()
+	view_el = []
+	while fec.MoveNext():
+		view_el.append(fec.Current.ToDSType(True))
+	elements.append(view_el)
+OUT = output1(elements)</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="3a95274f-9a01-496c-9255-34158f0dddfd" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="39.1128389638228" y="684.993199763782" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="refresh:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="7254c473-73db-411b-bd9b-3fa61b67d27b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="802.173733875006" y="1751.4584923345" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright(c) 2016, Dimitar Venkov
+# @5devene, dimitar.ven@gmail.com
+
+import clr
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"): return obj1
+	else: return [obj1]
+
+elements = UnwrapElement(tolist(IN[0]))
+filter = tolist(IN[1])
+in1, out1 = [], []
+
+for i in xrange(len(elements)):
+	try: n1 = elements[i].Category.Name.lower()
+	except: n1 = ""
+	if any(filter[j].lower() in n1 for j in xrange(len(filter))):
+		in1.append(elements[i])
+	else: out1.append(elements[i])
+OUT = in1, out1</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f40a9b86-f8c5-4d7b-97ad-e180aeab0075" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="39.278295268822" y="742.893093102473" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="categoryName:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="ec4a64ed-b2bd-4984-a5a2-537d42fea72e" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1351.47081437634" y="1751.37642973373" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="in" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="257fc1f4-8b6e-4054-8d7f-6b4129344869" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="983.885928730671" y="1755.78474571958" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="f[0];&#xA;f[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <CoreNodeModels.FromObject guid="4e2b2f64-9e4f-460b-9ea7-634c05730810" type="CoreNodeModels.FromObject" nickname="String from Object" x="621.409411362227" y="1839.61378159994" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+    </CoreNodeModels.FromObject>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0731a1ac-cb71-4628-9560-7a62c5697117" start_index="0" end="6c04e673-f4fd-41ed-aee0-0c4f232c2a4d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6c04e673-f4fd-41ed-aee0-0c4f232c2a4d" start_index="0" end="7254c473-73db-411b-bd9b-3fa61b67d27b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3a95274f-9a01-496c-9255-34158f0dddfd" start_index="0" end="6c04e673-f4fd-41ed-aee0-0c4f232c2a4d" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7254c473-73db-411b-bd9b-3fa61b67d27b" start_index="0" end="257fc1f4-8b6e-4054-8d7f-6b4129344869" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f40a9b86-f8c5-4d7b-97ad-e180aeab0075" start_index="0" end="4e2b2f64-9e4f-460b-9ea7-634c05730810" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="257fc1f4-8b6e-4054-8d7f-6b4129344869" start_index="0" end="ec4a64ed-b2bd-4984-a5a2-537d42fea72e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4e2b2f64-9e4f-460b-9ea7-634c05730810" start_index="0" end="7254c473-73db-411b-bd9b-3fa61b67d27b" end_index="1" portType="0" />
+  </Connectors>
+  <Notes>
+    <Dynamo.Graph.Notes.NoteModel guid="3232b184-33ba-4333-a7de-015fea689203" text="DYNAMO FILE NAME&#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;Get_Elements_InViewsByCategories+.dyn" x="38.1028428940899" y="119" />
+    <Dynamo.Graph.Notes.NoteModel guid="ed269c17-ea70-4cfa-a13c-ecbf8ba13d2b" text="ASSOCIATED REVIT FILE(S)      &#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;N/A" x="38.1028428940899" y="209.730478188101" />
+    <Dynamo.Graph.Notes.NoteModel guid="5a97714b-7256-41b9-9b6d-37b8200f7f43" text="AUTHOR(S)&#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;Bryan McCaffrey (Bay Area)" x="38.1028428940899" y="301.320779282099" />
+    <Dynamo.Graph.Notes.NoteModel guid="d6882fb8-3dff-47d1-9138-b7bdcfe3a4ca" text="DESCRIPTION   &#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;Reads list of views and categories and returns list of elements of specified categories by view." x="37" y="391.891516572501" />
+    <Dynamo.Graph.Notes.NoteModel guid="251437b0-7c49-481d-ab33-6e53b0a03bd2" text="DYNAMO VERSION&#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;1.3" x="350.79058164771" y="119.957189205701" />
+    <Dynamo.Graph.Notes.NoteModel guid="8bc14a93-ea82-42b6-9cfe-0fb1281924fa" text="WORKING REVIT VERSION(S)&#xD;&#xA;________________________________________________________&#xD;&#xA;&#xD;&#xA;2017" x="350.79058164771" y="208.8220377283" />
+    <Dynamo.Graph.Notes.NoteModel guid="035bb8db-874d-4cc1-a1eb-68686b257d72" text="N/A&#xD;&#xA;" x="349.54174696065" y="301.320779282099" />
+    <Dynamo.Graph.Notes.NoteModel guid="c7a8206c-7b18-400f-92da-0a4d2a566920" text="INPUT:  Requires interaction / verification." x="379.08409772509" y="610.431861069001" />
+    <Dynamo.Graph.Notes.NoteModel guid="482a1e6b-5811-4432-943d-166cb0809a50" text="OUTPUT:  Suggests interaction / verification / review." x="379.21593842552" y="694.608088597101" />
+    <Dynamo.Graph.Notes.NoteModel guid="71a0e69b-fa74-4c1b-a305-14c7e230abc3" text="OUTPUT:  Requires interaction / verification/review." x="379.10586878514" y="779.2642375623" />
+    <Dynamo.Graph.Notes.NoteModel guid="4b22013c-f949-461d-98de-134f113788b6" text="OUTPUT:  Final data for use / further manipulation." x="378.93773117406" y="862.393943458901" />
+    <Dynamo.Graph.Notes.NoteModel guid="582de8fa-00b8-4bda-bef5-291503f12efa" text="THROUGHPUT:  No direct user interaction needed." x="379.36886528328" y="946.488870191901" />
+  </Notes>
+  <Annotations>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="2e5a0543-ca1f-423e-8baf-0ec46cfba42f" annotationText="INPUTS" left="29.1128389638228" top="580.990300868328" width="207" height="229.902792234145" fontSize="30" InitialTop="626.990300868328" InitialHeight="328.1365666005" TextblockHeight="36" backgrouund="#FFA4E1FF">
+      <Models ModelGuid="0731a1ac-cb71-4628-9560-7a62c5697117" />
+      <Models ModelGuid="3a95274f-9a01-496c-9255-34158f0dddfd" />
+      <Models ModelGuid="f40a9b86-f8c5-4d7b-97ad-e180aeab0075" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="7bbeec6e-283d-45a8-9ae8-23dc0f38c48b" annotationText="DESCRIPTION" left="27" top="51" width="632.79058164771" height="442.891516572501" fontSize="48" InitialTop="119" InitialHeight="412.891516572501" TextblockHeight="58" backgrouund="#FF848484">
+      <Models ModelGuid="3232b184-33ba-4333-a7de-015fea689203" />
+      <Models ModelGuid="ed269c17-ea70-4cfa-a13c-ecbf8ba13d2b" />
+      <Models ModelGuid="5a97714b-7256-41b9-9b6d-37b8200f7f43" />
+      <Models ModelGuid="d6882fb8-3dff-47d1-9138-b7bdcfe3a4ca" />
+      <Models ModelGuid="251437b0-7c49-481d-ab33-6e53b0a03bd2" />
+      <Models ModelGuid="8bc14a93-ea82-42b6-9cfe-0fb1281924fa" />
+      <Models ModelGuid="035bb8db-874d-4cc1-a1eb-68686b257d72" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="cbcfe4c3-510e-42af-a611-66666b1cb41c" annotationText="" left="369.08409772509" top="580.431861069001" width="260" height="74" fontSize="14" InitialTop="610.431861069001" InitialHeight="140" TextblockHeight="20" backgrouund="#FFA4E1FF">
+      <Models ModelGuid="c7a8206c-7b18-400f-92da-0a4d2a566920" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="6985dc12-8b6a-4a2a-a327-6db5213e19a8" annotationText="" left="369.21593842552" top="664.608088597101" width="319" height="74" fontSize="14" InitialTop="694.608088597101" InitialHeight="140" TextblockHeight="20" backgrouund="#FFFFC999">
+      <Models ModelGuid="482a1e6b-5811-4432-943d-166cb0809a50" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="503af2b1-e7af-4356-a90f-3e21263c512e" annotationText="" left="369.10586878514" top="749.2642375623" width="310" height="74" fontSize="14" InitialTop="779.2642375623" InitialHeight="140" TextblockHeight="20" backgrouund="#FFFFB8D8">
+      <Models ModelGuid="71a0e69b-fa74-4c1b-a305-14c7e230abc3" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="b0171f92-aac8-4567-b2fc-b161f6621110" annotationText="" left="368.93773117406" top="832.393943458901" width="308" height="74" fontSize="14" InitialTop="862.393943458901" InitialHeight="140" TextblockHeight="20" backgrouund="#FFB9F9E1">
+      <Models ModelGuid="4b22013c-f949-461d-98de-134f113788b6" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="b83b013e-2f94-42a1-8786-47f5b2f30e50" annotationText="" left="369.36886528328" top="916.488870191901" width="307" height="74" fontSize="14" InitialTop="946.488870191901" InitialHeight="140" TextblockHeight="20" backgrouund="#FFD8D8D8">
+      <Models ModelGuid="582de8fa-00b8-4bda-bef5-291503f12efa" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="605c4f67-68da-4d5f-a509-7d01170b75e2" annotationText="OUTPUTS" left="1341.47081437634" top="1712.37642973373" width="112.403333333333" height="107" fontSize="24" InitialTop="1751.37642973373" InitialHeight="175" TextblockHeight="29" backgrouund="#FFB9F9E1">
+      <Models ModelGuid="ec4a64ed-b2bd-4984-a5a2-537d42fea72e" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+    <Dynamo.Graph.Annotations.AnnotationModel guid="17c5e29f-0a6a-432e-ba07-472d032a5ef3" annotationText="READ VIEWS + CATEGORIES AND SELECT ELEMENTS OF CATEGORIES IN VIEWS" left="610.512363510474" top="1683.43431974505" width="473.373565220197" height="224.17946185489" fontSize="24" InitialTop="1751.43431974505" InitialHeight="112.350425974531" TextblockHeight="58" backgrouund="#FFD8D8D8">
+      <Models ModelGuid="6c04e673-f4fd-41ed-aee0-0c4f232c2a4d" />
+      <Models ModelGuid="7254c473-73db-411b-bd9b-3fa61b67d27b" />
+      <Models ModelGuid="257fc1f4-8b6e-4054-8d7f-6b4129344869" />
+      <Models ModelGuid="4e2b2f64-9e4f-460b-9ea7-634c05730810" />
+    </Dynamo.Graph.Annotations.AnnotationModel>
+  </Annotations>
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-2043.49084472656" eyeY="1541.20349121094" eyeZ="1529.39404296875" lookX="434.905822753906" lookY="-471.147979736328" lookZ="-2102.04467773438" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

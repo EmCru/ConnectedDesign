@@ -1,0 +1,133 @@
+<Workspace Version="1.3.2.2480" X="-495.405231479226" Y="-286.080423814168" zoom="1.545620359375" ScaleFactor="1" Name="Get_Fabrication_Specs" Description="get the fabrication specs from a Document" ID="392d3385-33fe-431e-a823-0292fb36cdf4" Category="ArupBimSF.Revit.Fabrication">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="c17199dc-f859-4e4c-8759-1bfbd0e44685" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1191.53153405566" y="315" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Spec Name" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0e3a2ea4-c0f1-4a54-8b0f-370aa2da5b04" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1194.50102305215" y="401.115180898256" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Spec Group" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="c4ed64ce-538e-41aa-a27e-ff464d6c287e" type="PythonNodeModels.PythonNode" nickname="Fabrication Specification Name" x="938.340617511044" y="317.222934590281" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Copyright(c) 2016, Nathan Chapman
+# nchapman@generalheating.com
+
+import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import FabricationConfiguration
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+Inpt = UnwrapElement(IN[0])
+ItmList = list()
+
+Doc = DocumentManager.Instance.CurrentDBDocument
+
+Config = FabricationConfiguration.GetFabricationConfiguration(Doc)
+
+for Item in Inpt:
+	SpecName = Config.GetSpecificationName(Item)
+	ItmList.append(SpecName)
+
+OUT = ItmList</Script>
+    </PythonNodeModels.PythonNode>
+    <PythonNodeModels.PythonNode guid="36bcaf31-ed3b-40c1-bab7-64a3fc519f3c" type="PythonNodeModels.PythonNode" nickname="Fabrication Specification Group" x="934.777686871806" y="394.121454973621" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Copyright(c) 2016, Nathan Chapman
+# nchapman@generalheating.com
+
+import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import FabricationConfiguration
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+Inpt = UnwrapElement(IN[0])
+ItmList = list()
+
+Doc = DocumentManager.Instance.CurrentDBDocument
+
+Config = FabricationConfiguration.GetFabricationConfiguration(Doc)
+
+for Item in Inpt:
+	SpecGrp = Config.GetSpecificationGroup(Item)
+	ItmList.append(SpecGrp)
+
+OUT = ItmList</Script>
+    </PythonNodeModels.PythonNode>
+    <PythonNodeModels.PythonNode guid="e6d3d689-28da-45b6-9fd0-b30c97aa6a5e" type="PythonNodeModels.PythonNode" nickname="Fabrication Specification Abbreviation" x="930.720847669793" y="465.36542643148" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Copyright(c) 2016, Nathan Chapman
+# nchapman@generalheating.com
+
+import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import FabricationConfiguration
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+Inpt = UnwrapElement(IN[0])
+ItmList = list()
+
+Doc = DocumentManager.Instance.CurrentDBDocument
+
+Config = FabricationConfiguration.GetFabricationConfiguration(Doc)
+
+for Item in Inpt:
+	SpecAbrn = Config.GetSpecificationAbbreviation(Item)
+	ItmList.append(SpecAbrn)
+
+OUT = ItmList</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="7f6db856-6ea4-4e9f-be5e-931a74f0050b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1189.55187472467" y="473.372746479551" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Spec Abbreviation" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="f35ffdd1-8769-4b5e-b19b-769e635aa28c" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="750.551075837578" y="370.184801076926" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <PythonNodeModels.PythonNode guid="0278cdbb-8b84-4d67-98fe-ece71151eed0" type="PythonNodeModels.PythonNode" nickname="Fabrication All Specification ID's" x="558" y="391.236242601539" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="0">
+      <Script>#Copyright(c) 2016, Nathan Chapman
+# nchapman@generalheating.com
+
+import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import FabricationConfiguration
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+Doc = DocumentManager.Instance.CurrentDBDocument
+
+ItmList = list()
+
+Config = FabricationConfiguration.GetFabricationConfiguration(Doc)
+AllSpecs = Config.GetAllSpecifications(None)
+
+ItmList.append(AllSpecs)
+
+OUT = ItmList</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="c4ed64ce-538e-41aa-a27e-ff464d6c287e" start_index="0" end="c17199dc-f859-4e4c-8759-1bfbd0e44685" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="36bcaf31-ed3b-40c1-bab7-64a3fc519f3c" start_index="0" end="0e3a2ea4-c0f1-4a54-8b0f-370aa2da5b04" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e6d3d689-28da-45b6-9fd0-b30c97aa6a5e" start_index="0" end="7f6db856-6ea4-4e9f-be5e-931a74f0050b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f35ffdd1-8769-4b5e-b19b-769e635aa28c" start_index="0" end="c4ed64ce-538e-41aa-a27e-ff464d6c287e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f35ffdd1-8769-4b5e-b19b-769e635aa28c" start_index="0" end="36bcaf31-ed3b-40c1-bab7-64a3fc519f3c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f35ffdd1-8769-4b5e-b19b-769e635aa28c" start_index="0" end="e6d3d689-28da-45b6-9fd0-b30c97aa6a5e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0278cdbb-8b84-4d67-98fe-ece71151eed0" start_index="0" end="f35ffdd1-8769-4b5e-b19b-769e635aa28c" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

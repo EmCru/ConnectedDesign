@@ -1,0 +1,53 @@
+<Workspace Version="1.3.2.2480" X="11" Y="8" zoom="1" ScaleFactor="1" Name="Get_DocumentWarnings" Description="get warnings from active document.  This only works with revit 2018 and higher" ID="3170f6ce-15b0-4866-abc2-df4a6a282ca0" Category="ArupBimSF.Revit.Document">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="a99d7a71-524d-4bd9-a3b0-c52fa8551797" type="PythonNodeModels.PythonNode" nickname="Python Script" x="421" y="392.020276544751" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Works only with Revit 2018+ and Dynamo 1.3.0+
+import clr
+#Import Revit Services
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+wlist = doc.GetWarnings()
+
+if isinstance(wlist, list):
+	wtext = wlist.GetDescriptionText()
+	welt = wlist.GetFailingElements()
+	wsev = wlist.GetSeverity()
+else:
+	wtext, welt, wsev = [], [], []
+	for i in wlist:
+		wtext.append(i.GetDescriptionText())
+		welt.append(i.GetFailingElements())
+		wsev.append(i.GetSeverity())
+OUT = wtext, welt, wsev</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="fffff3ce-2a75-4d70-9d14-a1e54dd8ed5f" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="590.373408952031" y="376.449485061455" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="seq[0];&#xA;seq[1];&#xA;seq[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="53fcc648-4276-48cb-869a-855814796fc6" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="802.699652788593" y="359" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//Failure message (string)&#xD;&#xA;WarningText" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9a90ddb3-46c5-4d60-88d5-b87acdd7a8e8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="803.580779432501" y="432.623972388504" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//Ids of the failing elements&#xD;&#xA;FailingElementIds" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="223e3c51-86e8-48a4-9b97-035e8e580cad" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="804.806347421654" y="508.019972693321" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//Failure severity&#xD;&#xA;FailureType" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="a99d7a71-524d-4bd9-a3b0-c52fa8551797" start_index="0" end="fffff3ce-2a75-4d70-9d14-a1e54dd8ed5f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fffff3ce-2a75-4d70-9d14-a1e54dd8ed5f" start_index="0" end="53fcc648-4276-48cb-869a-855814796fc6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fffff3ce-2a75-4d70-9d14-a1e54dd8ed5f" start_index="1" end="9a90ddb3-46c5-4d60-88d5-b87acdd7a8e8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fffff3ce-2a75-4d70-9d14-a1e54dd8ed5f" start_index="2" end="223e3c51-86e8-48a4-9b97-035e8e580cad" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

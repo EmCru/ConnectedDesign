@@ -1,0 +1,51 @@
+<Workspace Version="1.3.2.2480" X="-188.165" Y="25.95" zoom="0.8425" ScaleFactor="1" Name="Get All_ModelGroup Types" Description="collect all model groups in current project" ID="0aef9f02-16dd-45ff-9092-41abd9a3390c" Category="ArupBimSF.Revit.Element_Collectors">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="513a3c2c-233b-41d0-8e33-3fd592e656a5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1088.50470411615" y="536.293398817718" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="ModelGroupTypes" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="26da4b38-0013-4524-8ef4-4fbb3e959b1f" type="PythonNodeModels.PythonNode" nickname="Python Script" x="912.118063557065" y="498.819364429349" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false" inputcount="0">
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import DocumentManager
+clr.AddReference('RevitServices')
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+# Import Revit API
+clr.AddReference('RevitAPI')
+import Autodesk.Revit.DB
+from Autodesk.Revit.DB import *
+
+# Import ToDSType(bool) extension method
+clr.AddReference('RevitNodes')
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+def GetModelGroupTypes(doc):
+  return list(
+      modelGroupType.ToDSType(True) for modelGroupType in
+      FilteredElementCollector(doc)
+      .OfCategory(BuiltInCategory.OST_IOSModelGroups)
+      .OfClass(GroupType)
+    )
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+modelGroupTypes = GetModelGroupTypes(doc)
+
+#Assign your output to the OUT variable.
+OUT = modelGroupTypes
+</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="26da4b38-0013-4524-8ef4-4fbb3e959b1f" start_index="0" end="513a3c2c-233b-41d0-8e33-3fd592e656a5" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

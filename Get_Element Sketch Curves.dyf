@@ -1,0 +1,135 @@
+<Workspace Version="1.3.2.2480" X="-156.936903926865" Y="-64.576239365768" zoom="0.982642311367965" ScaleFactor="1" Name="Get_Element Sketch Curves" Description="Gets the sketch element (boundary) from families defined by planar sketches (floors, beam system, filled region, etc)" ID="88309663-7ffa-41ed-b5fc-17a5a60cf08d" Category="ArupBimSF.Revit.Elements">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="ef7b5498-f593-4121-9017-000079c91470" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1169.74700709984" y="266.798827596447" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="curves" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="47e9e5e5-c877-4f74-a980-88bd6bde028a" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="995.8" y="339.4" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="res[0];&#xA;res[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="43b93e54-c39c-4b9c-9937-6487f72750a5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1172.2" y="393.2" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="model curves" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="e96ba84b-9348-4fa4-9771-d611e68a7247" type="PythonNodeModels.PythonNode" nickname="Python Script" x="855.820681948369" y="340" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+import math
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"): return obj1
+	else: return [obj1]
+
+def output1(l1):
+	if len(l1) == 1: return l1[0]
+	else: return l1
+
+elements = UnwrapElement(tolist(IN[0]))
+getModel = IN[1]
+
+accepted_mc = "Autodesk.Revit.DB.ModelLine, Autodesk.Revit.DB.ModelArc, Autodesk.Revit.DB.ModelEllipse, Autodesk.Revit.DB.ModelHermiteSpline, Autodesk.Revit.DB.ModelNurbSpline"
+
+def almost_eq(line, mc):
+	line2 = mc.Location.Curve
+	xyz1 = line.Evaluate(0.5, True)
+	if not line2.IsBound:
+		xyz2 = line2.Center
+		try: xyz1 = line.Center
+		except: pass
+	else:
+		xyz2 = line2.Evaluate(0.5, True)
+	if xyz1.DistanceTo(xyz2) &lt;= 0.0001:
+		return True
+	else:
+		return False
+
+def clean1(l1):
+	for i in xrange(len(l1) ):
+		l1[i] = [x for x in l1[i] if x != None]
+	return l1
+
+def getSketch(el1):
+	try:
+		sk1 = doc.GetElement(ElementId(el1.Id.IntegerValue - 1) )
+	except:
+		sk1 = None
+	if not getModel and sk1 is not None and sk1.GetType().ToString() == 'Autodesk.Revit.DB.Sketch':
+		profile = sk1.Profile
+	else:
+		t1 = SubTransaction(doc)
+		t1.Start()
+		deleted = doc.Delete(el1.Id)
+		t1.RollBack()
+		
+		profile, mc = CurveArrArray(), []
+		for d in deleted:
+			test_el = doc.GetElement(d)
+			el_type = test_el.GetType().ToString()
+			if el_type == "Autodesk.Revit.DB.Sketch":
+				profile = test_el.Profile
+				if not getModel:
+					break
+			elif getModel and el_type in accepted_mc :
+				mc.append(test_el)
+
+	ordered_mc = [ [None] * i.Size for i in profile] if getModel else []
+	curves = [ [None] * i.Size for i in profile]
+	for i in xrange(profile.Size):
+		for j in xrange(profile[i].Size):
+			curves[i][j] = profile[i][j].ToProtoType()
+			if getModel:
+				for k in xrange(len(mc)):
+					if almost_eq(profile[i][j], mc[k]):
+						ordered_mc[i][j] = mc[k].ToDSType(True)
+						del mc[k]
+						break
+						
+	return curves, clean1(ordered_mc)
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+result = map(getSketch, elements)
+TransactionManager.Instance.TransactionTaskDone()
+OUT = output1([r[0] for r in result]), output1([r[1] for r in result])</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="753819df-f98f-47e6-bbcd-556252ba4d2f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="532.010316345044" y="332.334338245269" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements_In:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="30e1fe28-cb2b-45a7-88d4-d481330f277e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="511.542110315065" y="406.759397052839" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Get_ModelCurves:bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0d16945d-45ad-4797-ab7d-52ed86ade817" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="529.03795465112" y="480.412241179062" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ReFresh:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="47e9e5e5-c877-4f74-a980-88bd6bde028a" start_index="0" end="ef7b5498-f593-4121-9017-000079c91470" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="47e9e5e5-c877-4f74-a980-88bd6bde028a" start_index="1" end="43b93e54-c39c-4b9c-9937-6487f72750a5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e96ba84b-9348-4fa4-9771-d611e68a7247" start_index="0" end="47e9e5e5-c877-4f74-a980-88bd6bde028a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="753819df-f98f-47e6-bbcd-556252ba4d2f" start_index="0" end="e96ba84b-9348-4fa4-9771-d611e68a7247" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="30e1fe28-cb2b-45a7-88d4-d481330f277e" start_index="0" end="e96ba84b-9348-4fa4-9771-d611e68a7247" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0d16945d-45ad-4797-ab7d-52ed86ade817" start_index="0" end="e96ba84b-9348-4fa4-9771-d611e68a7247" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

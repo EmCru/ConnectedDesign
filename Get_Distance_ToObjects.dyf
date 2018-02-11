@@ -1,0 +1,60 @@
+<Workspace Version="1.3.2.2480" X="86.5087082903815" Y="32.3628793347635" zoom="0.670998674854747" ScaleFactor="1" Name="Get_Distance➜Objects" Description="finds the closest geometry to input geometry.  Returns closest object and point" ID="72c0d9c4-317f-410e-b77d-888dc8b8b76d" Category="ArupBimSF.Points &amp; Coordinates">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="Autodesk.Geometry" resolvedName="Autodesk.DesignScript.Geometry.Geometry" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="697e04ae-3217-44c1-a634-44c7c1e66141" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1852.01815580013" y="723.530396383358" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Closest Object" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="e2d64b39-e315-439c-bbae-9456a9f96848" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1308.61042038755" y="844.147480625403" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="filtered = List.FilterByBoolMask(geom, mask)[&quot;in&quot;];&#xA;Flatten(filtered);&#xA;Flatten(filtered.ClosestPointTo(other));" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d54001b7-f951-4066-942c-fb924a159c27" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1877.13375873167" y="852.410381038722" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Closest Point" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <CoreNodeModels.Formula guid="16d50833-a8cf-4b98-a429-d09e3e1fafe8" type="CoreNodeModels.Formula" nickname="Formula" x="1127.05707745656" y="745.284964400227" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <FormulaText>a=b</FormulaText>
+    </CoreNodeModels.Formula>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="580b2688-6a4e-4c39-b57d-ba513ea08d6c" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="725.753487759916" y="571.827494150717" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="seq2 = seq1.DistanceTo(p);&#xA;mind = List.MinimumItem(seq2);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="dc8fbd3c-698e-4a3e-9fe7-117c36f0de3d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="319.081996328015" y="577.120982906857" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="geometry : Autodesk.Geometry[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="ca0edf45-fc1a-4fdd-9c88-07795f437705" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="309.236570296534" y="874.078718758401" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="others : Autodesk.Geometry" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="3cea6b54-64ae-42a3-8c5c-2875f3da7985" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1352.52224611798" y="641.966600387214" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Distance To Closest" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="512cbb08-3bc8-4164-9e3a-2dc95c49cacd" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1344.20869598939" y="564.571815340116" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Distance To All" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="e2d64b39-e315-439c-bbae-9456a9f96848" start_index="1" end="697e04ae-3217-44c1-a634-44c7c1e66141" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e2d64b39-e315-439c-bbae-9456a9f96848" start_index="2" end="d54001b7-f951-4066-942c-fb924a159c27" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="16d50833-a8cf-4b98-a429-d09e3e1fafe8" start_index="0" end="e2d64b39-e315-439c-bbae-9456a9f96848" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="580b2688-6a4e-4c39-b57d-ba513ea08d6c" start_index="0" end="16d50833-a8cf-4b98-a429-d09e3e1fafe8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="580b2688-6a4e-4c39-b57d-ba513ea08d6c" start_index="0" end="512cbb08-3bc8-4164-9e3a-2dc95c49cacd" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="580b2688-6a4e-4c39-b57d-ba513ea08d6c" start_index="1" end="16d50833-a8cf-4b98-a429-d09e3e1fafe8" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="580b2688-6a4e-4c39-b57d-ba513ea08d6c" start_index="1" end="3cea6b54-64ae-42a3-8c5c-2875f3da7985" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="dc8fbd3c-698e-4a3e-9fe7-117c36f0de3d" start_index="0" end="e2d64b39-e315-439c-bbae-9456a9f96848" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="dc8fbd3c-698e-4a3e-9fe7-117c36f0de3d" start_index="0" end="580b2688-6a4e-4c39-b57d-ba513ea08d6c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ca0edf45-fc1a-4fdd-9c88-07795f437705" start_index="0" end="e2d64b39-e315-439c-bbae-9456a9f96848" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ca0edf45-fc1a-4fdd-9c88-07795f437705" start_index="0" end="580b2688-6a4e-4c39-b57d-ba513ea08d6c" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

@@ -1,0 +1,95 @@
+<Workspace Version="1.3.2.2480" X="-691.705920186591" Y="-83.092635710444" zoom="1.30764135636719" ScaleFactor="1" Name="Get_Elements_By Id" Description="Select Revit Elements By Id and Doc input. Works with open or closed documents" ID="2d07df5e-66c3-4500-98c1-c730f41a7534" Category="ArupBimSF.Revit.Element_Selectors">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="15ad6a20-e1aa-4c3b-8312-60d62c52d914" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1360.68778530063" y="410.188661024413" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+from System.Collections.Generic import *
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+doc = IN[1]
+
+def toRvtId(_id):
+	if isinstance(_id, int) or isinstance(_id, str):
+		id = ElementId(int(_id))
+		return id
+	elif isinstance(_id, ElementId):
+		return _id
+
+#unwrap incoming information for use with API
+ids = []
+for i in IN[0]:
+    ids.append(UnwrapElement(i))
+
+#use element ids to select elements
+elements = []
+message = None
+try:
+	for i in ids:
+		elements.append(doc.GetElement(toRvtId(i)).ToDSType(True))
+except:
+	message = "Invalid Id"
+	pass
+
+#Assign your output to the OUT variable
+if message != None:
+	OUT =  '\n'.join('{:^35}'.format(s) for s in message.split('\n'))
+else:
+	OUT = elements</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="102eef19-2ef4-405d-a8f8-b4ee24bf814d" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1497.03855897929" y="295.952672807916" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="13d379eb-b1b2-4e83-8e52-466214ab58da" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="1143.39845225818" y="281.213903900137" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.CreateList guid="d4469931-4dfe-42dd-82f8-9417410412e6" type="CoreNodeModels.CreateList" nickname="List.Create" x="981.286566376406" y="279.174693755514" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </CoreNodeModels.CreateList>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="77bfe6ed-d804-4e22-a79e-64ce0a43c55d" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Empty" x="826.922153239731" y="242.65586161726" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Empty" />
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5acc579f-3b88-49ad-88df-fb4c5ba83790" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="829.711277507061" y="357.228450271862" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Ids_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="efca17e1-9613-4093-8343-84b6376dce15" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="831.769562461994" y="454.396009078126" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Doc" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="15ad6a20-e1aa-4c3b-8312-60d62c52d914" start_index="0" end="102eef19-2ef4-405d-a8f8-b4ee24bf814d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="13d379eb-b1b2-4e83-8e52-466214ab58da" start_index="0" end="15ad6a20-e1aa-4c3b-8312-60d62c52d914" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d4469931-4dfe-42dd-82f8-9417410412e6" start_index="0" end="13d379eb-b1b2-4e83-8e52-466214ab58da" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="77bfe6ed-d804-4e22-a79e-64ce0a43c55d" start_index="0" end="d4469931-4dfe-42dd-82f8-9417410412e6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5acc579f-3b88-49ad-88df-fb4c5ba83790" start_index="0" end="d4469931-4dfe-42dd-82f8-9417410412e6" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="efca17e1-9613-4093-8343-84b6376dce15" start_index="0" end="15ad6a20-e1aa-4c3b-8312-60d62c52d914" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

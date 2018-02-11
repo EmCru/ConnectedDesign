@@ -1,0 +1,46 @@
+<Workspace Version="1.3.2.2480" X="-148" Y="371" zoom="1" ScaleFactor="1" Name="➜GetFromClipBoard" Description="gets text strings copied to clipboard" ID="4efae743-341f-4472-967a-e04d786b49d9" Category="ArupBimSF.Data Transfer">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="b8802e15-5750-4b8e-96d8-fa6938e69207" type="PythonNodeModels.PythonNode" nickname="Python Script" x="874.352574102964" y="28.2698907956318" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+import System
+from System.Threading import Thread, ThreadStart
+clr.AddReference("System.Windows.Forms")
+
+clipboardcontents = '###'
+
+def GetText():
+    def thread_proc():
+        global clipboardcontents
+        clipboardcontents = System.Windows.Forms.Clipboard.GetText()
+    t = Thread(ThreadStart(thread_proc))
+    t.ApartmentState = System.Threading.ApartmentState.STA
+    t.Start()
+    t.Join()
+
+try:
+	GetText()
+	OUT = clipboardcontents
+except:
+	OUT = 'Data could not be copied to clipboard'</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b89d3904-a7f8-463e-9cac-5970bde7f8ea" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1125" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="str" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="422455bd-c726-4889-87f9-ed499927d3ba" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="602" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="toggle : bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b8802e15-5750-4b8e-96d8-fa6938e69207" start_index="0" end="b89d3904-a7f8-463e-9cac-5970bde7f8ea" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="422455bd-c726-4889-87f9-ed499927d3ba" start_index="0" end="b8802e15-5750-4b8e-96d8-fa6938e69207" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

@@ -1,0 +1,72 @@
+<Workspace Version="1.3.2.2480" X="404.662016357255" Y="94.3550049225929" zoom="0.965566782607747" ScaleFactor="1" Name="Get_LineStyle.Info_FromLines" Description="Gives LineStyle name and element of Lines" ID="e8c4a721-c340-447a-adbb-d7897a170cbb" Category="ArupBimSF.Revit.Lines,Text &amp; Styles">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="0ae6fe77-cd2a-4f1b-90fa-2381928b171a" type="PythonNodeModels.PythonNode" nickname="Python Script" x="370.750444286735" y="243.234820816619" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitServices')
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+clr.AddReference('RevitNodes')
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+if isinstance(IN[0],list):
+	lines = UnwrapElement(IN[0])
+else:
+	lines = [UnwrapElement(IN[0])]
+	
+linestyles = []
+linestyleids = []
+
+for l in lines:
+	linestyles.append(l.LineStyle.Name)
+	linestyleids.append(l.LineStyle)
+
+
+OUT = [linestyles,linestyleids]
+
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="99951c64-58e4-437a-9d2e-9087002355ba" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="74.3778256985844" y="246.184150781089" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Lines_In : var[] " />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="3058ebe6-edf8-4922-b15c-0ca98f989587" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="766.324116949974" y="186.10570851369" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Style_Name" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="ecac1bc6-09de-4e0a-8cea-bcbbcfd2e354" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="540.518050976413" y="239.777769671849" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="out[0];&#xA;out[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="87e17492-023e-409d-a55b-2c5f33685cc5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="762.830468214541" y="277.344909043762" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="GraphicStyle" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="97496d1b-a035-4015-8d74-07e4a68ede96" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Element.Id" x="715.165543273982" y="360.138280940816" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Element.Id">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="736b78aa-e39c-40bd-ad2c-dd1074b10896" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="957.118802187198" y="353.559143502856" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Type_Id" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0ae6fe77-cd2a-4f1b-90fa-2381928b171a" start_index="0" end="ecac1bc6-09de-4e0a-8cea-bcbbcfd2e354" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="99951c64-58e4-437a-9d2e-9087002355ba" start_index="0" end="0ae6fe77-cd2a-4f1b-90fa-2381928b171a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecac1bc6-09de-4e0a-8cea-bcbbcfd2e354" start_index="0" end="3058ebe6-edf8-4922-b15c-0ca98f989587" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecac1bc6-09de-4e0a-8cea-bcbbcfd2e354" start_index="1" end="87e17492-023e-409d-a55b-2c5f33685cc5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecac1bc6-09de-4e0a-8cea-bcbbcfd2e354" start_index="1" end="97496d1b-a035-4015-8d74-07e4a68ede96" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="97496d1b-a035-4015-8d74-07e4a68ede96" start_index="0" end="736b78aa-e39c-40bd-ad2c-dd1074b10896" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

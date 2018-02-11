@@ -1,0 +1,60 @@
+<Workspace Version="1.3.2.2480" X="-211.849946332637" Y="64.350036560049" zoom="0.982642311367965" ScaleFactor="1" Name="Get_Element Name" Description="Get the element name from all types of elements including system families" ID="5b18114a-b075-42b2-b1e9-c73d7cd42c99" Category="ArupBimSF.Revit.Elements">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="dafa376f-507e-439c-8ffb-2f2676dcc9b1" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1507.41706385866" y="327.772535082062" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Names_Out" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="1cdf511b-a9cc-4e18-b299-d60d041b23e7" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1085.12598577276" y="434.514646608753" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+faminsts = IN[0]
+elementlist = list()
+for item in faminsts:
+	try:
+		n = UnwrapElement(item).Name
+	except:
+		# Use a built-in property of (wrapped) Dynamo elements for family symbols instead
+		try:
+			n = item.Name
+		except:
+			# maybe it's a parameter name
+			try:
+				n = item.Definition.Name
+			except:
+				n = []
+	elementlist.append(n)
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f18dd95f-4c91-446b-87b5-fdf34bcb2dd0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="639.320472828228" y="391.98001105751" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Input: var" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="c6401e6f-0d1b-452d-a7bc-59b4d6dbcfd7" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="830.311532822492" y="318.4966479847" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="8fadceef-ec0f-46b2-9de2-e34840a411a6" type="PythonNodeModels.PythonNode" nickname="Return List Or Single Value" x="1244.07652462785" y="330.707348984415" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>check = IN[0]
+items = IN[1]
+if isinstance(check, (list)): OUT = items
+else: OUT = items[0]</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="1cdf511b-a9cc-4e18-b299-d60d041b23e7" start_index="0" end="8fadceef-ec0f-46b2-9de2-e34840a411a6" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f18dd95f-4c91-446b-87b5-fdf34bcb2dd0" start_index="0" end="c6401e6f-0d1b-452d-a7bc-59b4d6dbcfd7" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f18dd95f-4c91-446b-87b5-fdf34bcb2dd0" start_index="0" end="8fadceef-ec0f-46b2-9de2-e34840a411a6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c6401e6f-0d1b-452d-a7bc-59b4d6dbcfd7" start_index="0" end="1cdf511b-a9cc-4e18-b299-d60d041b23e7" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8fadceef-ec0f-46b2-9de2-e34840a411a6" start_index="0" end="dafa376f-507e-439c-8ffb-2f2676dcc9b1" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

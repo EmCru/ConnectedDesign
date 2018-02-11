@@ -1,0 +1,63 @@
+<Workspace Version="1.3.2.2480" X="-676.489306295026" Y="-175.834480290163" zoom="1.24844365397223" ScaleFactor="1" Name="Get_Intersection" Description="get the intersecting solid of two input geometries" ID="9a782eff-6ae7-4edb-bc86-17a727b3664c" Category="ArupBimSF.Geometry">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f08acba3-bfad-47af-92e6-12ae01b6ffa8" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1395.91691079179" y="391.473037915308" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="9386dafc-49de-4406-94fa-382ac6f4d70c" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="1126.02248003452" y="360.178059330109" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <PythonNodeModels.PythonNode guid="af342c88-acb1-430d-a4e9-09c8ac7e1aca" type="PythonNodeModels.PythonNode" nickname="Python Script" x="945.838054042986" y="380.733621699097" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+clr.AddReference("RevitNodes")
+
+import Revit
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+baseGeometry = IN[0]
+intersectionGeometry = IN[1]
+interferences = []
+
+
+for i in intersectionGeometry:
+	for j in baseGeometry:
+		interference = i.DoesIntersect(j)
+		if interference == True:
+			interferences.append(j.Intersect(i))
+
+			
+			
+OUT = interferences
+			</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0439ab84-d661-4cac-81a8-ed4e88cd0c39" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="753.4" y="377" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Base_Geo" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="3bee9e80-0d2a-4792-8523-1ed440392234" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="689.917322683734" y="445.383070287648" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Intersection_Geo" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9386dafc-49de-4406-94fa-382ac6f4d70c" start_index="0" end="f08acba3-bfad-47af-92e6-12ae01b6ffa8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="af342c88-acb1-430d-a4e9-09c8ac7e1aca" start_index="0" end="9386dafc-49de-4406-94fa-382ac6f4d70c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0439ab84-d661-4cac-81a8-ed4e88cd0c39" start_index="0" end="af342c88-acb1-430d-a4e9-09c8ac7e1aca" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3bee9e80-0d2a-4792-8523-1ed440392234" start_index="0" end="af342c88-acb1-430d-a4e9-09c8ac7e1aca" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

@@ -1,0 +1,72 @@
+<Workspace Version="1.3.2.2480" X="-304" Y="354" zoom="1" ScaleFactor="1" Name="Get_Filled Region_BoundaryCurves" Description="gets the boundary curves from input filled regions" ID="d932b0c8-92aa-4623-b2d6-2a32a938454b" Category="ArupBimSF.Revit.Elements">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="4512a500-10d7-43d2-bb02-d52fc97d9336" type="PythonNodeModels.PythonNode" nickname="Python Script" x="873" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB.Analysis import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import ToProtoType, ToRevitType geometry conversion extension methods
+clr.ImportExtensions(Revit.GeometryConversion)
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+filledRegions = UnwrapElement(IN[0])
+
+def process_list(_func, _list):
+    return map( lambda x: process_list(_func, x) if type(x)==list else _func(x), _list )
+
+def ToDSType(item):
+	curves = []
+	for i in item:
+		curves.append(i.ToProtoType())
+	return curves
+
+curves = []
+for i in filledRegions:
+	curves.append(process_list(ToDSType, i.GetBoundaries()))
+
+#Assign your output to the OUT variable
+OUT = curves</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="731419b1-2332-4b6a-b37a-1e514326cbdf" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1072" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Boundary Curves" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="667e6775-afbd-4f73-9096-d189dae1e7ad" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="623" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Filled Region" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="4512a500-10d7-43d2-bb02-d52fc97d9336" start_index="0" end="731419b1-2332-4b6a-b37a-1e514326cbdf" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="667e6775-afbd-4f73-9096-d189dae1e7ad" start_index="0" end="4512a500-10d7-43d2-bb02-d52fc97d9336" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

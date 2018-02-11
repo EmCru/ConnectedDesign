@@ -1,0 +1,67 @@
+<Workspace Version="1.3.2.2480" X="218" Y="91" zoom="1" ScaleFactor="1" Name="Get_Elements_BySelectInRevitByCategory" Description="Get Elements by select in revit by category. This isoloates you selection so you can only select the category chosen._!se" ID="2ae07c71-558e-4460-b9cf-3a4ff6193646" Category="ArupBimSF.Revit.Element_Selectors">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="6b846430-feed-4b2a-b281-901c2c38414d" type="PythonNodeModels.PythonNode" nickname="Python Script" x="653" y="342" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright (c) mostafa el ayoubi ,  2017
+#Data-Shapes www.data-shapes.net , elayoubi.mostafa@gmail.com
+#This work was inspired by @DanielHurtubise
+
+import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+clr.AddReference('RevitAPIUI')
+from Autodesk.Revit.UI import*
+from Autodesk.Revit.UI.Selection import ObjectType , ISelectionFilter
+clr.AddReference('RevitServices')
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uidoc = uidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
+
+class selectionfilter(ISelectionFilter):
+	def __init__(self,categories):
+		self.categories = categories
+	def AllowElement(self,element):
+		if element.Category.Name in [c.Name for c in self.categories] :
+			return True
+		else:
+			return False
+	def AllowReference(reference,point):
+		return False
+
+if isinstance(IN[0],list):
+	categories = UnwrapElement(IN[0])
+else:
+	categories = [UnwrapElement(IN[0])]
+	
+selfilt = selectionfilter(categories)
+catnames = ', '.join([c.Name for c in categories])
+if IN[1]:
+	sel = uidoc.Selection.PickObjects(Selection.ObjectType.Element,selfilt,'Select %s' %(catnames))
+	selelem = [doc.GetElement(s.ElementId) for s in sel]
+	OUT = selelem
+else:
+	OUT = 'Set toggle to true!'</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d0397833-ab08-4fc1-be89-329b90ab4cca" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="850" y="342" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="cc6f0403-4483-4f0e-8458-2260507b7b31" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="399.5" y="310" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Category" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="46883b32-a5c4-451b-bba2-0e026e2c2f2e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="345" y="408" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Toggle : bool = false" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6b846430-feed-4b2a-b281-901c2c38414d" start_index="0" end="d0397833-ab08-4fc1-be89-329b90ab4cca" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="cc6f0403-4483-4f0e-8458-2260507b7b31" start_index="0" end="6b846430-feed-4b2a-b281-901c2c38414d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="46883b32-a5c4-451b-bba2-0e026e2c2f2e" start_index="0" end="6b846430-feed-4b2a-b281-901c2c38414d" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

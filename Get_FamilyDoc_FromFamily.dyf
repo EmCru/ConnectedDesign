@@ -1,0 +1,47 @@
+<Workspace Version="1.3.2.2480" X="-173" Y="154" zoom="1" ScaleFactor="1" Name="Get_FamilyDoc_FromFamily" Description="gets the family document from input family" ID="2d3480ed-c8d9-4345-a9af-278723fa8f21" Category="ArupBimSF.Revit.Directory">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="657cb103-457d-4433-ae3c-09fd2bf85821" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1268.93271681082" y="15.8021763688112" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Family.Doc" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="98f4cbdb-1871-4c39-86eb-e4206f6871d5" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1050.57232018189" y="15.8021763688112" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+element = UnwrapElement(IN[0])
+family = []
+fdoc = []
+for i in element:
+	family = Document.EditFamily(doc,i)
+	fdoc.append(family)
+
+OUT = fdoc</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="b8a99eb1-33c2-4ca7-8a3d-753b0b6ba30d" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.UniqueItems" x="828.476871843281" y="154.005035747683" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.UniqueItems@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1262d533-ee6f-492e-af50-a9ace2eb426d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="750.313296640628" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Family" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="98f4cbdb-1871-4c39-86eb-e4206f6871d5" start_index="0" end="657cb103-457d-4433-ae3c-09fd2bf85821" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b8a99eb1-33c2-4ca7-8a3d-753b0b6ba30d" start_index="0" end="98f4cbdb-1871-4c39-86eb-e4206f6871d5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1262d533-ee6f-492e-af50-a9ace2eb426d" start_index="0" end="b8a99eb1-33c2-4ca7-8a3d-753b0b6ba30d" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

@@ -1,0 +1,67 @@
+<Workspace Version="1.3.2.2480" X="142.33" Y="128.075" zoom="0.8425" ScaleFactor="1" Name="Get_DynamoElements_By Revit Selection" Description="get a list of elements selected in revit" ID="200ae5a2-7612-4858-bf6c-50b40e9e14a7" Category="ArupBimSF.Revit.Element_Selectors">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="ee791041-890e-4b6a-a091-2c048e60c3fc" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="871" y="252" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="fe25e0ea-99cc-462b-abe6-5cfa166eddce" type="PythonNodeModels.PythonNode" nickname="Python Script" x="649" y="252" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#python nodes in dynamo 1.0
+#proposed by Julien Benoit @jbenoit44 
+#http://aecuandme.wordpress.com/
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+# Import geometry conversion extension methods
+clr.ImportExtensions(Revit.GeometryConversion)
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+from System.Collections.Generic import *
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+uidoc=DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument
+
+sel=[]
+elt=[]
+# Start Transaction
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+sel=uidoc.Selection.GetElementIds()
+
+for i in sel:
+	elt.append(doc.GetElement(i).ToDSType(True))
+		
+# End Transaction
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT=elt</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="7f13374d-4245-4941-9fb2-89011cf3a97c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="364" y="320" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="reset:bool = true;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="8406bbd9-db7f-4541-b43d-293423b92a28" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Empty" x="364" y="231.364985163205" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Empty" />
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="fe25e0ea-99cc-462b-abe6-5cfa166eddce" start_index="0" end="ee791041-890e-4b6a-a091-2c048e60c3fc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7f13374d-4245-4941-9fb2-89011cf3a97c" start_index="0" end="fe25e0ea-99cc-462b-abe6-5cfa166eddce" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8406bbd9-db7f-4541-b43d-293423b92a28" start_index="0" end="fe25e0ea-99cc-462b-abe6-5cfa166eddce" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

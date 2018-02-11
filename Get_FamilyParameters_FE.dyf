@@ -1,0 +1,39 @@
+<Workspace Version="1.3.2.2480" X="-744.262236674575" Y="327.75546109375" zoom="1.545620359375" ScaleFactor="1" Name="Get_FamilyParameters_FE" Description="Gets all family parameters in a family (inside the family editor)._!!FE" ID="1e9285d7-ea5e-408c-8edb-832c54125799" Category="ArupBimSF.Revit.FamilyEditor">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1728a245-252b-4da0-98ec-6eb2134e1384" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1086.40968221467" y="19.9409682214675" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="familyParameters" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="8881fdd5-af34-4570-a3e5-c948d4d5f127" type="PythonNodeModels.PythonNode" nickname="Python Script" x="873.412042371377" y="19.0590317785326" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+elementlist = list()
+if doc.IsFamilyDocument:
+	for param in doc.FamilyManager.Parameters:
+		elementlist.append(param)
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="78f71311-44af-44e0-a721-d7c3774f76d6" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="581.828805056158" y="21.2939788143116" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Refresh : bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="8881fdd5-af34-4570-a3e5-c948d4d5f127" start_index="0" end="1728a245-252b-4da0-98ec-6eb2134e1384" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="78f71311-44af-44e0-a721-d7c3774f76d6" start_index="0" end="8881fdd5-af34-4570-a3e5-c948d4d5f127" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>
