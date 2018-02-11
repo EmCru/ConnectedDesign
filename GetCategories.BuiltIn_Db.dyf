@@ -1,0 +1,55 @@
+<Workspace Version="1.3.2.2480" X="-272" Y="-71" zoom="1" ScaleFactor="1" Name="GetCategories.BuiltIn_Db" Description="collects all builtin Categories in revit database" ID="d09077c3-540e-4801-a253-abf348e8c414" Category="ArupBimSF.Revit.Document">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="3f925b5c-6c1b-405f-a3e6-906094a3fd2d" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1368.0645976269" y="465.090490789003" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="BuiltInCategories" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="8f1443fc-885a-422a-a34a-923a4eae7fcd" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1140.0645976269" y="511.303824122336" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="seq[0];&#xA;seq[1];&#xA;seq[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="80afd7d5-bfbe-44b3-85d7-ccb6c10936bf" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1368.0645976269" y="549.090490789003" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="ElementIDs" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="7c6c3192-6be5-4f95-b7d1-42dc00f4ff2d" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Transpose" x="916.235835449526" y="464" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Transpose@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="054c951a-8b28-4d99-92a1-b6035d001d57" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1379.33738538472" y="627.875254594725" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Categories" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="7cfa46d0-e99f-49b5-8807-2d08c96ebabb" type="PythonNodeModels.PythonNode" nickname="Python Script" x="778" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false" inputcount="0">
+      <Script>import clr
+import System
+clr.AddReference('RevitAPI')
+clr.AddReference('RevitAPIUI')
+from Autodesk.Revit.DB import *
+import Autodesk
+clr.AddReference("RevitNodes")
+import Revit
+
+bics = System.Enum.GetValues(BuiltInCategory)
+cdata = list()
+for bic in bics:
+	try:
+		cdata.append((bic,ElementId(bic),Revit.Elements.Category.ById(ElementId(bic).IntegerValue)))
+	except:
+		pass
+OUT = cdata</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="8f1443fc-885a-422a-a34a-923a4eae7fcd" start_index="0" end="3f925b5c-6c1b-405f-a3e6-906094a3fd2d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8f1443fc-885a-422a-a34a-923a4eae7fcd" start_index="1" end="80afd7d5-bfbe-44b3-85d7-ccb6c10936bf" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8f1443fc-885a-422a-a34a-923a4eae7fcd" start_index="2" end="054c951a-8b28-4d99-92a1-b6035d001d57" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7c6c3192-6be5-4f95-b7d1-42dc00f4ff2d" start_index="0" end="8f1443fc-885a-422a-a34a-923a4eae7fcd" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7cfa46d0-e99f-49b5-8807-2d08c96ebabb" start_index="0" end="7c6c3192-6be5-4f95-b7d1-42dc00f4ff2d" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

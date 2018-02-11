@@ -1,0 +1,50 @@
+<Workspace Version="1.3.2.2480" X="-476.425580724858" Y="-183.789018827874" zoom="1.545620359375" ScaleFactor="1" Name="Number➜String" Description="Converts a number to a string" ID="d89880a6-9e6c-4d7c-9cb8-4f0fd291f8df" Category="ArupBimSF.String Functions">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="0799bd22-a105-4ca0-9632-c022bf5fd2f9" type="PythonNodeModels.PythonNode" nickname="Python Script" x="658.584610546892" y="305.109668493993" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script># Copyright(c) 2017, Dimitar Venkov
+# @5devene, dimitar.ven@gmail.com
+# www.badmonkeys.net
+
+def tolist(x):
+	if hasattr(x,'__iter__'): return x
+	else : return [x]
+
+def output(x):
+	if len(x) == 1: return x[0]
+	else : return x
+
+def n2s(n, digits=IN[1]):
+	if digits is not None:
+		n = round(n, digits)
+	s1 = str(n)
+	if s1[-2:] == ".0":
+		s1 = s1[:-2]
+	return s1
+
+nums = tolist(IN[0])
+
+OUT = output(map(n2s, nums) )</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="62840e2d-8973-443c-8e0c-65ab698074aa" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="815.391240667026" y="303" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="str" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="9282fec3-87ee-46dc-b23e-78df8c0bcfb4" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="533.103577646199" y="305.580128146495" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="num:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b7511eb2-5ba6-4b80-bb89-65eae8b427a1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="445.767413120923" y="395.354922084356" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="digits:int = null" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0799bd22-a105-4ca0-9632-c022bf5fd2f9" start_index="0" end="62840e2d-8973-443c-8e0c-65ab698074aa" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9282fec3-87ee-46dc-b23e-78df8c0bcfb4" start_index="0" end="0799bd22-a105-4ca0-9632-c022bf5fd2f9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b7511eb2-5ba6-4b80-bb89-65eae8b427a1" start_index="0" end="0799bd22-a105-4ca0-9632-c022bf5fd2f9" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

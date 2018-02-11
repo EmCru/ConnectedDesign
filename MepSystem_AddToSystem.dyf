@@ -1,0 +1,125 @@
+<Workspace Version="1.3.2.2480" X="-334" Y="133" zoom="1" ScaleFactor="1" Name="MepSystem_AddToSystem" Description="adds input elements to mep system " ID="6365764d-f371-450b-9e09-6bce1e5f41d0" Category="ArupBimSF.Revit.Mep_Systems">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4ed9f622-16e2-4dc4-b425-f5ffb464a183" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1383" y="299" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Result" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="a5e6bd08-cf31-4a9e-8c3e-34c051723812" type="PythonNodeModels.PythonNode" nickname="Python: AddToSystem" x="1138" y="300" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+
+def AddToSystem(sys,terminals):
+	result = []
+	systype = sys.SystemType
+	if systype.GetType() == Mechanical.DuctSystemType:
+		TransactionManager.Instance.EnsureInTransaction(doc)
+		if hasattr(terminals, "__iter__"):
+			for terminal in terminals:
+				try:
+					connectors = terminal.MEPModel.ConnectorManager.Connectors
+					for conn in connectors:
+						try:
+							if conn.DuctSystemType == systype:
+								connset = ConnectorSet()
+								connset.Insert(conn)
+								sys.Add(connset)
+								result.append(terminal)
+						except:
+							pass
+				except:
+					pass
+		else:
+			try:
+				connectors = terminal.MEPModel.ConnectorManager.Connectors
+				for conn in connectors:
+					try:
+						if conn.DuctSystemType == systype:
+							connset = ConnectorSet()
+							connset.Insert(conn)
+							sys.Add(connset)
+							result.append(terminal)
+					except:
+						pass
+			except:
+				pass
+		TransactionManager.Instance.TransactionTaskDone()
+	else:
+		TransactionManager.Instance.EnsureInTransaction(doc)
+		if hasattr(terminals, "__iter__"):
+			for terminal in terminals:
+				try:
+					connectors = terminal.MEPModel.ConnectorManager.Connectors
+					for conn in connectors:
+						try:
+							if conn.PipeSystemType == systype:
+								connset = ConnectorSet()
+								connset.Insert(conn)
+								sys.Add(connset)
+								result.append(terminal)
+						except:
+							pass
+				except:
+					pass
+		else:
+			try:
+				connectors = terminal.MEPModel.ConnectorManager.Connectors
+				for conn in connectors:
+					try:
+						if conn.PipeSystemType == systype:
+							connset = ConnectorSet()
+							connset.Insert(conn)
+							sys.Add(connset)
+							result.append(terminal)
+					except:
+						pass
+			except:
+				pass
+		TransactionManager.Instance.TransactionTaskDone()
+	return result
+
+listout = []
+if isinstance(IN[0], list):
+	for i,sys in enumerate(UnwrapElement(IN[0])):
+		listout.append(AddToSystem(sys,UnwrapElement(IN[1])[i]))
+else:
+	listout.append(AddToSystem(UnwrapElement(IN[0]),UnwrapElement(IN[1])))
+
+OUT = listout</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6bb7a600-b783-4f98-807e-d56dc0668b90" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="925" y="293" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="System" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="047b0446-2fdd-4dcd-9129-cabfd0810fee" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="899" y="404" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="a5e6bd08-cf31-4a9e-8c3e-34c051723812" start_index="0" end="4ed9f622-16e2-4dc4-b425-f5ffb464a183" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6bb7a600-b783-4f98-807e-d56dc0668b90" start_index="0" end="a5e6bd08-cf31-4a9e-8c3e-34c051723812" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="047b0446-2fdd-4dcd-9129-cabfd0810fee" start_index="0" end="a5e6bd08-cf31-4a9e-8c3e-34c051723812" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

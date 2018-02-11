@@ -1,0 +1,89 @@
+<Workspace Version="1.3.2.2480" X="109.035844803433" Y="192.706613321567" zoom="0.593767140625" ScaleFactor="1" Name="Optimize_Bin Packing" Description="Groups a list of numeric values in bins according to the First Fit Decreasing algorithm based on a maximum cumulative value.&#xD;&#xA;This method can be used to optimize the planning of cut lengths of linear elements.&#xD;&#xA;The IndicesPerBin refer to the indices of the decreasing sorted value list, ordered per bin." ID="ae815b20-df7c-4297-a8ef-cc9bb76775cb" Category="ArupBimSF.Patterns &amp; Logic">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="64b23e80-0fcd-4000-a6c9-706c39505522" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1471" y="250" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="BinPackingResult" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="809e75cf-c1df-4407-ae4d-142b8738ec84" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1040.00189048231" y="308.028972037171" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#In this script values are sorted into bins with a fixed maximum size.
+#The sorting occurs according to the First Fit Decreasing algorithm.
+#The input for "Values" need to be sorted in Decreasing order for an optimal result
+#Authored by Dieter Vermeulen, Autodesk (2017)
+
+import clr
+
+Values=IN[0]
+BinSize=IN[1]
+
+Bin=[]  			#Array of packed bins
+Waste=[]			#List of waste per bin
+ValueIndices=[]	#Index of the value assigned to the bin
+result=False
+j=0 #Initiate counter for the sorting index
+
+for val in Values:
+	i=0  #Reset Counter for the bin assignment
+	n=len(Bin)
+	while (i &lt; n):
+		if Waste[i]-val &gt;= 0:
+			Bin[i].append(val)
+			Waste[i]=Waste[i]-val
+			ValueIndices[i].append(j)
+			i=n
+			result = True
+		else:
+			i=i+1
+			result = False
+			
+	if not result:
+			Bin.append([val])
+			Waste.append(BinSize-val)
+			ValueIndices.append([j])
+	j=j+1	
+			
+	
+	
+#Assign your output to the OUT variable.
+OUT = Bin, Waste, ValueIndices</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="20b4505b-b1bd-487a-8ab9-8f292e013e6b" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1189.81305637982" y="293.504451038576" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="//Bin Packing Result&#xA;a[0];&#xA;//Waste&#xA;a[1];&#xA;//Values indexed per bin&#xA;a[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f97977a6-6357-48d5-ac33-fb35e7751884" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1479.30860534125" y="339.252225519288" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Waste" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="beb77ec1-d4ba-43f1-b679-7bf3f1763e17" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Reverse" x="820.835402937769" y="172" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Reverse@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b7b93f5e-4919-4b67-98fd-ef658cd8728b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1481.0296735905" y="425.074183976261" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="IndicesPerBin" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="fdcbb6f1-e47d-40fb-b257-ad58b70790e8" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Sort" x="623" y="173.24424781722" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Sort@var[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f7b67131-7b07-4fcb-8468-d7536872691e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="321" y="176" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Values: double[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="33ca39b6-f7f6-4255-90f2-6c2d478e4f70" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="320" y="337" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="BinSize:double" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="809e75cf-c1df-4407-ae4d-142b8738ec84" start_index="0" end="20b4505b-b1bd-487a-8ab9-8f292e013e6b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="20b4505b-b1bd-487a-8ab9-8f292e013e6b" start_index="0" end="64b23e80-0fcd-4000-a6c9-706c39505522" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="20b4505b-b1bd-487a-8ab9-8f292e013e6b" start_index="1" end="f97977a6-6357-48d5-ac33-fb35e7751884" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="20b4505b-b1bd-487a-8ab9-8f292e013e6b" start_index="2" end="b7b93f5e-4919-4b67-98fd-ef658cd8728b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="beb77ec1-d4ba-43f1-b679-7bf3f1763e17" start_index="0" end="809e75cf-c1df-4407-ae4d-142b8738ec84" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fdcbb6f1-e47d-40fb-b257-ad58b70790e8" start_index="0" end="beb77ec1-d4ba-43f1-b679-7bf3f1763e17" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f7b67131-7b07-4fcb-8468-d7536872691e" start_index="0" end="fdcbb6f1-e47d-40fb-b257-ad58b70790e8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="33ca39b6-f7f6-4255-90f2-6c2d478e4f70" start_index="0" end="809e75cf-c1df-4407-ae4d-142b8738ec84" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

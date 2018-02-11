@@ -1,0 +1,45 @@
+<Workspace Version="1.3.2.2480" X="-1595.23996396989" Y="-461.477708008723" zoom="2.05668026833428" ScaleFactor="1" Name="Load_Fabrication_Services" Description="Loads fabrication services to active doc" ID="f8c03e4e-0f3f-49c8-a850-e65a817e9c66" Category="ArupBimSF.Revit.Fabrication">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="3a28f69d-138b-44a4-970a-324117ed1123" type="PythonNodeModels.PythonNode" nickname="Fabrication Load Service(s)" x="989.266356085782" y="427.785528711647" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import FabricationConfiguration
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+Inpt = UnwrapElement(IN[0])
+ItmList = list(
+
+Doc = DocumentManager.Instance.CurrentDBDocument
+TransactionManager.Instance.EnsureInTransaction(Doc)
+
+Config = FabricationConfiguration.GetFabricationConfiguration(Doc)
+Config.ReloadConfiguration()
+LServices = Config.LoadServices(Inpt)
+ItmList.append(LServices)
+
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = ItmList</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="8dc2cee7-b582-457f-9a4c-667bad73a498" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1198.63223064945" y="429.580595496252" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Services_Loaded" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="824f5c6f-690c-4291-8afd-f7b24cc53f2a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="828.835896670656" y="435.792677942027" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Service_IDs" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="3a28f69d-138b-44a4-970a-324117ed1123" start_index="0" end="8dc2cee7-b582-457f-9a4c-667bad73a498" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="824f5c6f-690c-4291-8afd-f7b24cc53f2a" start_index="0" end="3a28f69d-138b-44a4-970a-324117ed1123" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

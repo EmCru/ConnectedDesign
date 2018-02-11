@@ -1,0 +1,24 @@
+<Workspace Version="1.3.2.2480" X="-642.528719423136" Y="-136.076971056703" zoom="1.17131835730765" ScaleFactor="1" Name="MultilineString➜List" Description="converts a string with line breaks in to a list of strings" ID="aef9a219-67c8-4a02-a97f-e3d981425ddb" Category="ArupBimSF.String Functions">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="String" resolvedName="DSCore.String" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2f755ac9-0c68-4c0c-8a8e-179e9c1d3dba" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1443.26668102238" y="459.110852730683" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="List_Out" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8957d9f3-2b04-4b97-8d16-986d057f808a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="830.152847724665" y="416.190623795294" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="String_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="1991ed9a-da37-4e42-a1d5-195cf0b21937" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1053.80075106797" y="421.886083627549" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="t1 = &quot;&#xA;&quot;;&#xA;t2 = String.Split(t3, {t1});&#xA;t4 = String.TrimWhitespace(t2);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="8957d9f3-2b04-4b97-8d16-986d057f808a" start_index="0" end="1991ed9a-da37-4e42-a1d5-195cf0b21937" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1991ed9a-da37-4e42-a1d5-195cf0b21937" start_index="2" end="2f755ac9-0c68-4c0c-8a8e-179e9c1d3dba" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

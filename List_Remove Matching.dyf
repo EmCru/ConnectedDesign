@@ -1,0 +1,59 @@
+<Workspace Version="1.3.2.2480" X="-1009.79696613412" Y="322.403370344903" zoom="1.1313606400394" ScaleFactor="1" Name="List_Remove Matching" Description="Removes Matching Items and reports back all Match,&amp;No Match from Both Lists" ID="e5d6bcbf-cd43-49b9-a811-6c971c9016e2" Category="ArupBimSF.^FixMe">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="438f5b43-8b28-489d-9450-18019be14f65" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2353.80377993097" y="-92.7905945785088" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="a_Reduced List" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="eef2abd1-8116-4e50-8815-a0660255ff2f" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2358.69667988341" y="-2.77254479251485" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="b_Unmatched Items" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c618cb44-8bd8-47e7-beb2-b51906afc965" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="1039.84516765281" y="112.965363555518" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="a_TakeFromList" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a49c37f0-1d06-4bf7-8bba-7a89068c690c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="1048.90958981436" y="-26.8101705820521" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="b_ItemsToTake" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="53b2a7f0-fa89-40c5-ba01-621aa3c6e6c7" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.GetItemAtIndex" x="2087.09802186549" y="-57.1522294137399" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.GetItemAtIndex@var[]..[],int">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="bb1f276d-4c7c-481c-9c34-fdd19acd6037" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1957.79371353054" y="53.273477025575" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="0;" ShouldFocus="false" />
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="1c602cdb-44f6-4ca6-8c9d-6a8b1d2128a8" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.GetItemAtIndex" x="2101.85360751477" y="100.502952368925" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.GetItemAtIndex@var[]..[],int">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <PythonNodeModels.PythonNode guid="e505cbf4-a0a7-40ba-ba96-17d91b5536ac" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1606.49211885967" y="-12.6565364805222" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>listA = IN[0]
+listB = IN[1]
+unmatched = []
+
+#listC = [x for x in listA if x not in listB]
+for x in range(len(listA)):
+#	s = set(listA)
+	if listA[x] in listB:
+		listB.remove(listA[x])
+	else:
+		unmatched.append(listA[x])
+
+OUT = [listB, unmatched]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="5ae583ba-9744-4840-97ca-c588dfafecea" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1950.82223833094" y="152.838873956297" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="1;" ShouldFocus="false" />
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="c618cb44-8bd8-47e7-beb2-b51906afc965" start_index="0" end="e505cbf4-a0a7-40ba-ba96-17d91b5536ac" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a49c37f0-1d06-4bf7-8bba-7a89068c690c" start_index="0" end="e505cbf4-a0a7-40ba-ba96-17d91b5536ac" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="53b2a7f0-fa89-40c5-ba01-621aa3c6e6c7" start_index="0" end="438f5b43-8b28-489d-9450-18019be14f65" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bb1f276d-4c7c-481c-9c34-fdd19acd6037" start_index="0" end="53b2a7f0-fa89-40c5-ba01-621aa3c6e6c7" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1c602cdb-44f6-4ca6-8c9d-6a8b1d2128a8" start_index="0" end="eef2abd1-8116-4e50-8815-a0660255ff2f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e505cbf4-a0a7-40ba-ba96-17d91b5536ac" start_index="0" end="53b2a7f0-fa89-40c5-ba01-621aa3c6e6c7" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e505cbf4-a0a7-40ba-ba96-17d91b5536ac" start_index="0" end="1c602cdb-44f6-4ca6-8c9d-6a8b1d2128a8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5ae583ba-9744-4840-97ca-c588dfafecea" start_index="0" end="1c602cdb-44f6-4ca6-8c9d-6a8b1d2128a8" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

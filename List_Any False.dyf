@@ -1,0 +1,22 @@
+<Workspace Version="1.3.2.2480" X="-290" Y="107" zoom="1" ScaleFactor="1" Name="List_Any False" Description="#Depricated use list contains item and put true or false in a code block" ID="6bc028c9-9825-429c-ad6e-873945196c88" Category="ArupBimSF.^Depricated">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="38266008-507a-4c14-b418-c9b4a9550678" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1329.25280326198" y="185.450560652396" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="bool" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="7ccebe37-c33b-431e-a323-af32ffd1ab87" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1038.28032619776" y="190.889174311927" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="!(AllTrue(seq));" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="9390113b-3a63-435e-9f69-7c67d16ed57d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="750" y="184" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="List_In : bool[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="7ccebe37-c33b-431e-a323-af32ffd1ab87" start_index="0" end="38266008-507a-4c14-b418-c9b4a9550678" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9390113b-3a63-435e-9f69-7c67d16ed57d" start_index="0" end="7ccebe37-c33b-431e-a323-af32ffd1ab87" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

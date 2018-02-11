@@ -1,0 +1,27 @@
+<Workspace Version="1.3.2.2480" X="-177" Y="74" zoom="1" ScaleFactor="1" Name="Graph_SeqPassthru" Description="forces an operation to run in sequence." ID="1d067a2a-0dba-4a5e-b8c0-39816a8e303f" Category="ArupBimSF.Core">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="4c600b2b-f1a4-4c12-a13b-092ab07c5879" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="793.268774237358" y="217.849036393153" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="{passthrough,waitfor}[0];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4f978e70-ac81-4111-8690-ea96222f0342" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1221.1623797736" y="215.126742691874" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="passThrough" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f0ad2873-84c0-4efb-97bc-b475684ce137" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="575" y="210" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="passThrough" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="06cbe8b2-1c0d-46e7-aaf2-a874daf5f655" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="580.738611798732" y="296.032738389933" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="waitFor" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="4c600b2b-f1a4-4c12-a13b-092ab07c5879" start_index="0" end="4f978e70-ac81-4111-8690-ea96222f0342" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f0ad2873-84c0-4efb-97bc-b475684ce137" start_index="0" end="4c600b2b-f1a4-4c12-a13b-092ab07c5879" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="06cbe8b2-1c0d-46e7-aaf2-a874daf5f655" start_index="0" end="4c600b2b-f1a4-4c12-a13b-092ab07c5879" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

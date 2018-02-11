@@ -1,0 +1,38 @@
+<Workspace Version="1.3.2.2480" X="284.845159978919" Y="99.9267336298647" zoom="0.642869557405948" ScaleFactor="1" Name="List_InsertMultiple+" Description="insert multiple elements at multiple indices_!!List" ID="9bcc7979-0f05-40f9-ab54-2056c84fe540" Category="ArupBimSF.List Functions">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="8372af5d-445a-4abe-b729-90a80bf0b0a0" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="661" y="287" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="def primary( items : var[], indices : var[] )&#xA;{&#xA;i=SortIndexByValue(indices);&#xA;sortindices=List.GetItemAtIndex(indices,i);&#xA;sortitems=List.GetItemAtIndex(items,i);&#xA;a = List.Transpose({sortindices,sortitems});&#xA;return = a;&#xA;};&#xA;&#xA;&#xA;def insertmultiple(array : var[] ,items :var[], indices :var[])&#xA;{l={};&#xA;a = primary(items,indices);&#xA;return = [Imperative]&#xA;	{&#xA;	for (i in a)&#xA;		{l = Insert(array,i[1],i[0]);&#xA;		array = l;&#xA;		};&#xA;	return = array;&#xA;	};&#xA;&#xA;};" ShouldFocus="false" />
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="956e4e9a-0a6a-46ab-96f0-1cf20a30f6a0" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="679.752910506141" y="817.851099543361" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="list = insertmultiple(array,items,index);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b617082a-2811-49b3-b7e2-58026a9de8e9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1195.75291050614" y="815" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="array" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b5c8472a-b302-4b7a-b61c-fc16d9d928fd" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="409" y="779" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="array" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e672c4fa-a33a-4f00-9e8b-5992e5d256b1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="407" y="845" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="items" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="9d7d0f97-bf17-495d-9781-b2e08343e287" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="405" y="917" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="index" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="956e4e9a-0a6a-46ab-96f0-1cf20a30f6a0" start_index="0" end="b617082a-2811-49b3-b7e2-58026a9de8e9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b5c8472a-b302-4b7a-b61c-fc16d9d928fd" start_index="0" end="956e4e9a-0a6a-46ab-96f0-1cf20a30f6a0" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e672c4fa-a33a-4f00-9e8b-5992e5d256b1" start_index="0" end="956e4e9a-0a6a-46ab-96f0-1cf20a30f6a0" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9d7d0f97-bf17-495d-9781-b2e08343e287" start_index="0" end="956e4e9a-0a6a-46ab-96f0-1cf20a30f6a0" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

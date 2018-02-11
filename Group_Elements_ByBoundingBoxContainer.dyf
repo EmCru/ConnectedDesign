@@ -1,0 +1,108 @@
+<Workspace Version="1.3.2.2480" X="-47.7054831871774" Y="33.4046904045291" zoom="0.789161032924816" ScaleFactor="1" Name="Group_Elements_ByBoundingBoxContainer" Description="groups elements by bounding container (solid)" ID="18ff1f4e-3d56-4336-9d8f-ca413f405e26" Category="ArupBimSF.Revit.Element_Location">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Autodesk.Point" resolvedName="Autodesk.DesignScript.Geometry.Point" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9a88cebd-7ddc-4527-8a3c-823d65a68c43" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1631.15883924924" y="406.11239971455" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="objects_ByContainer" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="5800c5e3-1897-49df-9425-fe9c1521060b" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1412.02106420994" y="438.569312956779" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="OUT[0];&#xA;OUT[1];&#xA;OUT[2];&#xA;OUT[3];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1d0d210c-d4e0-4fe4-9302-8f21cea4b999" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1630.50834512757" y="480.349827611426" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="LocPts_ByContainer" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="40145634-5be6-41b6-ae71-18ca1d54c12b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1219.20817627917" y="429.78199854398" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script># Group a set of objects and their representative location points by their inclusion in a set of given list of "bins."  Bins can be solids or closed polygons or polycurves.  Objects and their corresponding location points are returned, per the first bin that contains them in the order in which they were received.  A list of objects and representative location points not found to included in any bin is also given.
+
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+objects = IN[0]
+pts = IN[1]
+bins = IN[2]
+
+objPerBin = []	# Objects per solid
+ptPerBin = []		# Points per solid
+objNotTaken = []	# Objects not in a solid
+ptNotTaken = []		# Points not in a solid
+
+for bin in bins:
+	objPerBin.append([])
+	ptPerBin.append([])
+
+for j in range(len(pts)):
+	taken = False
+	for k in range(len(bins)):
+		# For bins as solids
+		if type(bins[k]) is Solid:
+			if pts[j].DoesIntersect(bins[k]):
+				ptPerBin[k].append(pts[j])
+				objPerBin[k].append(objects[j])
+				taken = True
+				break
+		# For bins as polygons/polycurves
+		if type(bins[k]) is PolyCurve or type(bins[k]) is Polygon or type(bins[k]) is Rectangle:		
+			if bins[k].ContainmentTest(pts[j]):
+				ptPerBin[k].append(pts[j])
+				objPerBin[k].append(objects[j])
+				taken = True
+				break
+	# Note objects/points not in any bin
+	if not taken:
+		ptNotTaken.append(pts[j])
+		objNotTaken.append(objects[j])
+
+OUT = []
+OUT.append(objPerBin)
+OUT.append(ptPerBin)
+OUT.append(objNotTaken)
+OUT.append(ptNotTaken)
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="7d304135-14b8-4adb-a861-2d76a35b4960" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1011.45001327259" y="441.268269491837" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="objects;&#xA;points;&#xA;bins;" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="128aceb3-1378-411c-a9d7-8675f4c5bd22" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1631.15883924924" y="551.985279021594" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="objects_Excluded" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="08c41741-0615-4480-967e-149685ebed3d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="605.40856992243" y="466.658002497934" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Loc_Pts : Autodesk.Point[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="241709a0-8b1d-4e0a-949f-48f7e454cce1" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1631.15883924924" y="624.921718675116" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="LocPts_Excluded" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="395a0215-8376-491e-b454-6368bfb094e7" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="605.567417990327" y="398" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="objects : var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6271ef8a-a329-4a74-b2ff-2edb344e8e66" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="603.893813724147" y="538.40882592938" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="containers : var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="5800c5e3-1897-49df-9425-fe9c1521060b" start_index="0" end="9a88cebd-7ddc-4527-8a3c-823d65a68c43" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5800c5e3-1897-49df-9425-fe9c1521060b" start_index="1" end="1d0d210c-d4e0-4fe4-9302-8f21cea4b999" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5800c5e3-1897-49df-9425-fe9c1521060b" start_index="2" end="128aceb3-1378-411c-a9d7-8675f4c5bd22" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5800c5e3-1897-49df-9425-fe9c1521060b" start_index="3" end="241709a0-8b1d-4e0a-949f-48f7e454cce1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="40145634-5be6-41b6-ae71-18ca1d54c12b" start_index="0" end="5800c5e3-1897-49df-9425-fe9c1521060b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7d304135-14b8-4adb-a861-2d76a35b4960" start_index="0" end="40145634-5be6-41b6-ae71-18ca1d54c12b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7d304135-14b8-4adb-a861-2d76a35b4960" start_index="1" end="40145634-5be6-41b6-ae71-18ca1d54c12b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7d304135-14b8-4adb-a861-2d76a35b4960" start_index="2" end="40145634-5be6-41b6-ae71-18ca1d54c12b" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="08c41741-0615-4480-967e-149685ebed3d" start_index="0" end="7d304135-14b8-4adb-a861-2d76a35b4960" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="395a0215-8376-491e-b454-6368bfb094e7" start_index="0" end="7d304135-14b8-4adb-a861-2d76a35b4960" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6271ef8a-a329-4a74-b2ff-2edb344e8e66" start_index="0" end="7d304135-14b8-4adb-a861-2d76a35b4960" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

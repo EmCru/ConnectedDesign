@@ -1,0 +1,69 @@
+<Workspace Version="1.3.2.2480" X="-466.957580035621" Y="-225.176164864877" zoom="1.37758335255867" ScaleFactor="1" Name="Parameter_ExistsInElement" Description="checks input elements for a parameter by name_!pa!bool!el" ID="51431e81-e471-4057-8fee-30b1e4d0be7b" Category="ArupBimSF.Revit.Parameters">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="943bdeb0-65b6-424e-9c07-d95d80285291" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1462.93135725429" y="457.91887675507" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="bool" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="c5f40d04-8922-42e2-afa5-b2a612c059bc" type="PythonNodeModels.PythonNode" nickname="Python Script" x="996.154446177847" y="550.831513260531" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script># This node was originally created by Andreas Dieckmann
+# and only updated by Konrad K Sobon to work with Revit 2016
+
+# Copyright(c) 2015, Konrad K Sobon
+# @arch_laboratory, http://archi-lab.net
+
+# Modified to Clockwork coding style by Andreas Dieckmann
+
+import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+items = UnwrapElement(IN[0])
+param = IN[1]
+elementList = []
+
+for item in items:
+	try:
+		params = item.Parameters
+		paramNames = [i.Definition.Name for i in params]
+		if param in paramNames:
+			elementList.append(True)
+		else:
+			elementList.append(False)
+	except:
+		elementList.append(False)
+
+OUT = elementList</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="67cf8836-eb22-48d4-ba27-55ca9eff0680" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="557.689507891818" y="336.783289014169" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="b0904986-e345-4814-b5c2-7f252c53b84d" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="761.806122157223" y="337.952583977659" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e88a8378-004d-4b94-8767-d31798246c9e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="553.767626217518" y="582.132729965456" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="ParamName: string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <PythonNodeModels.PythonNode guid="5515e905-96b8-4cc2-979f-9933730368dc" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1191.61528977148" y="308.373524755157" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>check = IN[0]
+items = IN[1]
+if isinstance(check, (list)): OUT = items
+else: OUT = items[0]</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="c5f40d04-8922-42e2-afa5-b2a612c059bc" start_index="0" end="5515e905-96b8-4cc2-979f-9933730368dc" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="67cf8836-eb22-48d4-ba27-55ca9eff0680" start_index="0" end="b0904986-e345-4814-b5c2-7f252c53b84d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b0904986-e345-4814-b5c2-7f252c53b84d" start_index="0" end="c5f40d04-8922-42e2-afa5-b2a612c059bc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b0904986-e345-4814-b5c2-7f252c53b84d" start_index="0" end="5515e905-96b8-4cc2-979f-9933730368dc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e88a8378-004d-4b94-8767-d31798246c9e" start_index="0" end="c5f40d04-8922-42e2-afa5-b2a612c059bc" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5515e905-96b8-4cc2-979f-9933730368dc" start_index="0" end="943bdeb0-65b6-424e-9c07-d95d80285291" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

@@ -1,0 +1,35 @@
+<Workspace Version="1.3.2.2480" X="-110.27188544691" Y="118.190932492199" zoom="1.02988563947099" ScaleFactor="1" Name="Join_WithSeperator" Description="Joins two strings into one with a seperator" ID="ed704e17-b634-4671-a4dc-feab65cf25e6" Category="ArupBimSF.String">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction guid="b7a99082-0c8f-49c1-9f9e-61238cdf1c64" type="Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction" nickname="String.Join" x="917.135681202755" y="312.993570080646" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.String.Join@string,string[]" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1e894533-1957-41d4-84da-c780008a2c94" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1242.52679547675" y="267.898995629542" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="joinedString" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="803ab8a5-9ce6-45c7-b5e4-e1a67d2a0bb2" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="665.604177479968" y="226.552161544955" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="separator" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e88ee9bd-e909-4d70-986c-6acf7a6c8efc" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="673.792170667772" y="345.393551342477" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="stringA" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b2ef3d0f-c25c-4fb6-b93c-1c5763cdb2e9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="680.688306029903" y="471.644574200343" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="stringB" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b7a99082-0c8f-49c1-9f9e-61238cdf1c64" start_index="0" end="1e894533-1957-41d4-84da-c780008a2c94" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="803ab8a5-9ce6-45c7-b5e4-e1a67d2a0bb2" start_index="0" end="b7a99082-0c8f-49c1-9f9e-61238cdf1c64" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e88ee9bd-e909-4d70-986c-6acf7a6c8efc" start_index="0" end="b7a99082-0c8f-49c1-9f9e-61238cdf1c64" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b2ef3d0f-c25c-4fb6-b93c-1c5763cdb2e9" start_index="0" end="b7a99082-0c8f-49c1-9f9e-61238cdf1c64" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

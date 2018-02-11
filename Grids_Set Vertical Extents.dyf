@@ -1,0 +1,51 @@
+<Workspace Version="1.3.2.2480" X="58.31" Y="60.6825" zoom="0.8425" ScaleFactor="1" Name="Grids_Set Vertical Extents" Description="set the vertical extent of input grids" ID="d6400822-3876-4f53-94f0-f62d6fcfc101" Category="ArupBimSF.Revit.Location_References">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="a0b9b936-3f3c-4c90-8d32-d7ed9f9dcc75" type="PythonNodeModels.PythonNode" nickname="Python Script" x="729.5" y="393" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright (c) mostafa el ayoubi
+#Node-mode www.data-shapes.net 2016 elayoub.mostafa@gmail.com
+
+import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import*
+clr.AddReference('RevitServices')
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+UIunit = Document.GetUnits(doc).GetFormatOptions(UnitType.UT_Length).DisplayUnits
+
+def convunit(x):
+	return UnitUtils.ConvertToInternalUnits(x,UIunit)
+
+grids = [UnwrapElement(i) for i in FilteredElementCollector(doc).OfClass(Grid)]
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+for g in grids:
+	g.SetVerticalExtents(convunit(IN[0]),convunit(IN[1]))
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = grids</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4b032760-e752-48ce-8a48-9e2268fd92a2" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="926.5" y="393" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="14d7710e-ee82-4397-b818-8455a511f311" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="456" y="354" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Bottom extent" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a51a3150-481c-4e70-9001-1fc99ea2ba73" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="412" y="483" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Top extent" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="a0b9b936-3f3c-4c90-8d32-d7ed9f9dcc75" start_index="0" end="4b032760-e752-48ce-8a48-9e2268fd92a2" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="14d7710e-ee82-4397-b818-8455a511f311" start_index="0" end="a0b9b936-3f3c-4c90-8d32-d7ed9f9dcc75" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a51a3150-481c-4e70-9001-1fc99ea2ba73" start_index="0" end="a0b9b936-3f3c-4c90-8d32-d7ed9f9dcc75" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

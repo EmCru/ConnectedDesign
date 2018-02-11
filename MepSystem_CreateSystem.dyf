@@ -1,0 +1,96 @@
+<Workspace Version="1.3.2.2480" X="-480" Y="-32" zoom="1" ScaleFactor="1" Name="MepSystem_CreateSystem" Description="creates an MEP System" ID="a3e83594-6b01-4c30-867b-14c707deff1f" Category="ArupBimSF.Revit.Mep_Systems">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2df9f7f6-b03a-40d8-9362-757ae9297140" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1378" y="484" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Systems" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="e50b2a5b-8478-4ac4-aab1-5cd1e4f0b75c" type="PythonNodeModels.PythonNode" nickname="Python: Create system" x="1122" y="488" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+if isinstance(IN[0], list):
+	systemtypes = UnwrapElement(IN[0])
+else:
+	systemtypes = [UnwrapElement(IN[0])]
+sl = len(systemtypes)	
+	
+if isinstance(IN[1], list):
+	systemnames = IN[1]
+else:
+	systemnames = [IN[1]]
+
+listout = []
+if IN[1] != None:
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	for i,name in enumerate(systemnames):
+		sys = systemtypes[i%sl]
+		if sys.GetType() == Plumbing.PipeSystemType:
+			#try:
+			newsys = Plumbing.PipingSystem.Create(doc,sys.Id,name)
+			listout.append(newsys.ToDSType(False))
+			#except:
+				#pass
+		else:
+			#try:
+			newsys = Mechanical.MechanicalSystem.Create(doc,sys.Id,name)
+			listout.append(newsys.ToDSType(False))
+			#except:
+				#pass
+		
+	TransactionManager.Instance.TransactionTaskDone()
+else:
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	for sys in systemtypes:
+		if sys.GetType() == Plumbing.PipeSystemType:
+			try:
+				newsys = Plumbing.PipingSystem.Create(doc,sys.Id)
+				listout.append(newsys.ToDSType(False))
+			except:
+				pass
+		else:
+			try:
+				newsys = Mechanical.MechanicalSystem.Create(doc,sys.Id)
+				listout.append(newsys.ToDSType(False))
+			except:
+				pass
+		
+	TransactionManager.Instance.TransactionTaskDone()
+
+OUT = listout</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f3457413-e9ad-48d4-aa51-ba61b7eff20c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="895" y="473" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="SystemType" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e8864c7b-77a1-4217-953c-fb9a1b664601" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="888" y="589" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Names: string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="e50b2a5b-8478-4ac4-aab1-5cd1e4f0b75c" start_index="0" end="2df9f7f6-b03a-40d8-9362-757ae9297140" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f3457413-e9ad-48d4-aa51-ba61b7eff20c" start_index="0" end="e50b2a5b-8478-4ac4-aab1-5cd1e4f0b75c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e8864c7b-77a1-4217-953c-fb9a1b664601" start_index="0" end="e50b2a5b-8478-4ac4-aab1-5cd1e4f0b75c" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

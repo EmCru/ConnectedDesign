@@ -1,0 +1,29 @@
+<Workspace Version="1.3.2.2480" X="-363.416666742222" Y="402.693487711" zoom="1.1113575327695" ScaleFactor="1" Name="Math_Round Floor" Description="Rounds number to user input precision" ID="f38ec0df-72e5-4fc9-a25c-b813ae673580" Category="ArupBimSF.Math">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Math" resolvedName="DSCore.Math" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="702b3091-0ebe-430d-bcf9-78e6b008576c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1331" y="86" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="dbl" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="40fa8e69-28dd-49bc-a096-094577761b6a" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="981.6" y="74.2183333333333" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Math.Floor(a/b)*b;" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="daa346cb-0861-49a1-bf2d-02edf5bbd6d0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="628.687115511811" y="29.6947669967578" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="DoubleIn : double" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="596b0a06-625a-490c-949f-17812ea3b028" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="629.614377506352" y="142.321485903201" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="precision : double = 1" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="40fa8e69-28dd-49bc-a096-094577761b6a" start_index="0" end="702b3091-0ebe-430d-bcf9-78e6b008576c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="daa346cb-0861-49a1-bf2d-02edf5bbd6d0" start_index="0" end="40fa8e69-28dd-49bc-a096-094577761b6a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="596b0a06-625a-490c-949f-17812ea3b028" start_index="0" end="40fa8e69-28dd-49bc-a096-094577761b6a" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

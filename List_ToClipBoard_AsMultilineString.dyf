@@ -1,0 +1,46 @@
+<Workspace Version="1.3.2.2480" X="-353.177098114141" Y="121.495774257546" zoom="1.285282768853" ScaleFactor="1" Name="List➜ClipBoard_AsMultilineString" Description="sends input list to clipboard as a single multi-line string" ID="3818b85e-0595-4edf-b590-61a71bedd7af" Category="ArupBimSF.Data Transfer">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="74cfb338-bc47-49be-9ca6-2130b1436f86" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1146.19820170888" y="287.504831818888" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="to clipboard" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b9e1a07c-69cd-4fbe-bc50-29a18970739c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="343.97649368567" y="199.529192833121" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="List_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="104986de-4669-417c-b829-f6a62226828f" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="List➜MultilineString" x="613.232447531774" y="132.658921347412" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="4f394584-8fc7-4536-ac24-ef66e3fead89" />
+      <Name value="List➜MultilineString" />
+      <Description value="converts a list into a single string with line breaks" />
+      <Inputs>
+        <Input value="List_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="StringOut" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <PythonNodeModels.PythonNode guid="0d3b9077-01bf-494a-805e-72882378a6ee" type="PythonNodeModels.PythonNode" nickname="Python Script" x="927.930434319332" y="91.8136288670055" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('System.Windows.Forms')
+from System.Windows.Forms import Clipboard
+try:
+	Clipboard.SetText(IN[0])
+	OUT = IN[0]
+except:
+	OUT = 'Data could not be copied to clipboard'</Script>
+    </PythonNodeModels.PythonNode>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b9e1a07c-69cd-4fbe-bc50-29a18970739c" start_index="0" end="104986de-4669-417c-b829-f6a62226828f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="104986de-4669-417c-b829-f6a62226828f" start_index="0" end="0d3b9077-01bf-494a-805e-72882378a6ee" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0d3b9077-01bf-494a-805e-72882378a6ee" start_index="0" end="74cfb338-bc47-49be-9ca6-2130b1436f86" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

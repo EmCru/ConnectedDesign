@@ -1,0 +1,46 @@
+<Workspace Version="1.3.2.2480" X="-746.82195586583" Y="-468.463643197328" zoom="2.05668026833428" ScaleFactor="1" Name="List➜String_WithSeperator" Description="converts a list into a single string with a seperator" ID="a83c739a-59b7-4b91-b706-77b02f35eb1d" Category="ArupBimSF.String Functions">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="f523a82d-5e47-4118-bc2b-c2a1877a425c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1023.57117789419" y="361.717843395229" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="c6493855-53f6-4c09-861a-4807464192d4" type="PythonNodeModels.PythonNode" nickname="Python Script" x="855.366367927697" y="356.065210307948" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+fileExtension = IN[1]
+underscore = IN[2]
+
+newString = []
+for i in IN[0]:
+	newString.append(underscore.join(i) + fileExtension)
+	
+#Assign your output to the OUT variable
+OUT = newString</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="917a4983-5e5d-4e5c-90c2-7df018e67756" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="617.531567930124" y="322.06334694604" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="List_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="06f4784c-19f3-4329-b686-68f4f86a1be9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="640.687152685637" y="402.818439262643" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Suffix" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a3d0d6b2-14b6-48ab-bb79-5486d0310704" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="625.019545237141" y="514.205419758454" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Seperator" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="c6493855-53f6-4c09-861a-4807464192d4" start_index="0" end="f523a82d-5e47-4118-bc2b-c2a1877a425c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="917a4983-5e5d-4e5c-90c2-7df018e67756" start_index="0" end="c6493855-53f6-4c09-861a-4807464192d4" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="06f4784c-19f3-4329-b686-68f4f86a1be9" start_index="0" end="c6493855-53f6-4c09-861a-4807464192d4" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a3d0d6b2-14b6-48ab-bb79-5486d0310704" start_index="0" end="c6493855-53f6-4c09-861a-4807464192d4" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

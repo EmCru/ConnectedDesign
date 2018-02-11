@@ -1,0 +1,92 @@
+<Workspace Version="1.3.2.2480" X="185.733154619198" Y="227.922870053359" zoom="0.496186487382813" ScaleFactor="1" Name="PointCloud_Read Points" Description="" ID="a00163fb-5beb-41ae-8c04-f259941c964a" Category="ArupBimSF.Revit.Links_PointClouds">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="ecc935bd-8b15-4eae-b29e-ce5a40d50bfe" type="PythonNodeModels.PythonNode" nickname="pointcloudreadpoints" x="939.837595694312" y="448.670612236312" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>#Copyright(c) 2014, Jason Andersen, jason@serialnonstandard.com 
+
+# Default imports
+import clr
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB.PointClouds import *
+import System.Collections.Generic
+from System.Collections.Generic import List
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+doc =  DocumentManager.Instance.CurrentDBDocument
+app =  DocumentManager.Instance.CurrentUIApplication.Application
+
+#elements coming in
+elements = UnwrapElement(IN[0])
+pcFilter = UnwrapElement(IN[1])
+density = UnwrapElement(IN[2])
+#variables
+v_points = []
+
+#work
+for f in elements:
+	#local variable
+	averageDistance = 0.0001
+	# Get points.  Number of points is determined by the needs of the client
+	points = f.GetPoints(pcFilter[0], averageDistance, density)
+	v_points.append(points)   
+    #for p in points:
+        # Process each point
+        #System.Drawing.Color color = System.Drawing.ColorTranslator.FromWin32(point.Color);
+        #String pointDescription = String.Format("({0}, {1}, {2}, {3}", point.X, point.Y, point.Z, color.ToString());
+
+
+OUT = v_points
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="8c7e29c4-5d1d-491d-98ec-bc7342fd8042" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1214.57405498388" y="448.584108931373" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="PointCloudPoints" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="a3ac4eac-036b-4093-b14d-93b1b5f05993" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="740.784256941892" y="404.208599306461" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.CreateList guid="6ca8c9c7-df13-4d35-85c1-1d298cc9359d" type="CoreNodeModels.CreateList" nickname="List.Create" x="589.074054983882" y="402.584108931372" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </CoreNodeModels.CreateList>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="8eaddaf4-4053-4ae3-a71e-e6e9df66c037" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Empty" x="591.074054983882" y="318.584108931372" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Empty" />
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="48c579cb-c544-4e24-8939-51966c40c292" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="333.074054983881" y="540.584108931373" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Density of Points [Int]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="975dc0d2-d7ff-4b9b-8c15-cfe0acfcb200" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="333.574054983881" y="400.584108931373" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="PointCloudInstance" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="3c426c5a-fef9-4324-9528-18028991eab1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="335.074054983881" y="470.584108931373" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="PointCloudFilter" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="ecc935bd-8b15-4eae-b29e-ce5a40d50bfe" start_index="0" end="8c7e29c4-5d1d-491d-98ec-bc7342fd8042" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a3ac4eac-036b-4093-b14d-93b1b5f05993" start_index="0" end="ecc935bd-8b15-4eae-b29e-ce5a40d50bfe" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6ca8c9c7-df13-4d35-85c1-1d298cc9359d" start_index="0" end="a3ac4eac-036b-4093-b14d-93b1b5f05993" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8eaddaf4-4053-4ae3-a71e-e6e9df66c037" start_index="0" end="6ca8c9c7-df13-4d35-85c1-1d298cc9359d" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="48c579cb-c544-4e24-8939-51966c40c292" start_index="0" end="ecc935bd-8b15-4eae-b29e-ce5a40d50bfe" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="975dc0d2-d7ff-4b9b-8c15-cfe0acfcb200" start_index="0" end="6ca8c9c7-df13-4d35-85c1-1d298cc9359d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3c426c5a-fef9-4324-9528-18028991eab1" start_index="0" end="ecc935bd-8b15-4eae-b29e-ce5a40d50bfe" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>
