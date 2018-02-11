@@ -1,0 +1,84 @@
+<Workspace Version="1.3.2.2480" X="-167" Y="0" zoom="1" ScaleFactor="1" Name="Copy_Element➜Location" Description="copies elements to input locations and updates the host level of the elements" ID="f6752a87-e5c9-4b91-b275-0ea433372db8" Category="ArupBimSF.Revit.Element_Location">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="9dbc46c3-57bf-4c07-9a91-d8cc2cb979e8" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1121.61983494987" y="483.514813930651" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+from System.Collections.Generic import List
+#The inputs to this node will be stored as a list in the IN variables.
+if isinstance(IN[0],list):
+	elements = UnwrapElement(IN[0])
+else:
+	elements = [UnwrapElement(IN[0])]
+if isinstance(IN[1], list):
+	newlocations = [x.ToXyz() for x in IN[1]]
+else:
+	newlocations = [IN[1].ToXyz()]
+
+newelements = []
+
+options = CopyPasteOptions()
+elementlist = List[ElementId]()
+	
+TransactionManager.Instance.EnsureInTransaction(doc)
+for element,loc in zip(elements,newlocations):
+	try:
+		oldloc = element.Location.Point
+		
+		elementlist.Add(element.Id)
+		OffsetZ = (oldloc.Z - loc.Z)*-1
+		OffsetX = (oldloc.X - loc.X)*-1
+		OffsetY = (oldloc.Y - loc.Y)*-1
+		direction = XYZ(OffsetX,OffsetY,OffsetZ)
+		trans = Transform.CreateTranslation(direction)
+		newelementId = ElementTransformUtils.CopyElements(doc,elementlist,doc,trans,options)
+		elementlist.Clear()
+		newelement = doc.GetElement(newelementId[0])
+		newelements.append(newelement.ToDSType(False))
+	except:
+		newelements.append(None)
+
+TransactionManager.Instance.TransactionTaskDone()
+#Assign your output to the OUT variable.
+OUT = newelements</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="fc605737-9ada-41f4-bd80-e711d3b32a69" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1384" y="509" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="New Element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="3dac2744-ed84-43bb-b399-5aa4c3145023" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="783" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="476a3939-bb33-413c-a137-e37aadafbe91" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="787" y="628" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Location" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9dbc46c3-57bf-4c07-9a91-d8cc2cb979e8" start_index="0" end="fc605737-9ada-41f4-bd80-e711d3b32a69" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3dac2744-ed84-43bb-b399-5aa4c3145023" start_index="0" end="9dbc46c3-57bf-4c07-9a91-d8cc2cb979e8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="476a3939-bb33-413c-a137-e37aadafbe91" start_index="0" end="9dbc46c3-57bf-4c07-9a91-d8cc2cb979e8" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

@@ -1,0 +1,61 @@
+<Workspace Version="1.3.2.2480" X="37.1727377029466" Y="243.66399628951" zoom="0.931811528498331" ScaleFactor="1" Name="3dSectionBox_Set by Bounding Box" Description="set the extents of a 3d section box by an imput bounding box" ID="0b086581-ac46-421f-bd6c-7390630850d0" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="f5223510-7ae8-468c-bdf3-8b940b882db4" type="PythonNodeModels.PythonNode" nickname="Python Script" x="661.090502866547" y="75.0673450217256" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.GeometryConversion)
+clr.ImportExtensions(Revit.Elements)
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+bbox = IN[0]
+view = UnwrapElement(IN[1])
+try:
+    TransactionManager.Instance.EnsureInTransaction(doc)
+    newmax = UnwrapElement(bbox.MaxPoint).ToRevitType()
+    newmin = UnwrapElement(bbox.MinPoint).ToRevitType()
+    newbox = BoundingBoxXYZ()
+    newbox.Max = newmax
+    newbox.Min = newmin
+
+    z = view.SetSectionBox(newbox)
+
+    OUT = "Done"
+except:
+    OUT = "Error"</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="a449efa2-2c3c-47d9-9975-9c94c9b37f38" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="802.494384375191" y="75.0673450217256" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Result" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="db52f34c-f123-4cd5-a0e3-4d67756895c5" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="490.403881508644" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="BoundingBox" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="35c88a21-2128-494f-83e4-2b220bb61a67" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="492.755842631942" y="146.239178383773" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="View" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="f5223510-7ae8-468c-bdf3-8b940b882db4" start_index="0" end="a449efa2-2c3c-47d9-9975-9c94c9b37f38" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="db52f34c-f123-4cd5-a0e3-4d67756895c5" start_index="0" end="f5223510-7ae8-468c-bdf3-8b940b882db4" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="35c88a21-2128-494f-83e4-2b220bb61a67" start_index="0" end="f5223510-7ae8-468c-bdf3-8b940b882db4" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

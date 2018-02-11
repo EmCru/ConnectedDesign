@@ -1,0 +1,137 @@
+<Workspace Version="1.3.2.2480" X="-172.401948070882" Y="190.963023335833" zoom="0.619952718741735" ScaleFactor="1" Name="Create_EnlargedPlan_ByRoomOrSpace" Description="creates a Room/Space Planview with a set offset distance.  Use for created enlarged and area plans" ID="7f66deb8-5afa-411d-96ce-537d041687fd" Category="ArupBimSF.Revit.Views">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="bed1975c-540d-4200-8aeb-386c579d3149" type="PythonNodeModels.PythonNode" nickname="Python Script" x="2797.45659123799" y="402.778655262562" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="4">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import Element wrapper extension methods
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import geometry conversion extension methods
+clr.ImportExtensions(Revit.GeometryConversion)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+import System
+import math
+from System import Array
+from System.Collections.Generic import *
+
+looplist=[]
+vp=[]
+rm=[]
+for list in IN[0]:
+	loop=[]
+	for c in list:
+		loop.append(UnwrapElement(c).ToRevitType())
+	ILoop=List[Curve](loop)
+	CL=CurveLoop.Create(ILoop)
+	looplist.append(CL)
+for i in IN[1]:	
+	vp.append(UnwrapElement(i))
+for i in IN[3]:	
+	rm.append(UnwrapElement(i))
+	
+RunMe=IN[2]
+if RunMe:
+	# Start Transaction
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	for l,v in zip(looplist,vp):
+		#assign CurveLoop to the CropBox of the view
+		v.CropBoxActive =True
+		cropManager = v.GetCropRegionShapeManager()
+		if cropManager.IsValidObject and cropManager.IsCropRegionShapeValid(l):					
+			cropManager.SetCropShape(l)
+		else:
+			print 'Not Allowed to manage Crop for ' + v.Name + ' :-(' 
+			v.CropBoxActive = False
+	# End Transaction
+	TransactionManager.Instance.TransactionTaskDone()
+	doc.Regenerate()
+else:
+	OUT = "Run Me set to False"
+#Assign your output to the OUT variable.
+OUT = IN[1]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="fa7a358a-3fe9-4154-8269-4dfad978140f" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2995.45659123799" y="402" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="FloorPlanView" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="86a0bbac-ea90-465a-b247-3e75393a6eec" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Geometry.Explode" x="2302.57970106422" y="594.020255242586" isVisible="false" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="ProtoGeometry.dll" function="Autodesk.DesignScript.Geometry.Geometry.Explode">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="bcae5f26-77a3-4850-b72b-a233a09e728b" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="PolyCurve.Offset" x="2015.56461919157" y="590.923199414726" isVisible="false" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="ProtoGeometry.dll" function="Autodesk.DesignScript.Geometry.PolyCurve.Offset@double,bool">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="0e336900-34f8-4a6e-a2c4-4f6d29dcf500" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.FirstItem" x="1543.76998129226" y="593.821156994754" isVisible="false" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.FirstItem@var[]..[]">
+      <PortInfo index="0" default="False" useLevels="True" level="3" shouldKeepListStructure="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="002f820d-9ce0-459a-a00d-5dcdba9cc5c3" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="PolyCurve.ByJoinedCurves" x="1739.35278694891" y="596.187600562124" isVisible="false" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="ProtoGeometry.dll" function="Autodesk.DesignScript.Geometry.PolyCurve.ByJoinedCurves@Autodesk.DesignScript.Geometry.Curve[]">
+      <PortInfo index="0" default="False" useLevels="True" level="2" shouldKeepListStructure="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="50b3e2df-bf77-46ec-ba80-e8abfcb00961" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1817.05716013993" y="681.6911654465" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="0;" ShouldFocus="false" />
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="91fc5ada-a6f9-4249-b473-a34d0bcf6b3f" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="floor plan" x="1294.64527700544" y="464.444434677533" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="27fcae3c-d5de-422c-a569-94d8c90ef2e6" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Room.FinishBoundary" x="1285.52272601633" y="593.570405164652" isVisible="false" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Room.FinishBoundary">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="521cb795-d8d7-4744-a9b2-e97c4501326a" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="rooms" x="959.996186704499" y="391.421446000759" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="015fb668-4d9a-4e6c-93bb-c60cf8145764" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="764" y="475" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="FloorPlanView" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="a9e1171e-638f-42c5-9b18-5f0163f2de10" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="859" y="397" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Room" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="824ed4c1-35f1-4cb8-8ec4-96fb2a7cea1f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="741.879983805844" y="673.351310165446" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Offset:double=200" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="7798cac0-4841-46c5-92cb-59a7c2f57ad1" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="916.571401359313" y="863.347512411368" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="RunMe:bool" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="bed1975c-540d-4200-8aeb-386c579d3149" start_index="0" end="fa7a358a-3fe9-4154-8269-4dfad978140f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="86a0bbac-ea90-465a-b247-3e75393a6eec" start_index="0" end="bed1975c-540d-4200-8aeb-386c579d3149" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bcae5f26-77a3-4850-b72b-a233a09e728b" start_index="0" end="86a0bbac-ea90-465a-b247-3e75393a6eec" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="0e336900-34f8-4a6e-a2c4-4f6d29dcf500" start_index="0" end="002f820d-9ce0-459a-a00d-5dcdba9cc5c3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="002f820d-9ce0-459a-a00d-5dcdba9cc5c3" start_index="0" end="bcae5f26-77a3-4850-b72b-a233a09e728b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="50b3e2df-bf77-46ec-ba80-e8abfcb00961" start_index="0" end="bcae5f26-77a3-4850-b72b-a233a09e728b" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="91fc5ada-a6f9-4249-b473-a34d0bcf6b3f" start_index="0" end="bed1975c-540d-4200-8aeb-386c579d3149" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="27fcae3c-d5de-422c-a569-94d8c90ef2e6" start_index="0" end="0e336900-34f8-4a6e-a2c4-4f6d29dcf500" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="521cb795-d8d7-4744-a9b2-e97c4501326a" start_index="0" end="bed1975c-540d-4200-8aeb-386c579d3149" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="521cb795-d8d7-4744-a9b2-e97c4501326a" start_index="0" end="27fcae3c-d5de-422c-a569-94d8c90ef2e6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="015fb668-4d9a-4e6c-93bb-c60cf8145764" start_index="0" end="91fc5ada-a6f9-4249-b473-a34d0bcf6b3f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a9e1171e-638f-42c5-9b18-5f0163f2de10" start_index="0" end="521cb795-d8d7-4744-a9b2-e97c4501326a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="824ed4c1-35f1-4cb8-8ec4-96fb2a7cea1f" start_index="0" end="bcae5f26-77a3-4850-b72b-a233a09e728b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7798cac0-4841-46c5-92cb-59a7c2f57ad1" start_index="0" end="bed1975c-540d-4200-8aeb-386c579d3149" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

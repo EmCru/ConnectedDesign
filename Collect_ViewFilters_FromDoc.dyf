@@ -1,0 +1,85 @@
+<Workspace Version="1.3.2.2480" X="69" Y="43" zoom="1" ScaleFactor="1" Name="Collect_ViewFilters_FromDoc" Description="Gets all the view filters in the active document" ID="a5e50069-4584-4637-b3bb-6ea2d432f297" Category="ArupBimSF.Revit.Document">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="410a326c-84d1-4a2b-b012-73f14b9c29e1" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1112.27527780705" y="568.973058526003" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="c5ece1b8-83b8-4efd-9a5c-7d42c49bfaea" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1185.13220734734" y="465.043716065972" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Id" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="9a046e81-5de5-4e6f-a2ff-fef63731f6fb" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="942.840505342631" y="460.262944206568" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="595317fc-fa3d-4145-8837-3130cfc49b0b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1129.41597544578" y="695.589616450486" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Name" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="37a9dc33-e527-44a3-ac44-0c4edfa62962" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Element.Name" x="820.969230357441" y="692.876518584552" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Element.Name">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <PythonNodeModels.PythonNode guid="bac7884f-6727-407c-a367-2a49c8d3046b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="286" y="467.354252276193" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="0">
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+from System.Collections.Generic import *
+
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+#collect all views in the model
+collector = FilteredElementCollector(doc)
+views = collector.OfClass(FilterElement).ToElements()
+
+view = []
+for i in views:
+	view.append(i.ToDSType(True))
+OUT = view</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="4599c223-a9cc-46ce-8e04-51d63816de8a" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Get_Element Id+" x="550" y="347" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="f0ddfb11-5d22-4c33-80f6-95fa258a31e2" />
+      <Name value="Get_Element Id+" />
+      <Description value="Gets Revit element Id and GUID for input elements" />
+      <Inputs>
+        <Input value="Elements" />
+      </Inputs>
+      <Outputs>
+        <Output value="Id_As_Integer" />
+        <Output value="Id_As_String" />
+        <Output value="GUID" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9a046e81-5de5-4e6f-a2ff-fef63731f6fb" start_index="0" end="c5ece1b8-83b8-4efd-9a5c-7d42c49bfaea" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="37a9dc33-e527-44a3-ac44-0c4edfa62962" start_index="0" end="595317fc-fa3d-4145-8837-3130cfc49b0b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bac7884f-6727-407c-a367-2a49c8d3046b" start_index="0" end="410a326c-84d1-4a2b-b012-73f14b9c29e1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bac7884f-6727-407c-a367-2a49c8d3046b" start_index="0" end="37a9dc33-e527-44a3-ac44-0c4edfa62962" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bac7884f-6727-407c-a367-2a49c8d3046b" start_index="0" end="4599c223-a9cc-46ce-8e04-51d63816de8a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4599c223-a9cc-46ce-8e04-51d63816de8a" start_index="0" end="9a046e81-5de5-4e6f-a2ff-fef63731f6fb" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

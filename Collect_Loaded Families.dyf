@@ -1,0 +1,42 @@
+<Workspace Version="1.3.2.2480" X="7.98776179468599" Y="-338.327402416722" zoom="1.30764135636719" ScaleFactor="1" Name="Collect_Loaded Families" Description="get all families " ID="5f06107f-5bd0-4c40-a75a-34dd8c0f1e22" Category="ArupBimSF.Revit.Element_Collectors">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="cca9fb2c-41c2-4748-b282-531f44bdd527" type="PythonNodeModels.PythonNode" nickname="Python Script" x="460.690766489955" y="509.822158785346" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Made by Marc Tavenier @marctavenier
+import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference('RevitServices')
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+
+elementlist = []
+doc = DocumentManager.Instance.CurrentDBDocument
+
+collector = FilteredElementCollector(doc).OfClass(Family)
+elementlist = collector.ToElements()
+
+#Assign your output to the OUT variable
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="990f2f58-7880-4908-bd58-a6c3d1e4bd93" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="721.774337259472" y="508.716264040731" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1d32f17a-4206-41a7-a9f5-1d26c9d90b3a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="154.935485391327" y="506.103904148338" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="reset:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="cca9fb2c-41c2-4748-b282-531f44bdd527" start_index="0" end="990f2f58-7880-4908-bd58-a6c3d1e4bd93" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="1d32f17a-4206-41a7-a9f5-1d26c9d90b3a" start_index="0" end="cca9fb2c-41c2-4748-b282-531f44bdd527" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

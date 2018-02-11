@@ -1,0 +1,68 @@
+<Workspace Version="1.3.2.2480" X="93.0906646085156" Y="137.045332304258" zoom="0.496186487382813" ScaleFactor="1" Name="Facade_SlatGenerator" Description="" ID="4201f07d-b35a-4c51-89c1-ac27615124f6" Category="ArupBimSF.Patterns &amp; Logic">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Surface" resolvedName="Autodesk.DesignScript.Geometry.Surface" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="Line" resolvedName="Autodesk.DesignScript.Geometry.Line" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Math" resolvedName="DSCore.Math" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="Vector" resolvedName="Autodesk.DesignScript.Geometry.Vector" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Plane" resolvedName="Autodesk.DesignScript.Geometry.Plane" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Circle" resolvedName="Autodesk.DesignScript.Geometry.Circle" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Autodesk.Geometry.Solid" resolvedName="Autodesk.DesignScript.Geometry.Solid" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Autodesk.DesignScript.Geometry.Solid" resolvedName="Autodesk.DesignScript.Geometry.Solid" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="4bb41979-f4ae-464d-a240-0b4156d75781" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Vertical Slats" x="1775.66916305289" y="404.092124148777" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="spread = (0..1..#sltAmt);&#xA;points0 = crv0&lt;1&gt;.PointAtParameter(spread&lt;2&gt;);&#xA;points1 = crv1&lt;1&gt;.PointAtParameter(spread&lt;2&gt;);&#xA;//Creating the Base Slats&#xA;slatSrf = Surface.ByLoft(DSCore.List.Transpose(Line.ByStartPointEndPoint&#xA;(points0,points1)));&#xA;srfThicken = {Surface.Thicken(slatSrf,slatThickness,true)};&#xA;//Creating the Tooling Paths&#xA;toolSpread = (0..1..#toolAmt);&#xA;toolPoints = toolPicker&lt;1&gt;.PointAtParameter(toolSpread&lt;2&gt;);&#xA;//Creating Tooling Shapes&#xA;count0 = Count(Flatten(toolPoints));&#xA;toolRads = DSCore.List.Chop(DSCore.List.Shuffle(Math.Round(&#xA;(slatThickness..maxToolRadius..#count0))),count0/2);&#xA;vec0 = Vector.ByTwoPoints(DSCore.List.Shuffle(toolPoints[0]),&#xA;DSCore.List.Shuffle(toolPoints[1]));&#xA;//Creating our Planes to host our Tool Profiles&#xA;pln0 = Plane.ByOriginNormal(toolPoints,vec0).ToCoordinateSystem()&#xA;.XYPlane;&#xA;circ0 = Circle.ByPlaneRadius(pln0,toolRads);&#xA;profiles = DSCore.List.Transpose({DSCore.List.Shuffle(circ0[0]),circ0[1]});&#xA;solids = Autodesk.Geometry.Solid.ByLoft(profiles);&#xA;difference = Flatten(srfThicken.DifferenceAll(solids));" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <PortInfo index="5" default="False" />
+      <PortInfo index="6" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="f877176d-741f-4f35-a996-f7241ae16bbe" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Base Operations" x="917.024029091468" y="315.309335117613" isVisible="false" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="//Inputs&#xA;srf = surface01;&#xA;slatThickness = sltThickness;&#xA;dist = offsetDistance;&#xA;sltAmt = slatAmount;&#xA;toolAmt = toolAmount;&#xA;maxToolRadius = dist - slatThickness;&#xA;//Offset Surface&#xA;srfOff = surface01.Offset(dist);&#xA;//Base Surface and Switcher&#xA;per0 = Flatten(srf.PerimeterCurves());&#xA;side1 = {per0[0],per0[2].Reverse()};&#xA;side2 = {per0[1],per0[3].Reverse()};&#xA;//Offset Surface and Switcher&#xA;per1 = Flatten(srfOff.PerimeterCurves());&#xA;side3 = {per1[0],per1[2].Reverse()};&#xA;side4 = {per1[1],per1[3].Reverse()};&#xA;toolPicker = side4;&#xA;//Curves Coming in the length of a slat&#xA;crv0 = side1.ExtendEnd(-sltThickness/2).ExtendStart(-sltThickness/2);&#xA;crv1 = side3.ExtendEnd(-sltThickness/2).ExtendStart(-sltThickness/2);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2e0b1990-0606-4f36-9652-325c5d784b95" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2716.81471268084" y="726.964345453336" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="solids" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c0dc6d96-5261-46a6-abd1-d9133d53442d" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="471.840545997192" y="697.02922308597" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Amount of 'Cutting Tools'.&#xD;&#xA;toolAmount : int = 18" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d467cfbc-c5c7-4f58-b1de-325278c8fbc9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="427.906610146943" y="382.398540840062" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Slat Thickness.&#xD;&#xA;slatThickness : double = 50" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c6b7c587-0db6-4e34-9c97-44f8fba64512" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="424" y="469.324177461084" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Offset Distance.&#xD;&#xA;offsetDistance : double = 750" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="be8df0b2-98da-47c7-a491-bd51c66848c8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="483.628120641852" y="575.000116900298" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Amount of Slats.&#xD;&#xA;slatAmount : int = 50" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="dc81af21-8285-4d30-a240-4630f6d802ff" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="468.473972825651" y="288" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Input Surface.&#xD;&#xA;srf : Surface" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="4bb41979-f4ae-464d-a240-0b4156d75781" start_index="14" end="2e0b1990-0606-4f36-9652-325c5d784b95" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="1" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="3" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="4" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="4" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="5" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="6" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="13" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="5" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="14" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f877176d-741f-4f35-a996-f7241ae16bbe" start_index="15" end="4bb41979-f4ae-464d-a240-0b4156d75781" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c0dc6d96-5261-46a6-abd1-d9133d53442d" start_index="0" end="f877176d-741f-4f35-a996-f7241ae16bbe" end_index="4" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d467cfbc-c5c7-4f58-b1de-325278c8fbc9" start_index="0" end="f877176d-741f-4f35-a996-f7241ae16bbe" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c6b7c587-0db6-4e34-9c97-44f8fba64512" start_index="0" end="f877176d-741f-4f35-a996-f7241ae16bbe" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="be8df0b2-98da-47c7-a491-bd51c66848c8" start_index="0" end="f877176d-741f-4f35-a996-f7241ae16bbe" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="dc81af21-8285-4d30-a240-4630f6d802ff" start_index="0" end="f877176d-741f-4f35-a996-f7241ae16bbe" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

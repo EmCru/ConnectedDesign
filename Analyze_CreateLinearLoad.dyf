@@ -1,0 +1,100 @@
+<Workspace Version="1.3.2.2480" X="12.6927697548829" Y="179.754645651055" zoom="0.496186487382813" ScaleFactor="1" Name="Analyze_CreateLinearLoad" Description="Creation of linear loads on analytical stick elements" ID="b8bf3f85-e102-4b2d-ad5d-7058cb91f25c" Category="ArupBimSF.Revit.Structural">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Vector" resolvedName="Autodesk.DesignScript.Geometry.Vector" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <PythonNodeModels.PythonNode guid="1a7e439d-c747-4671-965f-44260255265b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1474.88576705807" y="561.399235318704" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="5">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <Script>import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB.Structure import *
+
+clr.AddReference('System')
+from System.Collections.Generic import List
+
+clr.AddReference('RevitNodes')
+import Revit
+clr.ImportExtensions(Revit.GeometryConversion)
+clr.ImportExtensions(Revit.Elements)
+
+clr.AddReference('RevitServices')
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+lineloads = []
+
+#The inputs to this node will be stored as a list in the IN variables.
+elements = UnwrapElement(IN[0])
+force = IN[1].ToXyz()
+moment = IN[2].ToXyz()
+LLType = UnwrapElement(IN[3])
+case = IN[4]
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+loadCasesCollector = FilteredElementCollector(doc).OfClass(LoadCase)
+loadCases = []
+for c in loadCasesCollector:
+	loadCases.append(c)
+
+
+if len(loadCases)&gt;0 and case&lt;=len(loadCases):
+	loadCase = loadCases[case-1]
+else:
+	loadCase = 0
+
+
+for i in range(0, len(elements)):
+	ll = LineLoad.Create(doc, elements[i], force, moment, LLType)
+	if loadCase != 0:
+		ll.LoadCaseId = loadCase.Id
+	lineloads.append(ll)
+	
+TransactionManager.Instance.TransactionTaskDone()
+
+#Assign your output to the OUT variable.
+OUT = lineloads</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="39043956-8e30-4cb2-b038-b8fcc9885aef" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="438" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Set of elements that need to be provided with linear loads&#xD;&#xA;elements[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1a7254a8-0375-4979-8476-c525117985a3" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1696.36871858359" y="567" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="LineLoads" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="2707ee24-3951-4f23-971e-adcd5fc54523" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="588" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Linear force expressed in N/m&#xD;&#xA;//Direction indicated by a vector&#xD;&#xA;force:Vector" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="625ed2e5-82a7-4b98-9b87-24559c24ca1c" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="738" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Moment expressed in N.m&#xD;&#xA;//Direction indicated by a vector&#xD;&#xA;moment:Vector" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="975d0ab6-e60e-4dc7-8225-6f4c206e6607" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="912.223282732588" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Line Load Type (hosted or non-hosted)&#xD;&#xA;//Input should be of type Autodesk.Revit.DB.Structure.LineLoadType;&#xD;&#xA;LineLoadType" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="73e72d9e-9637-4a4f-8a91-08252dd6a1c8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="1038" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="loadCase:int" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="1a7e439d-c747-4671-965f-44260255265b" start_index="0" end="1a7254a8-0375-4979-8476-c525117985a3" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="39043956-8e30-4cb2-b038-b8fcc9885aef" start_index="0" end="1a7e439d-c747-4671-965f-44260255265b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="2707ee24-3951-4f23-971e-adcd5fc54523" start_index="0" end="1a7e439d-c747-4671-965f-44260255265b" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="625ed2e5-82a7-4b98-9b87-24559c24ca1c" start_index="0" end="1a7e439d-c747-4671-965f-44260255265b" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="975d0ab6-e60e-4dc7-8225-6f4c206e6607" start_index="0" end="1a7e439d-c747-4671-965f-44260255265b" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="73e72d9e-9637-4a4f-8a91-08252dd6a1c8" start_index="0" end="1a7e439d-c747-4671-965f-44260255265b" end_index="4" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

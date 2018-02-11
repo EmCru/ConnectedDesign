@@ -1,0 +1,45 @@
+<Workspace Version="1.3.2.2480" X="-190.765509500812" Y="369.195937257944" zoom="1.72389743095233" ScaleFactor="1" Name="Action_RunMe If Not " Description="uses a run_me node if input does note eqaul &quot;&quot;#Action" ID="c45fc174-f97c-4297-a94d-ce7791c74726" Category="ArupBimSF.Boolean">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.List.Empty" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <PythonNodeModels.PythonNode guid="362ec496-fa10-453a-95d7-ee367470cdee" type="PythonNodeModels.PythonNode" nickname="Python Script" x="741.444336339075" y="-0.312691523881824" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>bool=IN[0]
+
+if bool == True:
+	OUT=IN[1]
+else:
+	OUT=0</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="000033e7-45f8-442f-b26c-14c27e6d8550" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="174.823917109077" y="-124.298857450852" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="List_In : var = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="5e991462-6895-41af-8ae7-6eb90b484940" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="956.025420914255" y="1.67654658290552" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="OUT" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5f99e261-b03f-4fb2-a25d-75b56ee7773f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="163.434399689676" y="10.6105940579384" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Run_If_Not : string = &quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="164f5fe0-478b-4ef8-aee7-3a445a4415d0" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="485.911933552262" y="-117.532611873906" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="t2 = t3 == t4;&#xA;t5 = t2 == false;" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="362ec496-fa10-453a-95d7-ee367470cdee" start_index="0" end="5e991462-6895-41af-8ae7-6eb90b484940" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="000033e7-45f8-442f-b26c-14c27e6d8550" start_index="0" end="362ec496-fa10-453a-95d7-ee367470cdee" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="000033e7-45f8-442f-b26c-14c27e6d8550" start_index="0" end="164f5fe0-478b-4ef8-aee7-3a445a4415d0" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5f99e261-b03f-4fb2-a25d-75b56ee7773f" start_index="0" end="164f5fe0-478b-4ef8-aee7-3a445a4415d0" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="164f5fe0-478b-4ef8-aee7-3a445a4415d0" start_index="1" end="362ec496-fa10-453a-95d7-ee367470cdee" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

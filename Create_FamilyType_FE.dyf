@@ -1,0 +1,54 @@
+<Workspace Version="1.3.2.2480" X="-1136.29223198984" Y="-58.6497019919638" zoom="2.05668026833428" ScaleFactor="1" Name="Create_FamilyType_FE" Description="Creates a new family type inside of family editor._!!FE" ID="fba8605c-516d-4400-899c-ea9b9001676b" Category="ArupBimSF.Revit.FamilyEditor">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9eefe129-65c4-4510-b9e8-041159746b66" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1118.99060041288" y="251.197148720181" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="NewType" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="b2a528c1-a015-4c92-8c52-d0bb31f7342c" type="PythonNodeModels.PythonNode" nickname="Create new types" x="931.557703508862" y="251.915121438031" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+types = IN[0]
+
+
+FamilyMan = doc.FamilyManager
+TransactionManager.Instance.EnsureInTransaction(doc)
+try:
+	newtype = FamilyMan.NewType(types)
+except:
+	newtype = "could not create new type"
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = newtype</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e467d282-c5e1-443a-83c0-c2e66abdc280" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="665.533611388164" y="253.107532150006" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="NewTypeName : string" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b2a528c1-a015-4c92-8c52-d0bb31f7342c" start_index="0" end="9eefe129-65c4-4510-b9e8-041159746b66" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e467d282-c5e1-443a-83c0-c2e66abdc280" start_index="0" end="b2a528c1-a015-4c92-8c52-d0bb31f7342c" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

@@ -1,0 +1,42 @@
+<Workspace Version="1.3.2.2480" X="211.962834213865" Y="220.162376807642" zoom="0.281624590317532" ScaleFactor="1" Name="2d_BoundaryExtents" Description="" ID="ef06f31f-94c2-4327-86a1-46a16d5766c0" Category="ArupBimSF.Points &amp; Coordinates">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Point" resolvedName="Autodesk.DesignScript.Geometry.Point" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="Rectangle" resolvedName="Autodesk.DesignScript.Geometry.Rectangle" assemblyName="ProtoGeometry.dll" />
+    <ClassMap partialName="Line" resolvedName="Autodesk.DesignScript.Geometry.Line" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="9b9bfe77-39d9-469b-af6a-01adb99f928c" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="The Guts" x="953.5" y="468.213333333333" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="t2 = t3.Curves;&#xA;t4 = t2.ToNurbsCurve();&#xA;t5 = t4.EndPoint;&#xA;t6 = Flatten(t5);&#xA;t7 = t4.StartPoint;&#xA;t8 = Flatten(t7);&#xA;t9 = t4.ControlPoints();&#xA;t10 = Flatten(t9);&#xA;t11 = {t6, t8, t10};&#xA;t12 = Flatten(t11);&#xA;t13 = Point.PruneDuplicates(t12, 0.001);&#xA;t14 = t13.X;&#xA;t15 = List.MaximumItem(t14);&#xA;t16 = t13.Y;&#xA;t17 = List.MinimumItem(t16);&#xA;t18 = Point.ByCoordinates(t15, t17, 0);&#xA;t19 = List.MinimumItem(t14);&#xA;t20 = Point.ByCoordinates(t19, t17, 0);&#xA;t21 = List.MaximumItem(t16);&#xA;t22 = Point.ByCoordinates(t19, t21, 0);&#xA;t23 = Point.ByCoordinates(t15, t21, 0);&#xA;t24 = {t18, t20, t22, t23};&#xA;t25 = Rectangle.ByCornerPoints(t24);&#xA;t26 = t25.Curves();&#xA;t27 = t26.PointAtParameter(0.5);&#xA;t28 = t26.EndPoint;&#xA;t29 = Line.ByStartPointEndPoint(t18, t22);&#xA;t30 = Line.ByStartPointEndPoint(t23, t20);&#xA;t31 = t29.Intersect(t30);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="51f26c48-1754-4e13-a252-e7c9676a6631" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1462.5" y="769.546666666667" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="rectangle" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="261382df-af30-45da-aa7a-86a2576ca6b5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1462.5" y="852.546666666667" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="centrePoints" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="5dedab8f-3449-458c-83a4-42d1f2d63327" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1462.5" y="936.546666666667" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="cornerPoints" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d478a647-cd1e-4b0f-992c-8414a59516b9" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="728.5" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="modelCurves" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="91cdea1e-f064-4c62-9e29-eb99aaf6b3f5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1462.5" y="1019.54666666667" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="centroid" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="9b9bfe77-39d9-469b-af6a-01adb99f928c" start_index="22" end="51f26c48-1754-4e13-a252-e7c9676a6631" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9b9bfe77-39d9-469b-af6a-01adb99f928c" start_index="24" end="261382df-af30-45da-aa7a-86a2576ca6b5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9b9bfe77-39d9-469b-af6a-01adb99f928c" start_index="25" end="5dedab8f-3449-458c-83a4-42d1f2d63327" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9b9bfe77-39d9-469b-af6a-01adb99f928c" start_index="28" end="91cdea1e-f064-4c62-9e29-eb99aaf6b3f5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d478a647-cd1e-4b0f-992c-8414a59516b9" start_index="0" end="9b9bfe77-39d9-469b-af6a-01adb99f928c" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

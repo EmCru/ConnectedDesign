@@ -1,0 +1,134 @@
+<Workspace Version="1.3.2.2480" X="46.1038337658747" Y="160.524165536768" zoom="0.843287710799125" ScaleFactor="1" Name="Db_Categories_Anno.Tags" Description="Get all annotation Categories" ID="7ba3b283-05c8-429f-be45-187b3b0f91f0" Category="ArupBimSF.Revit_Db.Categories">
+  <NamespaceResolutionMap />
+  <Elements>
+    <CoreNodeModels.Input.StringInput guid="6fbbeb87-5887-4e50-b13b-632b4a0fd110" type="CoreNodeModels.Input.StringInput" nickname="Anno-Tag Categories" x="-9.34434651707173" y="35.5171031802778" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Air Terminal Tags
+Analytical Beam Tags
+Analytical Brace Tags
+Analytical Column Tags
+Analytical Floor Tags
+Analytical Isolated Foundation Tags
+Analytical Link Tags
+Analytical Node Tags
+Analytical Slab Foundation Tags
+Analytical Wall Foundation Tags
+Analytical Wall Tags
+Area Load Tags
+Area Tags
+Assembly Tags
+Cable Tray Fitting Tags
+Cable Tray Tags
+Casework Tags
+Ceiling Tags
+Communication Device Tags
+Conduit Fitting Tags
+Conduit Tags
+Curtain Panel Tags
+Curtain System Tags
+Data Device Tags
+Detail Item Tags
+Door Tags
+Duct Accessory Tags
+Duct Fitting Tags
+Duct Insulation Tags
+Duct Lining Tags
+Duct Tags
+Electrical Equipment Tags
+Electrical Fixture Tags
+Fire Alarm Device Tags
+Flex Duct Tags
+Flex Pipe Tags
+Floor Tags
+Furniture System Tags
+Furniture Tags
+Generic Model Tags
+Internal Area Load Tags
+Internal Line Load Tags
+Internal Point Load Tags
+Keynote Tags
+Lighting Device Tags
+Lighting Fixture Tags
+Line Load Tags
+Mass Floor Tags
+Mass Tags
+Material Tags
+Mechanical Equipment Tags
+MEP Fabrication Containment Tags
+Mechanical Equipment Tags
+MEP Fabrication Containment Tags
+MEP Fabrication Ductwork Tags
+MEP Fabrication Hanger Tags
+MEP Fabrication Pipework Tags
+Nurse Call Device Tags
+Parking Tags
+Part Tags
+Pipe Accessory Tags
+Pipe Fitting Tags
+Pipe Insulation Tags
+Pipe Tags
+Planting Tags
+Plumbing Fixture Tags
+Point Load Tags
+Property Line Segment Tags
+Property Tags
+Railing Tags
+Revision Cloud Tags
+Roof Tags
+Room Tags
+Security Device Tags
+Site Tags
+Space Tags
+Specialty Equipment Tags
+Sprinkler Tags
+Stair Landing Tags
+Stair Run Tags
+Stair Support Tags
+Stair Tags
+Structural Area Reinforcement Tags
+Structural Beam System Tags
+Structural Column Tags
+Structural Connection Tags
+Structural Fabric Reinforcement Tags
+Structural Foundation Tags
+Structural Framing Tags
+Structural Path Reinforcement Tags
+Structural Rebar Coupler Tags
+Structural Rebar Tags
+Structural Stiffener Tags
+Structural Truss Tags
+Telephone Device Tags
+Wall Tags
+Window Tags
+Wire Tags
+Zone Tags</System.String>
+      <System.String value="Air Terminal Tags&#xD;&#xA;Analytical Beam Tags&#xD;&#xA;Analytical Brace Tags&#xD;&#xA;Analytical Column Tags&#xD;&#xA;Analytical Floor Tags&#xD;&#xA;Analytical Isolated Foundation Tags&#xD;&#xA;Analytical Link Tags&#xD;&#xA;Analytical Node Tags&#xD;&#xA;Analytical Slab Foundation Tags&#xD;&#xA;Analytical Wall Foundation Tags&#xD;&#xA;Analytical Wall Tags&#xD;&#xA;Area Load Tags&#xD;&#xA;Area Tags&#xD;&#xA;Assembly Tags&#xD;&#xA;Cable Tray Fitting Tags&#xD;&#xA;Cable Tray Tags&#xD;&#xA;Casework Tags&#xD;&#xA;Ceiling Tags&#xD;&#xA;Communication Device Tags&#xD;&#xA;Conduit Fitting Tags&#xD;&#xA;Conduit Tags&#xD;&#xA;Curtain Panel Tags&#xD;&#xA;Curtain System Tags&#xD;&#xA;Data Device Tags&#xD;&#xA;Detail Item Tags&#xD;&#xA;Door Tags&#xD;&#xA;Duct Accessory Tags&#xD;&#xA;Duct Fitting Tags&#xD;&#xA;Duct Insulation Tags&#xD;&#xA;Duct Lining Tags&#xD;&#xA;Duct Tags&#xD;&#xA;Electrical Equipment Tags&#xD;&#xA;Electrical Fixture Tags&#xD;&#xA;Fire Alarm Device Tags&#xD;&#xA;Flex Duct Tags&#xD;&#xA;Flex Pipe Tags&#xD;&#xA;Floor Tags&#xD;&#xA;Furniture System Tags&#xD;&#xA;Furniture Tags&#xD;&#xA;Generic Model Tags&#xD;&#xA;Internal Area Load Tags&#xD;&#xA;Internal Line Load Tags&#xD;&#xA;Internal Point Load Tags&#xD;&#xA;Keynote Tags&#xD;&#xA;Lighting Device Tags&#xD;&#xA;Lighting Fixture Tags&#xD;&#xA;Line Load Tags&#xD;&#xA;Mass Floor Tags&#xD;&#xA;Mass Tags&#xD;&#xA;Material Tags&#xD;&#xA;Mechanical Equipment Tags&#xD;&#xA;MEP Fabrication Containment Tags&#xD;&#xA;Mechanical Equipment Tags&#xD;&#xA;MEP Fabrication Containment Tags&#xD;&#xA;MEP Fabrication Ductwork Tags&#xD;&#xA;MEP Fabrication Hanger Tags&#xD;&#xA;MEP Fabrication Pipework Tags&#xD;&#xA;Nurse Call Device Tags&#xD;&#xA;Parking Tags&#xD;&#xA;Part Tags&#xD;&#xA;Pipe Accessory Tags&#xD;&#xA;Pipe Fitting Tags&#xD;&#xA;Pipe Insulation Tags&#xD;&#xA;Pipe Tags&#xD;&#xA;Planting Tags&#xD;&#xA;Plumbing Fixture Tags&#xD;&#xA;Point Load Tags&#xD;&#xA;Property Line Segment Tags&#xD;&#xA;Property Tags&#xD;&#xA;Railing Tags&#xD;&#xA;Revision Cloud Tags&#xD;&#xA;Roof Tags&#xD;&#xA;Room Tags&#xD;&#xA;Security Device Tags&#xD;&#xA;Site Tags&#xD;&#xA;Space Tags&#xD;&#xA;Specialty Equipment Tags&#xD;&#xA;Sprinkler Tags&#xD;&#xA;Stair Landing Tags&#xD;&#xA;Stair Run Tags&#xD;&#xA;Stair Support Tags&#xD;&#xA;Stair Tags&#xD;&#xA;Structural Area Reinforcement Tags&#xD;&#xA;Structural Beam System Tags&#xD;&#xA;Structural Column Tags&#xD;&#xA;Structural Connection Tags&#xD;&#xA;Structural Fabric Reinforcement Tags&#xD;&#xA;Structural Foundation Tags&#xD;&#xA;Structural Framing Tags&#xD;&#xA;Structural Path Reinforcement Tags&#xD;&#xA;Structural Rebar Coupler Tags&#xD;&#xA;Structural Rebar Tags&#xD;&#xA;Structural Stiffener Tags&#xD;&#xA;Structural Truss Tags&#xD;&#xA;Telephone Device Tags&#xD;&#xA;Wall Tags&#xD;&#xA;Window Tags&#xD;&#xA;Wire Tags&#xD;&#xA;Zone Tags" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="3b61a24e-0241-4191-8923-728e3901d83c" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Multiline Text_To List" x="258.141157161841" y="47.8088434969769" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="f949693a-8ab9-44a0-b211-346146fe2c7d" />
+      <Name value="Multiline Text_To List" />
+      <Description value="converts a string with line breaks in to a list of strings" />
+      <Inputs>
+        <Input value="String_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="List_Out" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="285cfb47-4b6d-4545-9ba3-95c58f042ff8" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Category.ByName" x="570.16863621291" y="41.2623332350048" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Category.ByName@string">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="61ee042f-633b-4430-a7f5-6eba1bcf9906" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="951.593188531181" y="55.4960317408604" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="TagCategories" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6fbbeb87-5887-4e50-b13b-632b4a0fd110" start_index="0" end="3b61a24e-0241-4191-8923-728e3901d83c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="3b61a24e-0241-4191-8923-728e3901d83c" start_index="0" end="285cfb47-4b6d-4545-9ba3-95c58f042ff8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="285cfb47-4b6d-4545-9ba3-95c58f042ff8" start_index="0" end="61ee042f-633b-4430-a7f5-6eba1bcf9906" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

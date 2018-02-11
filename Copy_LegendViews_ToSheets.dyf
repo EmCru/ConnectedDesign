@@ -1,0 +1,86 @@
+<Workspace Version="1.3.2.2480" X="-194" Y="161" zoom="1" ScaleFactor="1" Name="Copy_LegendViews_ToSheets" Description="Copy_LegendView_ToSheets" ID="320842d5-3d73-4f8c-bd46-45f82e908a85" Category="ArupBimSF.^TestingGrounds">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="72adb88a-0a5f-4b8d-960d-e7eaa3a1e350" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1290.67969452988" y="170" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="4a02ce25-5d17-4f8a-bf3b-50b32bc79889" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Failed" x="1125.67969452988" y="170" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="a[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="e8ec4b57-62bf-4c30-903c-6ae69b0cfada" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Succeded" x="1125.67969452988" y="335.881065683295" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="a[0];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" type="PythonNodeModels.PythonNode" nickname="Python Script" x="934.839847264938" y="219.599010632501" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+# import Document Manager
+clr.AddReference("RevitServices")
+import RevitServices 
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+uidoc = DocumentManager.Instance.CurrentUIDocument
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+clr.AddReference("RevitAPI")
+from Autodesk.Revit.DB import *
+
+dataEnteringNode = IN
+
+legend = UnwrapElement(IN[0])
+sheets = IN[1]
+loc = XYZ(IN[2].X, IN[2].Y, IN[2].Z)
+viewports = []
+failed = []
+
+for vs in sheets:
+	sheet = UnwrapElement(vs)
+	canAddToSht = Viewport.CanAddViewToSheet(doc, sheet.Id, legend.Id)
+	if canAddToSht:
+		try:		
+			TransactionManager.Instance.EnsureInTransaction(doc)	
+			viewport = Viewport.Create(doc, sheet.Id, legend.Id, loc)	
+			TransactionManager.Instance.TransactionTaskDone()
+			viewports.Add([viewport,sheet])
+		except:
+			failed.Add(["Failed",sheet])
+	else:
+		failed.Add(["Failed",sheet])
+		
+OUT = [viewports, failed]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="42fb5dd7-f3c3-494e-87a0-5c3278581ea9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1290.67969452988" y="320" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5a1ec531-1be1-447a-b66f-3ee444348ebf" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="684.839847264938" y="320" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Sheets to Copy To" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="ad3c38a2-6909-4dc5-bcd5-ef7ee2084656" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="684.839847264938" y="170" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Legend to Copy" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="fda1f209-85f6-4264-980d-622d9d150c2a" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="684.839847264938" y="470" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Location" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="4a02ce25-5d17-4f8a-bf3b-50b32bc79889" start_index="0" end="42fb5dd7-f3c3-494e-87a0-5c3278581ea9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e8ec4b57-62bf-4c30-903c-6ae69b0cfada" start_index="0" end="72adb88a-0a5f-4b8d-960d-e7eaa3a1e350" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" start_index="0" end="4a02ce25-5d17-4f8a-bf3b-50b32bc79889" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" start_index="0" end="e8ec4b57-62bf-4c30-903c-6ae69b0cfada" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5a1ec531-1be1-447a-b66f-3ee444348ebf" start_index="0" end="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ad3c38a2-6909-4dc5-bcd5-ef7ee2084656" start_index="0" end="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="fda1f209-85f6-4264-980d-622d9d150c2a" start_index="0" end="4b94b73e-cb5a-432f-95e0-babdaa00f8ab" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

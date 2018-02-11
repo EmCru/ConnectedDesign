@@ -1,0 +1,122 @@
+<Workspace Version="1.3.2.2480" X="16.1525701068375" Y="269.56366613975" zoom="0.695616441301115" ScaleFactor="1" Name="Change_Family Type_by Choosing Index" Description="Take an input of an instance elements and get you all types the element of it category and allows to select one of them to change it to" ID="8ff08009-4905-4827-89b4-35af0d3be8c4" Category="ArupBimSF.^TestingGrounds">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="5966c08d-8a8d-4ac6-bb0c-ac79af83dfd9" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="811.224371604883" y="261.456324952008" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="f6a1755c-c063-402f-8daf-8ce84aab9d1b" type="PythonNodeModels.PythonNode" nickname="Python Script" x="635.640810007937" y="262.990004356632" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script># Copyright(c) 2016, Konrad Sobon
+# @arch_laboratory, http://archi-lab.net
+
+# Import ToDSType(bool) extension method
+import clr
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+import sys
+pyt_path = r'C:\Program Files (x86)\IronPython 2.7\Lib'
+sys.path.append(pyt_path)
+
+#The inputs to this node will be stored as a list in the IN variable.
+dataEnteringNode = IN
+
+def ProcessList(_func, _list):
+    return map( lambda x: ProcessList(_func, x) if type(x)==list else _func(x), _list )
+
+def ProcessParallelLists(_func, *lists):
+	return map( lambda *xs: ProcessParallelLists(_func, *xs) if all(type(x) is list for x in xs) else _func(*xs), *lists )
+
+def ProcessListArg(_func, _list, _arg):
+    return map( lambda x: ProcessListArg(_func, x, _arg) if type(x)==list else _func(x, _arg), _list )
+
+def Unwrap(item):
+	return UnwrapElement(item)
+
+def ChangeType(element, typeId):
+	element.ChangeTypeId(ElementId(typeId))
+	return element
+
+if isinstance(IN[0], list):
+	elements = ProcessList(Unwrap, IN[0])
+else:
+	elements = [Unwrap(IN[0])]
+
+typeIds = IN[1]
+
+try:
+	errorReport = None
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	if isinstance(typeIds, list):
+		output = ProcessParallelLists(ChangeType, elements, typeIds)
+	else:
+		output = ProcessListArg(ChangeType, elements, typeIds)
+	TransactionManager.Instance.TransactionTaskDone()
+except:
+	# if error accurs anywhere in the process catch it
+	import traceback
+	errorReport = traceback.format_exc()
+
+# End Transaction
+TransactionManager.Instance.TransactionTaskDone()
+
+
+#Assign your output to the OUT variable
+if errorReport == None:
+	OUT = output
+else:
+	OUT = errorReport
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8f26e99d-971c-48c5-beb9-ef4792aefa4b" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="487.986846802471" y="261.347682296259" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="element" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="11c23db0-6c8d-4e40-b4b1-dad1f6dcdfde" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="490.678946807223" y="336.135557581958" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="typeId" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="311d4080-286a-415a-8d11-6794d09249bc" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Set_FamilyType_ByElementId" x="1153.86974928277" y="273.411582146992" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <ID value="179d5e62-6aeb-44c9-91c9-3fcca7dae4cb" />
+      <Name value="Set_FamilyType_ByElementId" />
+      <Description value="Change a family type by inputing the family instance and also the Element Id of the family type to change to_!Se!FT" />
+      <Inputs>
+        <Input value="element" />
+        <Input value="typeId" />
+      </Inputs>
+      <Outputs>
+        <Output value="element" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <CoreNodeModels.Input.StringInput guid="a99eb59f-68ff-4cfb-9bc6-bcd28a4cc7c0" type="CoreNodeModels.Input.StringInput" nickname="String" x="927.59727668913" y="115.911073404499" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Parent Name / Type Name</System.String>
+      <System.String value="Parent Name / Type Name" />
+    </CoreNodeModels.Input.StringInput>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="f6a1755c-c063-402f-8daf-8ce84aab9d1b" start_index="0" end="5966c08d-8a8d-4ac6-bb0c-ac79af83dfd9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8f26e99d-971c-48c5-beb9-ef4792aefa4b" start_index="0" end="f6a1755c-c063-402f-8daf-8ce84aab9d1b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="11c23db0-6c8d-4e40-b4b1-dad1f6dcdfde" start_index="0" end="f6a1755c-c063-402f-8daf-8ce84aab9d1b" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

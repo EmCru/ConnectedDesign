@@ -1,0 +1,42 @@
+<Workspace Version="1.3.2.2480" X="-203.216764429471" Y="-117.203177680392" zoom="0.888789228297155" ScaleFactor="1" Name="Feet&amp;Inches_Double➜Fraction" Description="Converts feet in number (decimal) format and converts it into fraction format" ID="05acfb22-cdbb-48d2-b28b-65e4e14eb9d4" Category="ArupBimSF.^FixMe">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Math" resolvedName="DSCore.Math" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="860bc837-afd5-45da-afc7-741878039410" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="747.739174985887" y="338.944787662068" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="def ft2frac(x,f1){&#xA;frac = Math.Pow(2, 1..8);&#xA;ft1 = Math.Floor(x);&#xA;in1 = (x - ft1) * 12;&#xA;in2 = Math.Floor(in1);&#xA;fr1 = (in1 - in2) * frac;&#xA;fr2 = Math.Round(fr1);&#xA;v1 = Math.Abs(fr1 - fr2);&#xA;ind1 = DSCore.List.FirstIndexOf(v1, DSCore.List.MinimumItem(v1));&#xA;fr3 = __Apply(f1,fr2[ind1]) + &quot;/&quot; + __Apply(f1,frac[ind1]);&#xA;t0 = fr3[0] == fr3[-1];&#xA;in3 = t0 ? (in2 + 1) : in2;&#xA;ft1s = __Apply(f1,ft1) + &quot;'&quot;;&#xA;in3s = __Apply(f1,in3);&#xA;ft1s = ft1s == &quot;0'&quot; ? &quot;&quot; : ft1s;&#xA;t1 = in3 == 0;&#xA;t2 = fr3 == &quot;0/2&quot;;&#xA;in2s = t1 ? &quot;&quot; : in3s;&#xA;fr3s = t2 || t0 ? &quot;&quot; : fr3;&#xA;mid = t1 || t2 || t0 ? &quot;&quot; : &quot; &quot;;&#xA;end = t1 &amp;&amp; t2 ? &quot;&quot; : &quot;\&quot;&quot;;&#xA;return = ft1s+in2s+mid+fr3s+end;&#xA;};" ShouldFocus="false" />
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="aef2553e-9f15-43f8-95a5-99eeebdb3fce" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1033.78627587011" y="268" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="fraction" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="cf356c01-fddf-4b3d-b312-a65291cabc41" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="752.149136483979" y="268" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="ft2frac(x,f1);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5c559192-9699-4f8e-942e-0e644824eca0" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="478.442124848011" y="268" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="number:var" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="5002c14f-65c4-4b41-99ed-f0f2035aaa61" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Number➜String" x="475.403218266937" y="357.776549660895" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="True" />
+      <ID value="d89880a6-9e6c-4d7c-9cb8-4f0fd291f8df" />
+      <Name value="Number➜String" />
+      <Description value="Converts a number to a string" />
+      <Inputs>
+        <Input value="num" />
+        <Input value="digits" />
+      </Inputs>
+      <Outputs>
+        <Output value="str" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="cf356c01-fddf-4b3d-b312-a65291cabc41" start_index="0" end="aef2553e-9f15-43f8-95a5-99eeebdb3fce" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5c559192-9699-4f8e-942e-0e644824eca0" start_index="0" end="cf356c01-fddf-4b3d-b312-a65291cabc41" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5002c14f-65c4-4b41-99ed-f0f2035aaa61" start_index="0" end="cf356c01-fddf-4b3d-b312-a65291cabc41" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

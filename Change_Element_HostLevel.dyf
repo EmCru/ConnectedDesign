@@ -1,0 +1,78 @@
+<Workspace Version="1.3.2.2480" X="-120" Y="-3" zoom="1" ScaleFactor="1" Name="Change_Element_HostLevel" Description="Moves an elements to input levels without changing their elevation" ID="70ca8bbf-d155-4e95-b379-197aaa376105" Category="ArupBimSF.Revit.Element_Location">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="b9fddcd1-f15f-4995-9c9e-ff25357cc1a1" type="PythonNodeModels.PythonNode" nickname="Python Script" x="949" y="318" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+
+element = UnwrapElement(IN[0])
+ref_level = UnwrapElement(IN[1])
+listout = []
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+for i,x in enumerate(element):
+	ref_levelid = ref_level.Id
+	
+	#familyinstances
+	try:
+		object_param_level = x.get_Parameter(BuiltInParameter.FAMILY_LEVEL_PARAM)
+	
+		object_level = doc.GetElement(object_param_level.AsElementId())
+	
+		object_param_offset = x.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
+	
+		object_newoffset = object_param_offset.AsDouble() + object_level.Elevation - ref_level.Elevation
+	
+		object_param_level.Set(ref_levelid)
+		object_param_offset.Set(object_newoffset)
+		listout.append(x)
+	#system families
+	except:
+		try:
+			object_param_level = x.get_Parameter(BuiltInParameter.RBS_START_LEVEL_PARAM)
+			
+			object_param_level.Set(ref_levelid)
+			listout.append(x)
+		except:
+			pass
+
+TransactionManager.Instance.TransactionTaskDone()
+
+OUT = listout</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="bd7b3700-d67a-43c7-a314-9f94f0545403" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="712" y="291" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="458ee340-d0d7-4808-ab81-253b554fdd99" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="735" y="409" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Level" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9d38f6c3-52a0-41a6-8fa0-308bb8ce30b5" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1159" y="322" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Succeeded" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b9fddcd1-f15f-4995-9c9e-ff25357cc1a1" start_index="0" end="9d38f6c3-52a0-41a6-8fa0-308bb8ce30b5" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="bd7b3700-d67a-43c7-a314-9f94f0545403" start_index="0" end="b9fddcd1-f15f-4995-9c9e-ff25357cc1a1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="458ee340-d0d7-4808-ab81-253b554fdd99" start_index="0" end="b9fddcd1-f15f-4995-9c9e-ff25357cc1a1" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

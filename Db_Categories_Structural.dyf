@@ -1,0 +1,99 @@
+<Workspace Version="1.3.2.2480" X="34.8175689502584" Y="100.707991573182" zoom="0.415911629367672" ScaleFactor="1" Name="Db_Categories_Structural" Description="Lists out all structural specific Revit categories " ID="e1f6deca-8ee1-4b39-a3a1-41ff0b76251f" Category="ArupBimSF.Revit_Db.Categories">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="List.create" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <CoreNodeModels.Input.StringInput guid="e66dbc4e-66c0-4096-ab1b-1b6363fae3d2" type="CoreNodeModels.Input.StringInput" nickname="Anno_Structural Symbols" x="250" y="297.221198426239" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Brace in Plan View Symbols
+Connection Symbols
+Foundation Span Direction Symbol
+Span Direction Symbol
+Structural Annotations
+Structural Area Reinforcement Symbols
+Structural Fabric Reinforcement Symbols
+Structural Path Reinforcement Symbols</System.String>
+      <System.String value="Brace in Plan View Symbols&#xD;&#xA;Connection Symbols&#xD;&#xA;Foundation Span Direction Symbol&#xD;&#xA;Span Direction Symbol&#xD;&#xA;Structural Annotations&#xD;&#xA;Structural Area Reinforcement Symbols&#xD;&#xA;Structural Fabric Reinforcement Symbols&#xD;&#xA;Structural Path Reinforcement Symbols" />
+    </CoreNodeModels.Input.StringInput>
+    <CoreNodeModels.Input.StringInput guid="e67e37ab-e830-4218-91c3-a7de0608773e" type="CoreNodeModels.Input.StringInput" nickname="Categories_Structural" x="253.187375865484" y="0" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Structural Area Reinforcement
+Structural Beam Systems
+Structural Columns
+Structural Connections
+Structural Fabric Areas
+Structural Fabric Reinforcement
+Structural Foundations
+Structural Framing
+Structural Path Reinforcement
+Structural Rebar
+Structural Rebar Couplers
+Structural Stiffeners
+Structural Trusses</System.String>
+      <System.String value="Structural Area Reinforcement&#xD;&#xA;Structural Beam Systems&#xD;&#xA;Structural Columns&#xD;&#xA;Structural Connections&#xD;&#xA;Structural Fabric Areas&#xD;&#xA;Structural Fabric Reinforcement&#xD;&#xA;Structural Foundations&#xD;&#xA;Structural Framing&#xD;&#xA;Structural Path Reinforcement&#xD;&#xA;Structural Rebar&#xD;&#xA;Structural Rebar Couplers&#xD;&#xA;Structural Stiffeners&#xD;&#xA;Structural Trusses" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="8f2ab672-de82-4008-9cec-52d024eb1055" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Category.ByName" x="1803.54989927955" y="699.64180456125" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Category.ByName@string">
+      <PortInfo index="0" default="False" useLevels="True" level="2" shouldKeepListStructure="True" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="5ce9e572-6c38-4423-8fd5-305cdfa583b6" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2234.12346191007" y="968.523634134115" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Structural" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <CoreNodeModels.HigherOrder.Map guid="411e069d-530b-412c-a69f-11f8a63466ee" type="CoreNodeModels.HigherOrder.Map" nickname="List.Map" x="1601.12987015448" y="702.45045998567" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </CoreNodeModels.HigherOrder.Map>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="7a055459-195e-488f-9d8d-10db442da02c" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Sort" x="1286.25030050903" y="875.88024461032" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Sort@var[]">
+      <PortInfo index="0" default="False" useLevels="True" level="1" shouldKeepListStructure="True" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b139364a-abb2-4f36-978b-84a2e09bb564" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2229.75138568819" y="1056.17593290383" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="StructuralSymbols" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="c2c21d8a-695c-4c66-879b-e6679552cfac" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1774.22886020079" y="1085.05762886198" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[0];&#xA;x[1];&#xA;x[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="ce61737b-c0ea-4761-b3e4-545773f58dd2" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Multiline Text_To List" x="1328.75645183286" y="702.935528518817" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" useLevels="True" level="1" shouldKeepListStructure="True" />
+      <ID value="f949693a-8ab9-44a0-b211-346146fe2c7d" />
+      <Name value="Multiline Text_To List" />
+      <Description value="converts a string with line breaks in to a list of strings" />
+      <Inputs>
+        <Input value="String_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="List_Out" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <CoreNodeModels.CreateList guid="440538a9-02e4-4f70-8b78-f8e6f6f7de62" type="CoreNodeModels.CreateList" nickname="List.Create" x="941.212064341515" y="378.732542506384" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+    </CoreNodeModels.CreateList>
+    <CoreNodeModels.Input.StringInput guid="b4150125-7dd4-4bd6-a6de-7e341b045047" type="CoreNodeModels.Input.StringInput" nickname="Reinforcing" x="253.90226683846" y="587.099997311412" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Rebar Cover References
+Rebar Set Toggle
+Rebar Shape
+Multi-Rebar Annotations</System.String>
+      <System.String value="Rebar Cover References&#xD;&#xA;Rebar Set Toggle&#xD;&#xA;Rebar Shape&#xD;&#xA;Multi-Rebar Annotations" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="594376c2-67b4-4633-a63c-6b71dc86f741" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2239.0571705607" y="1129.87625319589" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Rebar_Reinf" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="e66dbc4e-66c0-4096-ab1b-1b6363fae3d2" start_index="0" end="440538a9-02e4-4f70-8b78-f8e6f6f7de62" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e67e37ab-e830-4218-91c3-a7de0608773e" start_index="0" end="440538a9-02e4-4f70-8b78-f8e6f6f7de62" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8f2ab672-de82-4008-9cec-52d024eb1055" start_index="0" end="c2c21d8a-695c-4c66-879b-e6679552cfac" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="411e069d-530b-412c-a69f-11f8a63466ee" start_index="0" end="8f2ab672-de82-4008-9cec-52d024eb1055" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7a055459-195e-488f-9d8d-10db442da02c" start_index="0" end="411e069d-530b-412c-a69f-11f8a63466ee" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c2c21d8a-695c-4c66-879b-e6679552cfac" start_index="0" end="5ce9e572-6c38-4423-8fd5-305cdfa583b6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c2c21d8a-695c-4c66-879b-e6679552cfac" start_index="1" end="b139364a-abb2-4f36-978b-84a2e09bb564" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c2c21d8a-695c-4c66-879b-e6679552cfac" start_index="2" end="594376c2-67b4-4633-a63c-6b71dc86f741" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ce61737b-c0ea-4761-b3e4-545773f58dd2" start_index="0" end="411e069d-530b-412c-a69f-11f8a63466ee" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="440538a9-02e4-4f70-8b78-f8e6f6f7de62" start_index="0" end="ce61737b-c0ea-4761-b3e4-545773f58dd2" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b4150125-7dd4-4bd6-a6de-7e341b045047" start_index="0" end="440538a9-02e4-4f70-8b78-f8e6f6f7de62" end_index="2" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

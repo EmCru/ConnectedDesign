@@ -1,0 +1,62 @@
+<Workspace Version="1.3.2.2480" X="-708.628646366213" Y="424.798355212546" zoom="0.894168083312077" ScaleFactor="1" Name="Db_Subcategories by Category" Description="gets the sub categories assiciated with the input categories" ID="f5add24c-c8c1-4aaf-b6a0-c6f7d7416853" Category="ArupBimSF.Revit_Db.Categories">
+  <NamespaceResolutionMap />
+  <Elements>
+    <PythonNodeModels.PythonNode guid="3b53d85e-a72d-4598-876b-8686af43a5ec" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1406" y="118.5" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+cats = UnwrapElement(IN[0])
+elementlist = list()
+
+for cat in cats:
+	try:
+		sublist = []
+		for subcat in cat.SubCategories:
+			sublist.append(Revit.Elements.Category.ById(subcat.Id.IntegerValue))
+		elementlist.append(sublist)
+	except:
+		elementlist.append(list())
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="556743df-dc5f-493a-a844-3c774dd3c23a" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1853" y="20" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="subcategories" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="16ebb2ec-d1c6-4cfb-9dc4-3a68afb8a787" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="List_Return List or Single Value" x="1568" y="-1.85596524469395" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <ID value="67291313-4374-4ca3-afcf-99fb6114a4b8" />
+      <Name value="List_Return List or Single Value" />
+      <Description value="" />
+      <Inputs>
+        <Input value="unknownItem" />
+        <Input value="List_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="e811359d-26a9-4873-ab03-c025bd9846ec" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1145.31903295177" y="98.5628834746279" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="36f67e9f-1353-436a-bf16-cbbf442ffc08" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="1012.82850577049" y="8.81642032786601" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="category" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="3b53d85e-a72d-4598-876b-8686af43a5ec" start_index="0" end="16ebb2ec-d1c6-4cfb-9dc4-3a68afb8a787" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="16ebb2ec-d1c6-4cfb-9dc4-3a68afb8a787" start_index="0" end="556743df-dc5f-493a-a844-3c774dd3c23a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e811359d-26a9-4873-ab03-c025bd9846ec" start_index="0" end="3b53d85e-a72d-4598-876b-8686af43a5ec" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="36f67e9f-1353-436a-bf16-cbbf442ffc08" start_index="0" end="16ebb2ec-d1c6-4cfb-9dc4-3a68afb8a787" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="36f67e9f-1353-436a-bf16-cbbf442ffc08" start_index="0" end="e811359d-26a9-4873-ab03-c025bd9846ec" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

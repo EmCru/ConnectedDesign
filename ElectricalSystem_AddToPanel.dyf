@@ -1,0 +1,88 @@
+<Workspace Version="1.3.2.2480" X="-349" Y="-69" zoom="1" ScaleFactor="1" Name="ElectricalSystem_AddToPanel" Description="adds elements to panel" ID="d90385a0-e93a-4af9-97d5-f3f007ed5e60" Category="ArupBimSF.Revit.Mep_Electrical">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="806c4b19-2f17-4bd8-8da9-1636ea579320" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1356" y="464" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Success" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="b1ccfcb4-8be3-4e05-9c65-8918742928f1" type="PythonNodeModels.PythonNode" nickname="Python: AddToPanel" x="1024" y="527" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+succes = []
+failed = []
+
+def AddToPanel(panel,circuits):
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	if hasattr(circuits, "__iter__"):
+		for circuit in circuits:
+			try:
+				circuit.SelectPanel(panel)
+				succes.append(circuit.ToDSType(True))
+			except:
+				failed.append(circuit.ToDSType(True))
+	else:
+		try:
+			circuits.SelectPanel(panel)
+			succes.append(circuits.ToDSType(True))
+		except:
+			failed.append(circuits.ToDSType(True))
+	TransactionManager.Instance.TransactionTaskDone()
+	
+
+if isinstance(IN[0], list):
+	for i,sys in enumerate(UnwrapElement(IN[0])):
+		AddToPanel(sys,UnwrapElement(IN[1])[i])
+else:
+	AddToPanel(UnwrapElement(IN[0]),UnwrapElement(IN[1]))
+
+OUT = succes, failed</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="56d656eb-a92b-4224-b1a3-5e03c0c35104" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1369" y="599" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Failed" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="ed93b339-7439-444e-be55-8184db12205f" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1214" y="502" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[0];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="841e9024-49e0-4dc4-abd4-c029c87dd459" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1240" y="605" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="08f5e01d-847d-49ec-81b3-1a4c4474c211" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="813" y="496" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Panel" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c944d965-5c7b-4b79-afc1-cac91809d750" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="783" y="652" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Circuits" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="b1ccfcb4-8be3-4e05-9c65-8918742928f1" start_index="0" end="ed93b339-7439-444e-be55-8184db12205f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b1ccfcb4-8be3-4e05-9c65-8918742928f1" start_index="0" end="841e9024-49e0-4dc4-abd4-c029c87dd459" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="ed93b339-7439-444e-be55-8184db12205f" start_index="0" end="806c4b19-2f17-4bd8-8da9-1636ea579320" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="841e9024-49e0-4dc4-abd4-c029c87dd459" start_index="0" end="56d656eb-a92b-4224-b1a3-5e03c0c35104" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="08f5e01d-847d-49ec-81b3-1a4c4474c211" start_index="0" end="b1ccfcb4-8be3-4e05-9c65-8918742928f1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c944d965-5c7b-4b79-afc1-cac91809d750" start_index="0" end="b1ccfcb4-8be3-4e05-9c65-8918742928f1" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

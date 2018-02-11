@@ -1,0 +1,33 @@
+<Workspace Version="1.3.2.2480" X="357.772038066284" Y="424.490857823945" zoom="0.635248340448617" ScaleFactor="1" Name="Element_Has Area" Description="runs areas, spaces or rooms and geterimines if area is greater than 0" ID="33e8a931-1884-43c7-a7b4-822dc201f2df" Category="ArupBimSF.Revit.Elements">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.List" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="0eb126ee-e5b0-4a48-a4f1-ce2569b15eaa" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-63.1423484242413" y="-114.035663230815" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Elements_In : var[]..[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0e540662-fb7e-42dd-a131-5d43d8cd0bfc" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1274.55506899545" y="11.1741104351334" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Has area" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="0a12a73e-ea0f-44aa-ad3c-9c7e003c3c30" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1273.39042300658" y="110.916855733932" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="No area" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="efe19d04-5bca-4199-afb5-17bfef727876" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1126.69190173247" y="29.1160736234222" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="x[0];&#xA;x[1];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="22f857b1-c6f7-4bef-9be9-06a1e83af595" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="329.1973615816" y="-18.0891163013381" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="t3 = t4.GetParameterValueByName(&quot;Area&quot;);&#xA;t5 = t3 &gt; 0;&#xA;t6 = DSCore.List.GroupByKey(t4, t5);&#xA;t7 = __TryGetValueFromNestedDictionaries(t6, &quot;groups&quot;);&#xA;t8 = __TryGetValueFromNestedDictionaries(t6, &quot;unique keys&quot;);" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="0eb126ee-e5b0-4a48-a4f1-ce2569b15eaa" start_index="0" end="22f857b1-c6f7-4bef-9be9-06a1e83af595" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="efe19d04-5bca-4199-afb5-17bfef727876" start_index="0" end="0e540662-fb7e-42dd-a131-5d43d8cd0bfc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="efe19d04-5bca-4199-afb5-17bfef727876" start_index="1" end="0a12a73e-ea0f-44aa-ad3c-9c7e003c3c30" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="22f857b1-c6f7-4bef-9be9-06a1e83af595" start_index="3" end="efe19d04-5bca-4199-afb5-17bfef727876" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

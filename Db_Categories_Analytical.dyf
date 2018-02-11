@@ -1,0 +1,57 @@
+<Workspace Version="1.3.2.2480" X="306.709753221346" Y="481.998546583838" zoom="0.506001968988124" ScaleFactor="1" Name="Db_Categories_Analytical" Description="all  Analytical categories" ID="e6364eab-0132-45e6-8b7e-666fb74b549a" Category="ArupBimSF.Revit_Db.Categories">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="57728472-0f03-4f22-8631-d0c943e6dac9" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Category.ByName" x="965.327328706584" y="-336.084225161839" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Category.ByName@string">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.Input.StringInput guid="efdb948c-cbf1-4f69-a62b-249d2416e1bd" type="CoreNodeModels.Input.StringInput" nickname="Analytical Categories" x="313.748673912337" y="-353.297546900897" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>Analytical Beams
+Analytical Braces
+Analytical Columns
+Analytical Floors
+Analytical Foundation Slabs
+Analytical Isolated Foundations
+Analytical Links
+Analytical Nodes
+Analytical Spaces
+Analytical Surfaces
+OST_GbXMLFaces
+Analytical Wall Foundations
+Analytical Walls
+Analysis Display Style
+Analysis Results
+Boundary Conditions
+Structural Internal Loads
+Structural Load Cases
+Structural Loads</System.String>
+      <System.String value="Analytical Beams&#xD;&#xA;Analytical Braces&#xD;&#xA;Analytical Columns&#xD;&#xA;Analytical Floors&#xD;&#xA;Analytical Foundation Slabs&#xD;&#xA;Analytical Isolated Foundations&#xD;&#xA;Analytical Links&#xD;&#xA;Analytical Nodes&#xD;&#xA;Analytical Spaces&#xD;&#xA;Analytical Surfaces&#xD;&#xA;OST_GbXMLFaces&#xD;&#xA;Analytical Wall Foundations&#xD;&#xA;Analytical Walls&#xD;&#xA;Analysis Display Style&#xD;&#xA;Analysis Results&#xD;&#xA;Boundary Conditions&#xD;&#xA;Structural Internal Loads&#xD;&#xA;Structural Load Cases&#xD;&#xA;Structural Loads" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="d34a1f9f-cdf6-4b82-bc48-21fe46159efb" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1271.49539717442" y="-347.021099288425" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="AnalysisCategories;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="b0842044-8503-4b57-8f57-12e04580e3cb" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="MultilineString➜List" x="590.193811023271" y="-455.249931719892" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="aef9a219-67c8-4a02-a97f-e3d981425ddb" />
+      <Name value="MultilineString➜List" />
+      <Description value="converts a string with line breaks in to a list of strings" />
+      <Inputs>
+        <Input value="String_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="List_Out" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="57728472-0f03-4f22-8631-d0c943e6dac9" start_index="0" end="d34a1f9f-cdf6-4b82-bc48-21fe46159efb" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="efdb948c-cbf1-4f69-a62b-249d2416e1bd" start_index="0" end="b0842044-8503-4b57-8f57-12e04580e3cb" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b0842044-8503-4b57-8f57-12e04580e3cb" start_index="0" end="57728472-0f03-4f22-8631-d0c943e6dac9" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

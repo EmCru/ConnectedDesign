@@ -1,0 +1,69 @@
+<Workspace Version="1.3.2.2480" X="-195.064622884549" Y="-174.887077020862" zoom="1.24844365397223" ScaleFactor="1" Name="Delete_Elements" Description="Attempts to delete elements from Revit" ID="a3e05957-5656-4a26-829b-e97ada6764fd" Category="ArupBimSF.Revit.PurgeTools">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="ff945372-4975-4c07-83df-6bfbb560287c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="906.767029907826" y="327.541338658133" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="count" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="dc608ca8-3cc9-4469-a995-20465256ee4b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="903.125910377206" y="384.836171211517" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="deleted_Ids" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="35bf7c77-a589-4c0e-bfc8-d7a79f6f0f17" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="778.276752110717" y="371.944935108973" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="d[0];&#xA;d[1];&#xA;d[2];" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="248bf22e-a407-4316-afab-b22fbda97ee8" type="PythonNodeModels.PythonNode" nickname="Python Script" x="606.875045214716" y="394.558837525486" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+doc = DocumentManager.Instance.CurrentDBDocument
+
+def tolist(obj1):
+	if hasattr(obj1,"__iter__"): return obj1
+	else: return [obj1]
+
+ids = [e.Id for e in UnwrapElement(tolist(IN[0]) )]
+
+if IN[1]:
+	deleted, failed = [], []
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	for id in ids:
+		try:
+			del_id = doc.Delete(id)
+			deleted.extend([d.ToString() for d in del_id])
+		except : failed.append(id.ToString() )
+	TransactionManager.Instance.TransactionTaskDone()
+	s = set(deleted)
+	failed1 = [x for x in failed if x not in s]
+	OUT = len(deleted), ';'.join(deleted), ';'.join(failed1)
+else:
+	OUT = "Set confirm to True", "", ""</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b4efbf18-4e72-46a3-9733-0714b5ee6e9d" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="907.887894667137" y="476.230400012152" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="failed_Ids" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="20853420-145f-4372-ac29-0f8e7c33109f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="369.497719603066" y="377.367714291943" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="element:var[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f948fb97-8843-42dc-ba0b-65a410240a03" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="365.208975728592" y="481.165768773772" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="confirm:bool" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="35bf7c77-a589-4c0e-bfc8-d7a79f6f0f17" start_index="0" end="ff945372-4975-4c07-83df-6bfbb560287c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="35bf7c77-a589-4c0e-bfc8-d7a79f6f0f17" start_index="1" end="dc608ca8-3cc9-4469-a995-20465256ee4b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="35bf7c77-a589-4c0e-bfc8-d7a79f6f0f17" start_index="2" end="b4efbf18-4e72-46a3-9733-0714b5ee6e9d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="248bf22e-a407-4316-afab-b22fbda97ee8" start_index="0" end="35bf7c77-a589-4c0e-bfc8-d7a79f6f0f17" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="20853420-145f-4372-ac29-0f8e7c33109f" start_index="0" end="248bf22e-a407-4316-afab-b22fbda97ee8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f948fb97-8843-42dc-ba0b-65a410240a03" start_index="0" end="248bf22e-a407-4316-afab-b22fbda97ee8" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

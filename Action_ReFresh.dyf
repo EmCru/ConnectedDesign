@@ -1,0 +1,30 @@
+<Workspace Version="1.3.2.2480" X="-437" Y="324" zoom="1" ScaleFactor="1" Name="Action_ReFresh" Description="add to the front of a workflow to allow it to be refreshed with a boolean node" ID="24962544-891a-4634-a04f-66a0a5faacdf" Category="ArupBimSF.Boolean">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="83587801-01d5-4701-85b5-f579a5bd87e7" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1484.75897516608" y="175" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="data" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="6212910a-a2d2-44d2-ab52-aca92261dacc" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="839.37948758304" y="224" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Refresh : bool=true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="9428a240-367c-4fc0-9072-4dddc48623db" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="834.37948758304" y="116" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="list" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="45dc5275-ae36-45c4-86ea-97a90bb6394a" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="1088.75897516608" y="95.729762071383" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="list;&#xA;come;&#xA;&#xA;[Imperative]&#xA;&#xA;{&#xA;	if (come ==true)&#xA;		return = list;&#xA;	else&#xA;		return = list;&#xA;};" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6212910a-a2d2-44d2-ab52-aca92261dacc" start_index="0" end="45dc5275-ae36-45c4-86ea-97a90bb6394a" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9428a240-367c-4fc0-9072-4dddc48623db" start_index="0" end="45dc5275-ae36-45c4-86ea-97a90bb6394a" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="45dc5275-ae36-45c4-86ea-97a90bb6394a" start_index="2" end="83587801-01d5-4701-85b5-f579a5bd87e7" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

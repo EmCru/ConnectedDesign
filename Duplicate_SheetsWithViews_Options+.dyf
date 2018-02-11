@@ -1,0 +1,188 @@
+<Workspace Version="1.3.2.2480" X="-118.195571326781" Y="60.5194967955863" zoom="0.878530757378052" ScaleFactor="1" Name="Duplicate_SheetsWithViews_Options+" Description="Duplicate Input Sheets with or Without Views" ID="777318c0-84d2-49af-bca9-1f90fb815179" Category="ArupBimSF.Revit.Views &amp; Sheets">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Sheet" resolvedName="Revit.Elements.Views.Sheet" assemblyName="RevitNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="9c7e86f9-7a25-41be-9636-bddc7693d089" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1685.67469920563" y="248.722040085298" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="report" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="56e837cd-7f02-4af5-a716-062279ae3808" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1323.94852535681" y="250.256567696668" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="6">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <PortInfo index="3" default="False" />
+      <PortInfo index="4" default="False" />
+      <PortInfo index="5" default="False" />
+      <Script>import System
+import itertools
+
+import clr
+
+# Import ToDSType(bool) extension method
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+# Import DocumentManager and TransactionManager
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+from System.Collections.Generic import *
+
+# Import RevitAPI
+clr.AddReference("RevitAPI")
+import Autodesk
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.Exceptions import *
+
+doc = DocumentManager.Instance.CurrentDBDocument
+uiapp = DocumentManager.Instance.CurrentUIApplication
+app = uiapp.Application
+
+sheets = IN[0]
+run = IN[1]
+duplicateWithViews = IN[2]
+duplicateOption = (ViewDuplicateOption.Duplicate, ViewDuplicateOption.WithDetailing, ViewDuplicateOption.AsDependent)[ IN[3] ]
+affix = IN[4]
+prefix = IN[5]
+
+if run:
+	if isinstance(sheets, list):
+		sheetsList = sheets
+	else:
+		sheetsList = [sheets]
+		
+	TransactionManager.Instance.EnsureInTransaction(doc)
+	
+	allSheets = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Sheets)
+	allSheetNumbers = []
+	for i in allSheets:
+		allSheetNumbers.Add( i.SheetNumber )
+	
+	allViews = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Views)
+	allViewNamesAndTypes = []
+	for i in allViews:
+		if doc.GetElement(i.GetTypeId()) != None:
+			allViewNamesAndTypes.Add( [i.ViewName, i.ViewType] )
+
+	report = []
+	newSheetList = []
+	sheetViews = []
+	for i in sheetsList:
+		doc.Regenerate() 
+		unwrapSheet = UnwrapElement(i)
+		sheetSuccessfullyDuplicated = False
+		
+		titleBlock = FilteredElementCollector(doc, ElementId(i.Id)).OfCategory(BuiltInCategory.OST_TitleBlocks).ToElements()
+		titleBlockSymbol = titleBlock[0].Symbol
+		
+		currentSheetNumber = i.SheetNumber
+		currentSheetName = unwrapSheet.get_Parameter( BuiltInParameter.SHEET_NAME ).AsString()
+			
+		newSheetNumberString = prefix + currentSheetNumber + affix
+		if newSheetNumberString in allSheetNumbers:
+			report.Add("Sheet " + newSheetNumberString + " exists in the document and cannot be duplicated" )
+		else:
+			newSheet = ViewSheet.Create(doc, ElementId(titleBlockSymbol.ToDSType(True).Id) )
+			sheetSuccessfullyDuplicated = True
+			
+			sheetNumberParam = newSheet.get_Parameter( BuiltInParameter.SHEET_NUMBER )
+			sheetNumberParam.Set( newSheetNumberString )
+			allSheetNumbers.Add( newSheetNumberString )
+		
+			sheetName = newSheet.get_Parameter( BuiltInParameter.SHEET_NAME )
+			sheetName.Set(currentSheetName)
+			
+			newSheetList.Add( doc.GetElement(newSheet.Id) )
+			
+			doc.Regenerate()
+			if duplicateWithViews and sheetSuccessfullyDuplicated:
+				viewPorts = FilteredElementCollector(doc, ElementId(i.Id)).OfCategory(BuiltInCategory.OST_Viewports).ToElements()
+
+				ptXYZ = [] 
+				for j in viewPorts:
+					currentViewport = j
+					ptXYZ = currentViewport.GetBoxCenter()
+					
+					getView = doc.GetElement(currentViewport.ViewId)
+					viewType = getView.ViewType
+					newViewName = prefix + getView.ViewName + affix
+					
+					invalidDuplicateDependancyTypes = [ViewType.ThreeD, ViewType.DraftingView, ViewType.Rendering]
+					
+					viewExists = False
+					for i in range(len(allViewNamesAndTypes)):
+						if newViewName == allViewNamesAndTypes[i][0] and viewType == allViewNamesAndTypes[i][1]:
+							viewExists = True
+							break
+						
+					if viewExists:
+						report.Add("View Type " + str(viewType) + newViewName + " exists in the document and cannot be duplicated" )
+					elif viewType == ViewType.Legend:
+						addView = Viewport.Create(doc, ElementId(newSheet.ToDSType(True).Id), getView.Id, ptXYZ)
+					else:
+						overrideDuplicateOption = ViewDuplicateOption.WithDetailing if (viewType in invalidDuplicateDependancyTypes and duplicateOption == ViewDuplicateOption.AsDependent) else duplicateOption
+						
+						newView = getView.Duplicate(overrideDuplicateOption)
+						newViewNameParam = doc.GetElement(newView).get_Parameter( BuiltInParameter.VIEW_NAME )
+						newViewNameParam.Set(newViewName)
+						
+						addView = Viewport.Create(doc, ElementId(newSheet.ToDSType(True).Id), newView, ptXYZ)
+						allViewNamesAndTypes.Add( [newViewName, viewType] )
+
+	TransactionManager.Instance.TransactionTaskDone()
+	if report == []:
+		OUT = "Duplication process successful", newSheetList
+	else:	
+		OUT = report, newSheetList</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="a0da41a6-44cd-4bf6-bb65-0906b968b194" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.FirstItem" x="1482.75850133484" y="252.190991246729" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.FirstItem@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="e37e0adb-7a19-4bf1-b431-f4d18c2067dd" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="802.589367782839" y="161" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Enter the Revit sheets to duplicate&#xD;&#xA;Sheets_In:Sheet[]" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="f1b2d125-9be2-4d26-8ea1-b87e34779420" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="731.239649073319" y="307.704700950664" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Set to True to duplicate views on the sheets&#xD;&#xA;duplicateViews:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2c9c25de-3563-4ce4-ae2e-4793c7626e49" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1713.43193310419" y="410.824131872309" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="Sheets" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="70da93e0-2bbb-4f2c-8848-3ab95d5ace0e" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="503.494577813377" y="381.653025450243" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Enter DuplicateOption: 0 = Duplicate. 1 = WithDetailing. 2 = AsDependent&#xD;&#xA;duplicateOption:int=0" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="58e1bc87-b810-409d-a8de-c2f44145c168" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.LastItem" x="1525.16555043501" y="413.323746729416" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.LastItem@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="27433068-5ef9-43e1-b530-eb7e33cc6722" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="580.918977163335" y="456.6051773608" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Add the suffix to add to duplicated sheet number and view names&#xD;&#xA;suffix:string=&quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="b191cec1-c82a-4215-bb76-5d563dcfe42f" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="452" y="544.628891557146" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Enter an optional prefix at the start of the duplicated sheet number and view names&#xD;&#xA;Prefix:string=&quot;&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="65c2e93c-ccc2-4724-a82c-96169b6dc7ff" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="550.934964797677" y="234.007858503213" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Set to True to dupicate the input sheets&#xD;&#xA;RunMe:bool" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="56e837cd-7f02-4af5-a716-062279ae3808" start_index="0" end="58e1bc87-b810-409d-a8de-c2f44145c168" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="56e837cd-7f02-4af5-a716-062279ae3808" start_index="0" end="a0da41a6-44cd-4bf6-bb65-0906b968b194" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a0da41a6-44cd-4bf6-bb65-0906b968b194" start_index="0" end="9c7e86f9-7a25-41be-9636-bddc7693d089" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e37e0adb-7a19-4bf1-b431-f4d18c2067dd" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="f1b2d125-9be2-4d26-8ea1-b87e34779420" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="70da93e0-2bbb-4f2c-8848-3ab95d5ace0e" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="3" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="58e1bc87-b810-409d-a8de-c2f44145c168" start_index="0" end="2c9c25de-3563-4ce4-ae2e-4793c7626e49" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="27433068-5ef9-43e1-b530-eb7e33cc6722" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="4" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b191cec1-c82a-4215-bb76-5d563dcfe42f" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="5" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="65c2e93c-ccc2-4724-a82c-96169b6dc7ff" start_index="0" end="56e837cd-7f02-4af5-a716-062279ae3808" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

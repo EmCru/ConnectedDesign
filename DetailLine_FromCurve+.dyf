@@ -1,0 +1,73 @@
+<Workspace Version="1.3.2.2480" X="-948.429304630485" Y="292.428232063051" zoom="1.26328763388833" ScaleFactor="1" Name="DetailLine_FromCurve+" Description="Craetes a detail line from an input curve and view.  Allows you to create curves in Family editor also which the ootb version does not." ID="fa53d09b-c2ac-43eb-8b97-a9e8dc3e7fef" Category="ArupBimSF.Revit.Curves">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Autodesk.Curve" resolvedName="Autodesk.DesignScript.Geometry.Curve" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="801992a8-863c-464e-b5de-bff2af1f2cb6" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1786.45272686125" y="67.2442653654342" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="detailLine" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="6ed821e5-c0f6-4648-9957-4ce46c0cbe06" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1408.99090124736" y="135.829607493223" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+curves = UnwrapElement(IN[0])
+view = UnwrapElement(IN[1])
+elementlist = []
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+if doc.IsFamilyDocument: 
+	doc_create = doc.FamilyCreate
+else: 
+	doc_create = doc.Create
+for curve in curves:
+	detcurve = doc_create.NewDetailCurve(view, curve.ToRevitType())
+	elementlist.append(detcurve)
+TransactionManager.Instance.TransactionTaskDone()
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="31448a2f-4f9e-435b-a87a-9a8fb31b6611" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="980.679478945093" y="187.647042909392" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="view" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="16e736ae-7b56-4751-b989-c8597017dd88" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="655.681326470705" y="29.5420714660682" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="curve : Autodesk.Curve" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="55026ff0-54b2-4d48-b4a0-8741533f163f" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="TurnIntoSingleList" x="974.781412876031" y="42.4066273585362" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <ID value="d52559bb-10ee-4c9e-830b-3f34992e3f38" />
+      <Name value="List_TurnIntoSingleList" />
+      <Description value="Converts a collection or items and lists into a single one dimensional List_!!Li" />
+      <Inputs>
+        <Input value="unknownItem" />
+      </Inputs>
+      <Outputs>
+        <Output value="List" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="6ed821e5-c0f6-4648-9957-4ce46c0cbe06" start_index="0" end="801992a8-863c-464e-b5de-bff2af1f2cb6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="31448a2f-4f9e-435b-a87a-9a8fb31b6611" start_index="0" end="6ed821e5-c0f6-4648-9957-4ce46c0cbe06" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="16e736ae-7b56-4751-b989-c8597017dd88" start_index="0" end="55026ff0-54b2-4d48-b4a0-8741533f163f" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="55026ff0-54b2-4d48-b4a0-8741533f163f" start_index="0" end="6ed821e5-c0f6-4648-9957-4ce46c0cbe06" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

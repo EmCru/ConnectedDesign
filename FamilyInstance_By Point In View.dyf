@@ -1,0 +1,79 @@
+<Workspace Version="1.3.2.2480" X="164.423216674906" Y="94.5164591421392" zoom="0.943084670293635" ScaleFactor="1" Name="FamilyInstance_By Point In View" Description="places an annotation / view dependant family (ie; detail item, gen anno, title block...More) at a specified point in (input) view or view list." ID="056d954f-8d01-40b4-b2ce-ae685f43cd4d" Category="ArupBimSF.Revit.Elements_Families">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="Autodesk.Point" resolvedName="Autodesk.DesignScript.Geometry.Point" assemblyName="ProtoGeometry.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="25280986-3b06-42df-b5be-dac8e6eba253" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1069.12521193666" y="303.894155334151" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="familyInstance" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="31e406f0-f125-4b38-871d-ba9e915039ad" type="PythonNodeModels.PythonNode" nickname="Python Script" x="643" y="363.288076584804" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="3">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <PortInfo index="2" default="False" />
+      <Script>import clr
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+clr.ImportExtensions(Revit.GeometryConversion)
+
+clr.AddReference("RevitServices")
+import RevitServices
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+doc = DocumentManager.Instance.CurrentDBDocument
+points = UnwrapElement(IN[0])
+famtype = UnwrapElement(IN[1])
+lvl = UnwrapElement(IN[2])
+elementlist = list()
+counter = 0
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+# make sure familysymbol is active
+if famtype.IsActive == False:
+	famtype.Activate()
+	doc.Regenerate()
+for point in points:
+	newobj = doc.Create.NewFamilyInstance(point.ToXyz(),famtype,lvl)
+	elementlist.append(newobj.ToDSType(False))
+TransactionManager.Instance.TransactionTaskDone()
+OUT = elementlist</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="abe6364f-3bd4-40fa-898a-30a7aa67b836" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="118.496482809894" y="505.737584806155" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Views_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="a3468142-bb81-4a34-a5c4-b5923020176e" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="399.94300510211" y="277.150391760443" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="Flatten({item});" ShouldFocus="false">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.CodeBlockNodeModel>
+    <PythonNodeModels.PythonNode guid="51850106-2eb9-4207-9bea-5e4cc383c0e9" type="PythonNodeModels.PythonNode" nickname="Python Script" x="858.741044327572" y="284.327047399645" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>check = IN[0]
+items = IN[1]
+if isinstance(check, (list)): OUT = items
+else: OUT = items[0]</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="d54d2d1f-4eb9-42f4-ac45-b035da269cf8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="90.1967133341393" y="240.941656013" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Points_In : Autodesk.Point" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="835b2e6a-2633-46f5-9bb9-4d5f03472f00" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="109.097137617885" y="386.7844498921" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="FamilyTypes_In" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="31e406f0-f125-4b38-871d-ba9e915039ad" start_index="0" end="51850106-2eb9-4207-9bea-5e4cc383c0e9" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="abe6364f-3bd4-40fa-898a-30a7aa67b836" start_index="0" end="31e406f0-f125-4b38-871d-ba9e915039ad" end_index="2" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a3468142-bb81-4a34-a5c4-b5923020176e" start_index="0" end="31e406f0-f125-4b38-871d-ba9e915039ad" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a3468142-bb81-4a34-a5c4-b5923020176e" start_index="0" end="51850106-2eb9-4207-9bea-5e4cc383c0e9" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="51850106-2eb9-4207-9bea-5e4cc383c0e9" start_index="0" end="25280986-3b06-42df-b5be-dac8e6eba253" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="d54d2d1f-4eb9-42f4-ac45-b035da269cf8" start_index="0" end="a3468142-bb81-4a34-a5c4-b5923020176e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="835b2e6a-2633-46f5-9bb9-4d5f03472f00" start_index="0" end="31e406f0-f125-4b38-871d-ba9e915039ad" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+</Workspace>

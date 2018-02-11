@@ -1,0 +1,144 @@
+<Workspace Version="1.3.2.2480" X="-144.694218169036" Y="147.13785881408" zoom="0.57439614558181" ScaleFactor="1" Name="Db_Categories_Model" Description="gets all revit  model categoried (according to visibility settings)" ID="1d85d220-1d8d-481d-8aac-2c2aeac8b0d2" Category="ArupBimSF.Revit_Db.Categories">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="740ba8aa-17bb-4321-91fc-655365f0f77c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="2565.34322359598" y="325.493073178062" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//List of Model Categories According to &quot;Visibility/Graphic Overrides for Floor Plan&quot;&#xD;&#xA;ModelCategories" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="3e2d7911-1569-4e72-8454-5a935ce908e0" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="List.Clean" x="2135.32621701329" y="328.233862505359" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.List.Clean@var[]..[],bool">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="True" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="4dc1550f-453d-4958-b1db-ef7702c73967" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Category.ByName" x="1365.29194247958" y="185.263664329593" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="RevitNodes.dll" function="Revit.Elements.Category.ByName@string">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <CoreNodeModels.Watch guid="01f5aede-6720-4cd6-b837-1ea4e749c6b7" type="CoreNodeModels.Watch" nickname="Watch" x="1704.30609892735" y="340.664581059684" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+    </CoreNodeModels.Watch>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction guid="7bbbe5cc-988f-4d62-91bd-ad327a4fc1c6" type="Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction" nickname="String.Split" x="1000.04078685161" y="67.8349097624151" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.String.Split@string,string[]" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSVarArgFunction>
+    <CoreNodeModels.Input.BoolSelector guid="493df01e-631d-41d3-ac9c-6cb20fd097b3" type="CoreNodeModels.Input.BoolSelector" nickname="Boolean" x="1767.10692664331" y="203.835663163881" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.Boolean>False</System.Boolean>
+    </CoreNodeModels.Input.BoolSelector>
+    <CoreNodeModels.Input.StringInput guid="b9a60941-775e-423d-a74f-50bc60387771" type="CoreNodeModels.Input.StringInput" nickname="String" x="631.755123998606" y="76.3230445739294" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <System.String>OST_DuctTerminal
+OST_Areas
+OST_CableTrayFitting
+OST_CableTray
+OST_Casework
+OST_Ceilings
+OST_Columns
+OST_CommunicationDevices
+OST_ConduitFitting
+OST_Conduit
+OST_CurtainWallPanels
+OST_CurtaSystem
+OST_CurtainWallMullions
+OST_DataDevices
+OST_DetailComponents
+OST_FilledRegion
+OST_MaskingRegion
+OST_Doors
+OST_DuctAccessory
+OST_DuctFitting
+OST_DuctInsulations
+OST_DuctLinings
+OST_PlaceHolderDucts
+OST_DuctSystem
+OST_DuctCurves
+OST_ElectricalEquipment
+OST_ElectricalFixtures
+OST_Entourage
+OST_FireAlarmDevices
+OST_FlexDuctCurves
+OST_FlexPipeCurves
+OST_Floors
+OST_Furniture
+OST_FurnitureSystems
+OST_GenericModel
+OST_Grids
+OST_Gutter
+OST_HVAC_Zones
+OST_Levels
+OST_LightingDevices
+OST_LightingFixtures
+OST_Mass
+OST_MechanicalEquipment
+OST_FabricationContainment
+OST_FabricationDuctwork
+OST_FabricationHangers
+OST_FabricationPipework
+OST_NurseCallDevices
+OST_BuildingPad
+OST_Parking
+OST_Parts
+OST_PipeAccessory
+OST_PipeFitting
+OST_PlaceHolderPipes
+OST_PipeCurves
+OST_Planting
+OST_PlumbingFixtures
+OST_StairsRailing
+OST_RailingSupport
+OST_RailingTermination
+OST_RailingTopRail
+OST_StairsRailingBaluster
+OST_RailingHandRail
+OST_Ramps
+OST_RasterImages
+OST_Roads
+OST_Roofs
+OST_RoofSoffit
+OST_Fascia
+OST_SecurityDevices
+OST_ShaftOpening
+OST_Site
+OST_SpecialityEquipment
+OST_Sprinklers
+OST_Stairs
+OST_StairsRuns
+OST_StairsSupports
+OST_StairsLandings
+OST_AreaRein
+OST_StructuralFramingSystem
+OST_StructuralColumns
+OST_StructConnections
+OST_FabricAreas
+OST_FabricReinforcement
+OST_StructuralFoundation
+OST_StructuralFraming
+OST_PathRein
+OST_Rebar
+OST_Coupler
+OST_StructuralStiffener
+OST_StructuralTruss
+OST_TelephoneDevices
+OST_Topography
+OST_Walls
+OST_Windows
+OST_Wire
+Spaces
+Rooms
+Piping Systems</System.String>
+      <System.String value="OST_DuctTerminal&#xD;&#xA;OST_Areas&#xD;&#xA;OST_CableTrayFitting&#xD;&#xA;OST_CableTray&#xD;&#xA;OST_Casework&#xD;&#xA;OST_Ceilings&#xD;&#xA;OST_Columns&#xD;&#xA;OST_CommunicationDevices&#xD;&#xA;OST_ConduitFitting&#xD;&#xA;OST_Conduit&#xD;&#xA;OST_CurtainWallPanels&#xD;&#xA;OST_CurtaSystem&#xD;&#xA;OST_CurtainWallMullions&#xD;&#xA;OST_DataDevices&#xD;&#xA;OST_DetailComponents&#xD;&#xA;OST_FilledRegion&#xD;&#xA;OST_MaskingRegion&#xD;&#xA;OST_Doors&#xD;&#xA;OST_DuctAccessory&#xD;&#xA;OST_DuctFitting&#xD;&#xA;OST_DuctInsulations&#xD;&#xA;OST_DuctLinings&#xD;&#xA;OST_PlaceHolderDucts&#xD;&#xA;OST_DuctSystem&#xD;&#xA;OST_DuctCurves&#xD;&#xA;OST_ElectricalEquipment&#xD;&#xA;OST_ElectricalFixtures&#xD;&#xA;OST_Entourage&#xD;&#xA;OST_FireAlarmDevices&#xD;&#xA;OST_FlexDuctCurves&#xD;&#xA;OST_FlexPipeCurves&#xD;&#xA;OST_Floors&#xD;&#xA;OST_Furniture&#xD;&#xA;OST_FurnitureSystems&#xD;&#xA;OST_GenericModel&#xD;&#xA;OST_Grids&#xD;&#xA;OST_Gutter&#xD;&#xA;OST_HVAC_Zones&#xD;&#xA;OST_Levels&#xD;&#xA;OST_LightingDevices&#xD;&#xA;OST_LightingFixtures&#xD;&#xA;OST_Mass&#xD;&#xA;OST_MechanicalEquipment&#xD;&#xA;OST_FabricationContainment&#xD;&#xA;OST_FabricationDuctwork&#xD;&#xA;OST_FabricationHangers&#xD;&#xA;OST_FabricationPipework&#xD;&#xA;OST_NurseCallDevices&#xD;&#xA;OST_BuildingPad&#xD;&#xA;OST_Parking&#xD;&#xA;OST_Parts&#xD;&#xA;OST_PipeAccessory&#xD;&#xA;OST_PipeFitting&#xD;&#xA;OST_PlaceHolderPipes&#xD;&#xA;OST_PipeCurves&#xD;&#xA;OST_Planting&#xD;&#xA;OST_PlumbingFixtures&#xD;&#xA;OST_StairsRailing&#xD;&#xA;OST_RailingSupport&#xD;&#xA;OST_RailingTermination&#xD;&#xA;OST_RailingTopRail&#xD;&#xA;OST_StairsRailingBaluster&#xD;&#xA;OST_RailingHandRail&#xD;&#xA;OST_Ramps&#xD;&#xA;OST_RasterImages&#xD;&#xA;OST_Roads&#xD;&#xA;OST_Roofs&#xD;&#xA;OST_RoofSoffit&#xD;&#xA;OST_Fascia&#xD;&#xA;OST_SecurityDevices&#xD;&#xA;OST_ShaftOpening&#xD;&#xA;OST_Site&#xD;&#xA;OST_SpecialityEquipment&#xD;&#xA;OST_Sprinklers&#xD;&#xA;OST_Stairs&#xD;&#xA;OST_StairsRuns&#xD;&#xA;OST_StairsSupports&#xD;&#xA;OST_StairsLandings&#xD;&#xA;OST_AreaRein&#xD;&#xA;OST_StructuralFramingSystem&#xD;&#xA;OST_StructuralColumns&#xD;&#xA;OST_StructConnections&#xD;&#xA;OST_FabricAreas&#xD;&#xA;OST_FabricReinforcement&#xD;&#xA;OST_StructuralFoundation&#xD;&#xA;OST_StructuralFraming&#xD;&#xA;OST_PathRein&#xD;&#xA;OST_Rebar&#xD;&#xA;OST_Coupler&#xD;&#xA;OST_StructuralStiffener&#xD;&#xA;OST_StructuralTruss&#xD;&#xA;OST_TelephoneDevices&#xD;&#xA;OST_Topography&#xD;&#xA;OST_Walls&#xD;&#xA;OST_Windows&#xD;&#xA;OST_Wire&#xD;&#xA;Spaces&#xD;&#xA;Rooms&#xD;&#xA;Piping Systems" />
+    </CoreNodeModels.Input.StringInput>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="5f15933f-f414-42c1-ae0c-ec876c3b3ca5" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="877.579343684675" y="196.141796992318" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="&quot;\n&quot;;" ShouldFocus="false" />
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="3e2d7911-1569-4e72-8454-5a935ce908e0" start_index="0" end="740ba8aa-17bb-4321-91fc-655365f0f77c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="4dc1550f-453d-4958-b1db-ef7702c73967" start_index="0" end="01f5aede-6720-4cd6-b837-1ea4e749c6b7" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="01f5aede-6720-4cd6-b837-1ea4e749c6b7" start_index="0" end="3e2d7911-1569-4e72-8454-5a935ce908e0" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="7bbbe5cc-988f-4d62-91bd-ad327a4fc1c6" start_index="0" end="4dc1550f-453d-4958-b1db-ef7702c73967" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="493df01e-631d-41d3-ac9c-6cb20fd097b3" start_index="0" end="3e2d7911-1569-4e72-8454-5a935ce908e0" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="b9a60941-775e-423d-a74f-50bc60387771" start_index="0" end="7bbbe5cc-988f-4d62-91bd-ad327a4fc1c6" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5f15933f-f414-42c1-ae0c-ec876c3b3ca5" start_index="0" end="7bbbe5cc-988f-4d62-91bd-ad327a4fc1c6" end_index="1" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

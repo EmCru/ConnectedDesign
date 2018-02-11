@@ -1,0 +1,99 @@
+<Workspace Version="1.3.2.2480" X="0" Y="0" zoom="1" ScaleFactor="1" Name="Color_ConverRGBtoHEX" Description="" ID="3fb61101-d985-4dbe-ae69-78c5471d96bb" Category="ArupBimSF.Graphics">
+  <NamespaceResolutionMap />
+  <Elements>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="e7ad17ac-0d3a-4044-a102-ea1da4c56053" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1243" y="341" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//Sample #FFFFFF&#xD;&#xA;HEX" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="e13bf8ca-f2d4-4b53-97be-e5acb8bbcfde" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1064" y="337" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Copyright © 2016, Lingkon
+# @Lingkon, lingkonn@gmail.com
+###############################
+
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+#The inputs to this node will be stored as a list in the IN variables.
+dataEnteringNode = IN
+val=IN[0]
+def int_to_hex_color(v):
+    assert(len(v) == 3)
+    return '#%02x%02x%02x' % v
+import sys
+sys.path.append(r'C:\Program Files (x86)\IronPython 2.7\Lib')
+import ast
+x=ast.literal_eval(val)
+#Assign your output to the OUT variable.
+OUT=int_to_hex_color((x))</Script>
+    </PythonNodeModels.PythonNode>
+    <PythonNodeModels.PythonNode guid="73277b31-c3c3-43c6-84cf-1f2416241f0c" type="PythonNodeModels.PythonNode" nickname="Python Script" x="1065" y="498" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+      <Script>#Modified by Lingkon for BattleBIM
+#Copyright © 2017, Lingkon
+#@Lingkon, lingkonn@gmail.com
+#Source code" https://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa"
+###############################
+hex = IN[0]
+def hex_to_rgb(value):
+    """Return (red, green, blue) for the color given as #rrggbb."""
+    value = value.lstrip('#')
+    lv = len(value)
+    return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
+
+text = str(hex_to_rgb(hex))
+x=text.replace('(', '')
+y=x.replace(')', '')
+OUT = y
+</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="1bdaed23-b64c-4b46-9948-e222cc02a63b" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1239" y="500" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="//Sample 255,255,255&#xD;&#xA;RGB" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <PythonNodeModels.PythonNode guid="e0261bcd-b250-4e89-bc76-1b9e485404b8" type="PythonNodeModels.PythonNode" nickname="Python Script" x="919" y="332" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" inputcount="1">
+      <PortInfo index="0" default="False" />
+      <Script>#Copyright © 2016, Lingkon
+# @Lingkon, lingkonn@gmail.com
+###############################
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+#The inputs to this node will be stored as a list in the IN variables.
+dataEnteringNode = IN
+text=str(IN[0])
+x=text.replace('{', '')
+y=x.replace('}', '')
+x=text.replace(']', '')
+y=x.replace('[', '')
+#Assign your output to the OUT variable.
+OUT=y</Script>
+    </PythonNodeModels.PythonNode>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="5f92b1ad-9e6c-4e50-bb15-1211658db6a7" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="845" y="423" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="reset:bool = true" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="aba16ce4-1aca-4a20-894a-f15ff6cb3064" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="551" y="327" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Example 255,255,255&#xD;&#xA;RGBValue=&quot;255,255,255&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="8195dea2-0c5e-4ed3-ab31-3330da278fc8" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="615" y="501" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="//Example #FFFFFF&#xD;&#xA;HEXValue=&quot;#FFFFFF&quot;" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="e13bf8ca-f2d4-4b53-97be-e5acb8bbcfde" start_index="0" end="e7ad17ac-0d3a-4044-a102-ea1da4c56053" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="73277b31-c3c3-43c6-84cf-1f2416241f0c" start_index="0" end="1bdaed23-b64c-4b46-9948-e222cc02a63b" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e0261bcd-b250-4e89-bc76-1b9e485404b8" start_index="0" end="e13bf8ca-f2d4-4b53-97be-e5acb8bbcfde" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5f92b1ad-9e6c-4e50-bb15-1211658db6a7" start_index="0" end="e13bf8ca-f2d4-4b53-97be-e5acb8bbcfde" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5f92b1ad-9e6c-4e50-bb15-1211658db6a7" start_index="0" end="73277b31-c3c3-43c6-84cf-1f2416241f0c" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="aba16ce4-1aca-4a20-894a-f15ff6cb3064" start_index="0" end="e0261bcd-b250-4e89-bc76-1b9e485404b8" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="8195dea2-0c5e-4ed3-ab31-3330da278fc8" start_index="0" end="73277b31-c3c3-43c6-84cf-1f2416241f0c" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>
