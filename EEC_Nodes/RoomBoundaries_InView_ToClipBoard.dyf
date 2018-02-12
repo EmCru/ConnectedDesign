@@ -1,0 +1,74 @@
+<Workspace Version="1.3.2.2480" X="0" Y="0" zoom="1" ScaleFactor="1" Name="RoomBoundaries_InView_ToClipBoard" Description="use this to send room boundaries from an arch file to the cipboard as a multiline string... need to use string line to dyn line node to convert" ID="e54eb48e-4268-4612-842c-daba06346ba3" Category="EEC.Revit">
+  <NamespaceResolutionMap />
+  <Elements>
+    <CoreNodeModels.CreateList guid="d742c5b2-0749-443f-b031-b3e93a31c8fd" type="CoreNodeModels.CreateList" nickname="List.Create" x="2160.15907765388" y="79.0820378253485" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="true" inputcount="2">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </CoreNodeModels.CreateList>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="e6eb89ef-de6d-40d7-a683-96cf3f5ba154" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="List➜ClipBoard_AsMultilineString" x="2724.2525250577" y="81.2078205315915" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true">
+      <PortInfo index="0" default="False" />
+      <ID value="3818b85e-0595-4edf-b590-61a71bedd7af" />
+      <Name value="List➜ClipBoard_AsMultilineString" />
+      <Description value="sends input list to clipboard as a single multi-line string" />
+      <Inputs>
+        <Input value="List_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="to clipboard" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="661f56cb-caca-446f-9c9c-35688f4a0195" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="2378.22795461052" y="100.169232057729" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="5e58249b-0129-44ac-9cf4-5bfbfd64fbce" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Count" x="1616.85558227626" y="0" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="BuiltIn" function="Count@var[]..[]">
+      <PortInfo index="0" default="False" useLevels="True" level="2" shouldKeepListStructure="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="92cd68b1-a1c7-4a95-a1bd-91c4749ae87d" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Flatten" x="1847.55588563581" y="305.875472439221" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="BuiltIn" function="Flatten@var[]..[]">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="c21d3544-348d-45bb-8278-c25c56abf653" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Room.CoreCenterBoundary" x="1228.66350099111" y="153.424325097816" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="RevitNodes.dll" function="Revit.Elements.Room.CoreCenterBoundary">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="6e93caac-0abf-4252-9924-fa22cb6e7827" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="Select.ByCategoryAndView" x="849" y="151.233687915847" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="C:\Users\EmCru80\AppData\Roaming\Dynamo\Dynamo Revit\1.3\packages\archi-lab.net\bin\archilab.dll" function="archilab.Revit.Selection.Select.ByCategoryAndView@Revit.Elements.Category,Revit.Elements.Views.View">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <DSRevitNodesUI.Categories guid="294f7bcc-9753-46b1-a2a4-dd2ef0ac65f7" type="DSRevitNodesUI.Categories" nickname="Categories" x="548" y="412.233687915847" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false" index="403:Rooms" />
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="e6419203-242b-413e-9de8-a1491d75ea41" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Get_ActiveView" x="425.63225486351" y="281.050915357995" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true">
+      <PortInfo index="0" default="True" />
+      <ID value="74606960-673b-44ec-bbbe-a9c4cc82b7d5" />
+      <Name value="Get_ActiveView" />
+      <Description value="captures your active view and keeps it as an input " />
+      <Inputs>
+        <Input value="Refresh" />
+      </Inputs>
+      <Outputs>
+        <Output value="ActiveView" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CodeBlockNodeModel guid="a0c1f11e-a0f2-4341-992a-9efbe7b9eb8d" type="Dynamo.Graph.Nodes.CodeBlockNodeModel" nickname="Code Block" x="250" y="298.233687915847" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false" CodeText="1;" ShouldFocus="false" />
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="b9373e82-02e1-4421-89dc-7190cb12493c" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="3029.2525250577" y="0" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="to clipboard" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="d742c5b2-0749-443f-b031-b3e93a31c8fd" start_index="0" end="661f56cb-caca-446f-9c9c-35688f4a0195" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e6eb89ef-de6d-40d7-a683-96cf3f5ba154" start_index="0" end="b9373e82-02e1-4421-89dc-7190cb12493c" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="661f56cb-caca-446f-9c9c-35688f4a0195" start_index="0" end="e6eb89ef-de6d-40d7-a683-96cf3f5ba154" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5e58249b-0129-44ac-9cf4-5bfbfd64fbce" start_index="0" end="d742c5b2-0749-443f-b031-b3e93a31c8fd" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="92cd68b1-a1c7-4a95-a1bd-91c4749ae87d" start_index="0" end="d742c5b2-0749-443f-b031-b3e93a31c8fd" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c21d3544-348d-45bb-8278-c25c56abf653" start_index="0" end="5e58249b-0129-44ac-9cf4-5bfbfd64fbce" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c21d3544-348d-45bb-8278-c25c56abf653" start_index="0" end="92cd68b1-a1c7-4a95-a1bd-91c4749ae87d" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="6e93caac-0abf-4252-9924-fa22cb6e7827" start_index="0" end="c21d3544-348d-45bb-8278-c25c56abf653" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="294f7bcc-9753-46b1-a2a4-dd2ef0ac65f7" start_index="0" end="6e93caac-0abf-4252-9924-fa22cb6e7827" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e6419203-242b-413e-9de8-a1491d75ea41" start_index="0" end="6e93caac-0abf-4252-9924-fa22cb6e7827" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="a0c1f11e-a0f2-4341-992a-9efbe7b9eb8d" start_index="0" end="e6419203-242b-413e-9de8-a1491d75ea41" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>

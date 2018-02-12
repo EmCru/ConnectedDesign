@@ -1,0 +1,92 @@
+<Workspace Version="1.3.2.2480" X="445.600054744419" Y="217.846577390518" zoom="0.658674852158215" ScaleFactor="1" Name="Create_TimeSpan_ByNumberOfDays" Description="input amount of days and it outputs a date in yymmdd format. Greate for use in naming files and date_stamping " ID="b9398bbb-41f2-45dc-b9c0-95fc2ce13b6c" Category="ArupBimSF.Time">
+  <NamespaceResolutionMap>
+    <ClassMap partialName="DSCore.DateTime.Today" resolvedName="DSCore.DateTime" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.DateTime" resolvedName="DSCore.DateTime" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.TimeSpan" resolvedName="DSCore.TimeSpan" assemblyName="DSCoreNodes.dll" />
+    <ClassMap partialName="DSCore.DateTime.Now" resolvedName="DSCore.DateTime" assemblyName="DSCoreNodes.dll" />
+  </NamespaceResolutionMap>
+  <Elements>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="54f0df49-8da1-428b-8f26-2ee36cc88f5e" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="TimeSpan.TotalDays" x="803.30243143213" y="-60.5164733116875" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="DSCoreNodes.dll" function="DSCore.TimeSpan.TotalDays@var">
+      <PortInfo index="0" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="c73d7622-96ba-4dff-8586-881082c5aeaf" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="DateTime.AddTimeSpan" x="785" y="398" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="DSCoreNodes.dll" function="DSCore.DateTime.AddTimeSpan@var,var">
+      <PortInfo index="0" default="False" />
+      <PortInfo index="1" default="False" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="e60ee1fd-1780-44eb-8992-5256a9917890" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="TimeSpan.Create" x="370.692599181333" y="-46.5047019569205" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="true" assembly="DSCoreNodes.dll" function="DSCore.TimeSpan.Create@double,double,double,double,double">
+      <PortInfo index="0" default="True" />
+      <PortInfo index="1" default="True" />
+      <PortInfo index="2" default="True" />
+      <PortInfo index="3" default="True" />
+      <PortInfo index="4" default="True" />
+    </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="859f00a2-346f-4e05-9dca-19bc2fb28a90" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-86.8735883003931" y="-33.9099878129093" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="NumberOfDays: int = 0" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="9d424798-2abe-409a-ba7a-f4b371cc03a1" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Date_Current_yymmdd" x="1077.79572831792" y="342.554873981498" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="True" />
+      <ID value="ac6c473c-3d0b-4902-ad05-34dfa41e1ff9" />
+      <Name value="Date_Current_yymmdd" />
+      <Description value="get date in YYMMDD format for use in parameters and filenames" />
+      <Inputs>
+        <Input value="Date_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="YYMMDD" />
+        <Output value="Written" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CustomNodes.Function guid="5615b6ba-7f5c-4836-a796-4acca37ff119" type="Dynamo.Graph.Nodes.CustomNodes.Function" nickname="Date_Current_yymmdd" x="374.524727011764" y="257.530076084613" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="True" />
+      <ID value="ac6c473c-3d0b-4902-ad05-34dfa41e1ff9" />
+      <Name value="Date_Current_yymmdd" />
+      <Description value="get date in YYMMDD format for use in parameters and filenames" />
+      <Inputs>
+        <Input value="Date_In" />
+      </Inputs>
+      <Outputs>
+        <Output value="YYMMDD" />
+        <Output value="Written" />
+      </Outputs>
+    </Dynamo.Graph.Nodes.CustomNodes.Function>
+    <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="c713e85c-a548-4dfa-bcde-79272be2d700" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-75.9000344736211" y="276.246387714616" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
+      <Symbol value="Date_In = DSCore.DateTime.Now" />
+    </Dynamo.Graph.Nodes.CustomNodes.Symbol>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="2d3354bc-b129-4d9c-a7ce-ccb29d558027" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1603.28470905266" y="31.1901853335756" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="0_Start_Date" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="66693790-1897-4582-a207-1d331e0fbedb" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1609.04021868529" y="128.982277620534" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="1_End_Date" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="e854baca-0abd-440f-aeba-4ca5ad4152cc" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1739.49511490126" y="253.148148632807" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="2_Start_YYMMDD" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="540e5b62-5a86-4626-b941-9c72aa8225a7" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1703.10792994752" y="335.86889362658" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="3_End_YYMMDD" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="504c1f9e-6896-4127-82b8-ef8a6b44ea97" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1573" y="-86.2622127468408" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+      <PortInfo index="0" default="False" />
+      <Symbol value="4_Total Days" />
+    </Dynamo.Graph.Nodes.CustomNodes.Output>
+  </Elements>
+  <Connectors>
+    <Dynamo.Graph.Connectors.ConnectorModel start="54f0df49-8da1-428b-8f26-2ee36cc88f5e" start_index="0" end="504c1f9e-6896-4127-82b8-ef8a6b44ea97" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c73d7622-96ba-4dff-8586-881082c5aeaf" start_index="0" end="9d424798-2abe-409a-ba7a-f4b371cc03a1" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e60ee1fd-1780-44eb-8992-5256a9917890" start_index="0" end="c73d7622-96ba-4dff-8586-881082c5aeaf" end_index="1" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="e60ee1fd-1780-44eb-8992-5256a9917890" start_index="0" end="54f0df49-8da1-428b-8f26-2ee36cc88f5e" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="859f00a2-346f-4e05-9dca-19bc2fb28a90" start_index="0" end="e60ee1fd-1780-44eb-8992-5256a9917890" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="9d424798-2abe-409a-ba7a-f4b371cc03a1" start_index="0" end="540e5b62-5a86-4626-b941-9c72aa8225a7" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="5615b6ba-7f5c-4836-a796-4acca37ff119" start_index="0" end="e854baca-0abd-440f-aeba-4ca5ad4152cc" end_index="0" portType="0" />
+    <Dynamo.Graph.Connectors.ConnectorModel start="c713e85c-a548-4dfa-bcde-79272be2d700" start_index="0" end="5615b6ba-7f5c-4836-a796-4acca37ff119" end_index="0" portType="0" />
+  </Connectors>
+  <Notes />
+  <Annotations />
+  <Presets />
+  <Cameras>
+    <Camera Name="Background Preview" eyeX="-17" eyeY="24" eyeZ="50" lookX="12" lookY="-13" lookZ="-58" upX="0" upY="1" upZ="0" />
+  </Cameras>
+</Workspace>
