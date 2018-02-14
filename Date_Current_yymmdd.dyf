@@ -1,4 +1,4 @@
-<Workspace Version="1.3.2.2480" X="-36.8790526030724" Y="191.192594709741" zoom="0.647484034763658" ScaleFactor="1" Name="Date_Current_yymmdd" Description="get date in YYMMDD format for use in parameters and filenames" ID="c8abbe0f-dd74-4b17-aceb-1d9d5c528c62" Category="ArupBimSF.Time">
+<Workspace Version="1.3.2.2480" X="159.120947396928" Y="258.192594709741" zoom="0.647484034763658" ScaleFactor="1" Name="Date_Current_yymmdd" Description="get date in YYMMDD format for use in parameters and filenames" ID="ac6c473c-3d0b-4902-ad05-34dfa41e1ff9" Category="ArupBimSF.Time">
   <NamespaceResolutionMap>
     <ClassMap partialName="String" resolvedName="DSCore.String" assemblyName="DSCoreNodes.dll" />
     <ClassMap partialName="DSCore.DateTime.Now" resolvedName="DSCore.DateTime" assemblyName="DSCoreNodes.dll" />
@@ -38,7 +38,7 @@
     <CoreNodeModels.FromObject guid="25c18d32-d469-4228-b611-c3d0b819555a" type="CoreNodeModels.FromObject" nickname="String from Object" x="802.913272628138" y="155.864373900102" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
       <PortInfo index="0" default="False" />
     </CoreNodeModels.FromObject>
-    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="255d2380-b4d1-4469-9298-3188c54dde9f" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="DateTime.Components" x="440.386302824394" y="80.1067046270553" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.DateTime.Components@var">
+    <Dynamo.Graph.Nodes.ZeroTouch.DSFunction guid="255d2380-b4d1-4469-9298-3188c54dde9f" type="Dynamo.Graph.Nodes.ZeroTouch.DSFunction" nickname="DateTime.Components" x="316.831132805104" y="43.0401536212682" isVisible="true" isUpstreamVisible="true" lacing="Shortest" isSelectedInput="False" IsFrozen="false" isPinned="false" assembly="DSCoreNodes.dll" function="DSCore.DateTime.Components@var">
       <PortInfo index="0" default="False" />
     </Dynamo.Graph.Nodes.ZeroTouch.DSFunction>
     <Dynamo.Graph.Nodes.CustomNodes.Output guid="98b6bbe3-b942-4553-85c5-d03f0a181093" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1858.12994488941" y="138.51733195156" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
@@ -48,7 +48,7 @@
     <Dynamo.Graph.Nodes.CustomNodes.Symbol guid="1e83d0dc-bb2c-4031-a19e-1200f6b73b96" type="Dynamo.Graph.Nodes.CustomNodes.Symbol" nickname="Input" x="-11.0406513154736" y="82.5911279872031" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="True" IsFrozen="false" isPinned="false">
       <Symbol value="Date_In = DSCore.DateTime.Now" />
     </Dynamo.Graph.Nodes.CustomNodes.Symbol>
-    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4bb7b0e2-92c1-4a85-bc4d-307750fabcbe" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1847.80244142401" y="12.8486991740047" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
+    <Dynamo.Graph.Nodes.CustomNodes.Output guid="4bb7b0e2-92c1-4a85-bc4d-307750fabcbe" type="Dynamo.Graph.Nodes.CustomNodes.Output" nickname="Output" x="1847.80244142401" y="-238.8949597403" isVisible="true" isUpstreamVisible="true" lacing="Disabled" isSelectedInput="False" IsFrozen="false" isPinned="false">
       <PortInfo index="0" default="False" />
       <Symbol value="Written" />
     </Dynamo.Graph.Nodes.CustomNodes.Output>
