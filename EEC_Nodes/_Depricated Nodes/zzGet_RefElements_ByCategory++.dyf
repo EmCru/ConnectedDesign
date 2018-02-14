@@ -1,4 +1,4 @@
-<Workspace Version="1.3.2.2480" X="-361.952900990757" Y="-524.560353160683" zoom="0.581345930392876" ScaleFactor="1" Name="Get_RefElements_ByCategory++" Description="Gets reference elements from active doc" ID="773916b5-e5ac-4883-bbc6-c1ec8fc54a16" Category="ArupBimSF.Revit.Reference Objects">
+<Workspace Version="1.3.2.2480" X="186.047099009243" Y="-189.560353160683" zoom="0.581345930392876" ScaleFactor="1" Name="zzGet_RefElements_ByCategory++" Description="Gets reference elements from active doc" ID="1442d8e4-ef03-45bd-aff3-f4aa3f282024" Category="ArupBimSF.Revit.Reference Objects">
   <NamespaceResolutionMap>
     <ClassMap partialName="List.join" resolvedName="DSCore.List" assemblyName="DSCoreNodes.dll" />
   </NamespaceResolutionMap>
@@ -204,6 +204,7 @@ HVAC Zones</System.String>
   </Connectors>
   <Notes>
     <Dynamo.Graph.Notes.NoteModel guid="5d29039f-939d-4768-9f54-1bca41113949" text="The List.Combine node cannot handle an empty list so I use the boolean mask to swap out the empty with a null.  This makes it operate smoothly." x="2313.18557853076" y="1660.34477205376" />
+    <Dynamo.Graph.Notes.NoteModel guid="fc09d708-653a-4869-ae51-ad821efb84d4" text="I have craeted one that works!__This one dies" x="508.966501702614" y="976.171031691105" />
   </Notes>
   <Annotations>
     <Dynamo.Graph.Annotations.AnnotationModel guid="8c2c9212-0227-44f6-8954-4ad10e751d48" annotationText="&lt;Click here to edit the group title&gt;" left="1854.60263009928" top="1614.34477205376" width="756.49926013563" height="284.26441355887" fontSize="30" InitialTop="1660.34477205376" InitialHeight="268.264413558868" TextblockHeight="36" backgrouund="#FFC1D676">
